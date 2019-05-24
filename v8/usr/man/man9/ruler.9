@@ -1,0 +1,42 @@
+.TH RULER 9.1
+.SH NAME
+ruler \- measure things on the screen
+.SH SYNOPSIS
+.B ruler
+.SH DESCRIPTION
+.I Ruler
+measures things on a jerq screen.
+Press button 1 to sweep out a rectangle anywhere on the screen.
+For each rectangle swept,
+.I ruler
+displays the coordinates of the rectangle's corners (labelled
+`down' and `up'),
+the size
+of the rectangle and length of its diagonal.
+.LP
+There is
+a menu on button 3.
+The
+.I pixels
+and
+.I chars
+buttons control whether the size and diagonal measurements
+are in pixel or
+9x14 character units (the size used by
+.I jim(9.1)
+and
+.IR mux(9.1) ).
+The
+.I stop
+button deactivates
+.I ruler
+without exiting.
+Hitting
+.I measure
+reactivates
+.IR ruler .
+.I Exit
+exits.
+.SH BUGS
+Ruler's menu must pop up in its own layer, perhaps far
+away from the cursor.

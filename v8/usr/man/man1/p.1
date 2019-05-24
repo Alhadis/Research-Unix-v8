@@ -1,0 +1,43 @@
+.TH P 1
+.SH NAME
+p, more \- paginate
+.SH SYNOPSIS
+.B p
+[
+.BR \- n
+] [ file ] ...
+.PP
+.B more
+[ option ] ... [ file ] ...
+.SH DESCRIPTION
+.I P
+copies its standard input, or the named files if given,
+to its standard output,
+stopping at the end of the 22nd line to wait for a newline from the user.
+The page size may be set by
+saying (for example)
+.IP
+p \-60  
+.PP
+While waiting for a newline,
+.I p
+interprets some commands:
+.RS
+.IP \-
+Reprint last page. `\-\-' reprints the second last page, etc.
+.IP !
+Pass the rest of the line to the shell as a command.
+.IP q
+Quit.
+.RE
+.PP
+.I More,
+a paginator that lives up to its name, has too many features to describe.
+The essential fact about it is that
+space, not newline, gives the next page.
+.SH "SEE ALSO"
+tk(1)
+.SH BUGS
+Because of limited storage,
+.I p
+can't back up too far.

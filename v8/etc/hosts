@@ -1,0 +1,296 @@
+127.1		localhost
+192.11.41.2	forbes
+192.11.41.1	research
+192.11.40.1	research
+192.11.4.55	research
+192.11.41.3	kwee
+192.11.41.4	seki
+192.11.41.6	encke
+192.11.40.2	alice
+192.11.40.3	bowell
+192.11.40.4	encke
+192.11.40.5	forbes
+192.11.40.6	grigg
+192.11.40.7	hunny
+192.11.40.8	ikeya
+192.11.40.9	kwee
+192.11.40.10	most
+192.11.40.11	mrkos
+192.11.40.12	panther
+192.11.40.13	piggot
+192.11.40.14	polya
+192.11.40.15	seki
+192.11.40.16	snb
+192.11.41.5	snb
+192.11.40.17	sola
+192.11.40.18	swift
+192.11.40.19	west
+192.11.40.20	wild
+192.11.40.21	arend
+192.11.2.1	cbosgd osgd cbapus apus
+192.11.2.2	cbserpens serpens serp
+192.11.2.3	cbpavo pavo
+192.11.2.4	cbcrux crux
+192.11.2.5	cborion orion
+192.11.2.7	cbdraco draco
+192.11.2.8	cbhydra hydra
+192.11.2.9	cbcephus cephus
+192.11.3.1	vax135-hobb
+192.11.3.2	schatz
+192.11.3.3	hopi
+192.11.3.6	lucifer
+192.11.4.1	largo-mhbb
+192.11.4.2	homer-mh-gw
+192.11.4.5	chuck
+192.11.4.7	peecee
+192.11.4.8	bellcore
+192.11.4.12	dvw-pc1
+192.11.4.13	dvw-pc2
+192.11.4.14	dvw-pc3
+192.11.4.21	coutet
+192.11.4.24	yquem
+192.11.4.25	olorin
+192.11.4.99	vivace-mhbb
+192.11.6.1	aloof
+192.11.6.2	aloft
+192.11.6.3	c12
+192.11.6.4	alsun1
+192.11.33.1	cantor
+192.11.33.2	hilbert
+192.11.33.3	marvin
+192.11.33.4	image
+192.11.33.5	vax135
+192.11.33.6	sheila
+192.11.33.7	annie
+192.11.33.8	daisy
+192.11.33.9	lexcen
+192.11.33.10	gecko dopey-135 sleepy-135 grumpy-135
+192.11.33.11	pc-135
+192.11.33.12	iris-cleaners
+192.11.33.13	turboprocessor snet
+192.11.33.14	stephens
+192.11.33.15	frers
+192.11.34.1	circe c
+192.11.34.2	mentor m
+192.11.34.3	troilus t
+192.11.34.4	hector h
+192.11.34.5	kalypso k
+192.11.34.6	lycaon l
+192.11.34.7	penelope p
+192.11.34.8	telemachus telly
+192.11.34.9	ulysses u
+192.11.34.10	scylla s
+192.11.34.11	wbux6 w
+192.11.34.12	achilles a
+192.11.34.13	briseis b
+192.11.34.64	homer-mml mml
+192.11.34.65	homer-jjs jjs
+192.11.34.66	homer-rmp rmp
+192.11.34.67	homer-dgk dgk
+192.11.34.68	homer-kpv kpv
+192.11.34.69	homer-rjy rjy
+192.11.34.70	homer-smb smb
+192.11.34.127	homer-test test
+192.11.34.129	delta d
+192.11.34.130	epsilon e
+192.11.34.131	gamma g
+192.11.34.132	zeta z
+192.11.34.133	iota i
+192.11.35.1	allegra
+192.11.35.2	largo
+192.11.4.1	largo
+192.11.35.3	lento
+192.11.35.4	vivace
+192.11.4.99	vivace
+192.11.35.5	presto
+192.11.35.6	tempo-canary
+192.11.35.7	tempo-conure
+192.11.35.8	tempo-cuckoo
+192.11.35.9	tempo-dodo
+192.11.35.10	tempo-finch
+192.11.35.11	tempo-kiwi
+192.11.35.12	tempo-lovebird
+192.11.35.15	tempo-namon
+192.11.35.16	tempo-polyhymnia
+192.11.35.17	tempo-jdd
+192.11.35.18	tempo-euterpe
+192.11.35.19	tempo-nhg
+192.11.35.20	tempo-mp
+192.11.35.21	tempo-erato
+192.11.35.22	tempo-nam
+192.11.35.23	tempo-wdr
+192.11.35.24	tempo-dwight
+192.11.35.25	tempo-ann
+192.11.35.26	tempo-log
+192.11.35.27	tempo-amg
+192.11.35.28	tempo-btm
+192.11.35.29	tempo-bill
+192.11.35.30	tempo-lindsay
+192.11.35.31	tempo-rat
+192.11.35.32	tempo-pw
+192.11.35.34	tempo-phone1
+192.11.35.35	tempo-phone2
+192.11.35.36	tempo-phone3
+192.11.35.37	tempo-phone4
+192.11.35.38	tempo-phone5
+192.11.35.39	tempo-phone6
+192.11.35.40	tempo-dds
+192.11.35.41	tempo-calliope
+192.11.35.42	tempo-ripple
+192.11.35.44	tempo-scherzo
+192.11.35.46	tempo-clambake tempo-clam
+192.11.35.47	tempo-pancake tempo-pan
+192.11.35.48	tempo-snarf
+192.11.35.49	tempo-scott
+192.11.35.50	tempo-don
+192.11.35.51	tempo-kks
+192.11.35.52	tempo-lacy
+192.11.35.53	tempo-jpl
+192.11.35.54	tempo-krishnan
+192.11.35.55	tempo-jack
+192.11.35.56	tempo-aed
+192.11.35.57	tempo-edp
+192.11.35.58	tempo-rdg1
+192.11.35.59	tempo-nhg2
+192.11.35.60	tempo-gdb
+192.11.35.61	tempo-pamela
+192.11.35.62	tempo-rat2
+192.11.35.63	tempo-mischu
+192.11.35.64	tempo-rdg2
+192.11.35.65	tempo-vek
+192.11.35.66	tempo-dep
+192.11.35.67	tempo-sun3
+192.11.35.68	tempo-sun4
+192.11.35.69	tempo-sun5
+192.11.35.70	tempo-sun6
+192.11.35.71	tempo-sun7
+192.11.35.72	tempo-sun8
+192.11.35.73	tempo-sun9
+192.11.35.74	tempo-sun10
+192.11.35.75	tempo-sun11
+192.11.35.76	tempo-sun12
+192.11.35.77	tempo-sun13
+192.11.35.78	tempo-sun14
+192.11.35.79	tempo-sun15
+192.11.35.80	tempo-almaden
+192.11.36.1	m10
+192.11.36.2	sun1
+192.11.36.3	mhltx1 m1
+192.11.37.1	hoh-1-reserved
+192.11.37.2	hoh-2
+192.11.37.3	hoh-3
+192.11.38.1	houpi ping
+192.11.38.2	beer
+192.11.38.3	bear
+192.11.38.4	houem
+192.11.38.5	houon onyx
+192.11.38.6	houpo pong
+192.11.39.1	abelour-glenlivet abe abelour
+192.11.39.2	glengarioch glen
+192.11.39.3	laphroaig lap laph frog
+192.11.39.4	panini pa
+192.11.39.5	tamdhu tam
+192.11.39.6	hunny
+192.11.39.7	sweet
+192.11.42.1	samwise
+192.11.42.2	bitwise
+192.11.42.3	clockwise
+192.11.159.1	sunday
+192.11.159.2	monday
+192.11.159.3	tuesday
+192.11.159.4	wednesday
+192.11.159.5	thursday
+192.11.4.23	thursday
+192.11.159.6	friday
+192.11.159.7	saturday
+192.11.159.10	sunday-sun0
+192.11.159.11	tsingtao
+192.11.159.12	shanghi
+192.11.159.13	lee
+192.11.159.14	sunday-sun4
+192.11.159.15	sunday-sun5
+192.11.159.16	sunday-sun6
+192.11.159.17	sunday-sun7
+192.11.159.18	sunday-sun8
+192.11.159.19	sunday-sun9
+192.11.159.20	monday-sun0
+192.11.159.21	monday-sun1
+192.11.159.22	cognac
+192.11.159.23	monday-sun3
+192.11.159.24	monday-sun4
+192.11.159.25	monday-sun5
+192.11.159.26	monday-sun6
+192.11.159.27	monday-sun7
+192.11.159.28	monday-sun8
+192.11.159.29	monday-sun9
+192.11.159.30	tuesday-sun0 spot
+192.11.159.31	tuesday-sun1 duck
+192.11.159.32	tuesday-sun2
+192.11.159.33	tuesday-sun3
+192.11.159.34	tuesday-sun4
+192.11.159.35	tuesday-sun5
+192.11.159.36	tuesday-sun6
+192.11.159.37	tuesday-sun7
+192.11.159.38	tuesday-sun8
+192.11.159.39	tuesday-sun9
+192.11.159.40	wednesday-sun0
+192.11.159.41	wednesday-sun1
+192.11.159.42	wednesday-sun2
+192.11.159.43	wednesday-sun3
+192.11.159.44	wednesday-sun4
+192.11.159.45	wednesday-sun5
+192.11.159.46	wednesday-sun6
+192.11.159.47	wednesday-sun7
+192.11.159.48	wednesday-sun8
+192.11.159.49	wednesday-sun9
+192.11.159.50	thursday-sun0
+192.11.159.51	thursday-sun1
+192.11.159.52	thursday-sun2
+192.11.159.53	thursday-sun3
+192.11.159.54	thursday-sun4
+192.11.159.55	thursday-sun5
+192.11.159.56	thursday-sun6
+192.11.159.57	thursday-sun7
+192.11.159.58	thursday-sun8
+192.11.159.59	thursday-sun9
+192.11.159.60	friday-sun0
+192.11.159.61	friday-sun1
+192.11.159.62	friday-sun2
+192.11.159.63	friday-sun3
+192.11.159.64	friday-sun4
+192.11.159.65	friday-sun5
+192.11.159.66	friday-sun6 junco friday6
+192.11.159.67	friday-sun7
+192.11.159.68	friday-sun8
+192.11.159.69	friday-sun9
+192.11.159.70	saturday-sun0
+192.11.159.71	saturday-sun1
+192.11.159.72	saturday-sun2
+192.11.159.73	saturday-sun3
+192.11.159.74	saturday-sun4
+192.11.159.75	saturday-sun5
+192.11.159.76	saturday-sun6
+192.11.159.77	saturday-sun7
+192.11.159.78	saturday-sun8
+192.11.159.79	saturday-sun9
+192.11.159.80	vigne-pc1
+192.11.159.81	vigne-pc2
+192.11.159.82	vigne-pc3
+192.11.159.83	vigne-pc4
+192.11.159.84	vigne-pc5
+192.11.159.85	rotgut
+192.11.159.86	bugjuice
+192.11.159.87	elan
+192.11.159.88	mouton
+192.11.159.89	lafite
+192.11.159.90	sleepy
+192.11.159.91	grumpy
+192.11.159.92	dopey
+192.11.159.93	hubert
+192.11.159.94	guano
+192.11.159.95	petrus
+192.11.159.96	exodus
+192.11.159.97	ajax
+192.11.159.98	bashful
+192.11.159.99	doc
+

@@ -1,0 +1,49 @@
+.TH UUCHECK 8
+.SH NAME
+uucheck  \- check uucp directories and permissions file
+.SH SYNOPSIS
+.B /usr/lib/uucp/uucheck
+[
+.B \-v
+] [
+.B \-x
+debug_level
+]
+.SH DESCRIPTION
+.I Uucheck
+checks for the presence of files and
+directories
+used by
+programs associated with
+.I uucp (1).
+It also checks for some obvious errors in the
+.I Permissions
+file.
+When executed with the
+.B \-v
+option, it gives a detailed
+explanation of how the programs will interpret the
+.I Permissions
+file.
+.PP
+The
+.B \-x
+option requests deugging output.
+.I Debug_level
+is a single digit;
+higher numbers give more detail.
+.SH FILES
+.nf
+/usr/lib/uucp/Systems
+/usr/lib/uucp/Permissions
+/usr/lib/uucp/Devices
+/usr/lib/uucp/Maxuuxqts
+/usr/lib/uucp/Maxuuscheds
+/usr/spool/uucp/\(**
+/usr/spool/uucppublic/\(**
+.fi
+.SH "SEE ALSO"
+uucp(1)
+.SH BUGS
+The program doesn't check file/directory modes or some errors
+in the Permissions file such as duplicate login or machine name.

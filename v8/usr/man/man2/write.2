@@ -1,0 +1,51 @@
+.TH WRITE 2 
+.SH NAME
+write \- write on a file
+.SH SYNOPSIS
+.nf
+.B write(fildes, buffer, nbytes)
+.B char *buffer;
+.fi
+.SH DESCRIPTION
+.I Write
+writes data on the open file associated with the file descriptor.
+.PP
+.I Buffer
+is the address of
+.I nbytes
+contiguous
+bytes which are written on the output file.
+The number of characters actually written is returned.
+It should be regarded as an error
+if this is not the same as requested.
+.PP
+If the open file is being read by another process,
+data of at most one
+.I write
+will be delivered to any
+.IR read (2)
+in the other process.
+In particular, if 
+.I nbytes
+= 0, the 
+.I read
+will return a count of 0, which is conventionally taken
+to mean end of file.
+.PP
+Writes which are synchronized with file system blocks
+are more efficient than others; see
+.IR filsys (5).
+.PP
+On some systems
+.I write
+clears the set-user-id bit on a file.
+This prevents penetration of system security
+by a user who
+captures a writable set-user-id file that he does not own.
+.SH "SEE ALSO"
+creat(2), open(2), pipe(2), select(2)
+.SH DIAGNOSTICS
+Returns
+\-1 on error: bad descriptor, buffer address, or
+count; physical I/O errors.
+

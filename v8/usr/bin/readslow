@@ -1,0 +1,5 @@
+case $1 in
+-e)	shift
+	tail -0f $* ;;
+*)	tail +0f $*
+esac

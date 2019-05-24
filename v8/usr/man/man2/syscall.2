@@ -1,0 +1,35 @@
+.TH SYSCALL 2 
+.SH NAME
+syscall \- indirect system call
+.SH SYNOPSIS
+.nf
+.BR "syscall(number, arg, ... )" \  \  (VAX)
+.PP
+.BR "syscall(number, r0, r1, arg ... )" \  \  (PDP11)
+.fi
+.SH DESCRIPTION
+.I Syscall
+performs the system call whose assembly language
+interface has the specified
+.I number
+and arguments.
+.PP
+On a PDP11 the first two arguments correspond to
+registers r0 and r1,
+regardless of whether the entry point really
+uses them.
+.PP
+The r0 value of the system call is returned.
+.SH DIAGNOSTICS
+When the C-bit is set,
+.I syscall
+returns \-1 and sets the
+external variable 
+.I errno
+(see
+.IR intro (2)).
+.SH BUGS
+There is no way to simulate system calls
+such as
+.IR pipe (2),
+which return values in register r1.

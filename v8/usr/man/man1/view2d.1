@@ -1,0 +1,134 @@
+.TH VIEW2D 1
+.SH NAME
+view2d \- movie of a function f(x, y, t)
+.SH SYNOPSIS
+.B view2d
+[ option ...  ]
+file
+.LP
+.B regrid
+[ option ...  ]
+file
+.LP
+.B vdata
+[ option ...  ]
+file
+.SH DESCRIPTION
+.I View2d
+displays a sequence of functional surfaces on a 5620 or color display.
+On the 5620, the surface is ruled with a square mesh
+and projected isometrically;
+on a color display, the surface is viewed from above,
+with height indicated by color.
+The options are:
+.TP .6i
+.B \-T5
+output on the 5620;
+.B \-T5
+is the default when TERM (see
+.IR environ (7))
+is 5620.
+.TP
+.B \-Tc
+output on color display;
+.B \-Tc
+is the default when TERM is not 5620.
+.TP
+.B \-Tp
+produces input for
+.IR plot (1)
+to produce contour plots.
+.TP
+.BI \-c n
+use 
+.I n
+colors
+.RI ( n =32
+by default)
+or contours (6 by default).
+.TP
+.BI \-p s
+run movie for
+.I s
+seconds
+.RI ( s =5
+by default).
+.PP
+There are two supported ways to generate input for
+.IR view2d .
+.I Vdata
+takes ASCII input and allows scattered data;
+.I view2d(3)
+can be called from a program that
+already has data on a grid.
+.PP
+.I Regrid
+changes the grid sizes in
+.I view2d
+binary files,
+with options:
+.TP 1i
+.B \-b
+adds a bar at the bottom of the image indicating time.
+.TP
+.BI \-n NX\fR[,\fINY\fR]
+output grid is
+.I NX
+by
+.I NY.
+.TP
+.BI \-f NF
+output will have
+.I NF
+frames.
+.TP
+.B \-r
+the plane of closest fit to the first frame
+is subtracted from all the frames.
+.TP
+.BI \-m fmin,fmax
+clips the data to the range
+.I fmin,fmax.
+.PP
+One option applies to both \fIview2d\fP and \fIregrid\fP:
+.TP .8i
+.BI \-t TS\fR[,\fITE\fR]
+displays frames from
+.I TS
+(default first frame time)
+to
+.I TE
+(default last frame time).
+.PP
+.I Vdata
+takes input in the following format and converts to input for
+.IR view2d .
+The first line of each frame has
+the number of data points in the frame (an integer)
+and the time (a floating point value).
+The rest of the lines in the frame consist of x y z triples.
+The order of points is irrelevant.
+Every (floating point or integer) number must be white space separated.
+The options are:
+.TP .85i
+.BI \-n NX\fR[,\fINY\fR]
+output grid is
+.I NX
+by
+.I NY.
+.TP
+.B \-c
+use piecewise constant rather than linear interpolation.
+.TP
+.B \-s
+scatterplot the data on a black background.
+.TP
+.B \-i
+the data is already on a square grid,
+in the order x and y ascending with x varying fastest.
+.SH "SEE ALSO"
+view2d(3), view2d(5)
+.br
+Exotic options for photography, color maps, and halftone
+are described in
+.IR /usr/lib/view2d/howto .

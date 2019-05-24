@@ -1,0 +1,69 @@
+.TH DEROFF 1 
+.SH NAME
+deroff \- remove formatting requests
+.SH SYNOPSIS
+.B deroff
+[ option ... ]
+file ...
+.SH DESCRIPTION
+.I Deroff
+reads each file in sequence
+and removes all
+.I nroff
+and
+.I troff
+command lines, backslash constructions, macro definitions,
+.I eqn
+constructs
+(between `.EQ' and `.EN' lines or between 
+delimiters),
+.I tbl
+table descriptions,
+.I pic
+constructs,
+and
+.I refer
+references.
+Remaining text is written on the standard output.
+.I Deroff
+follows chains of included files
+(`.so' and `.nx' commands);
+if a file has already been included, a `.so' is ignored and a `.nx' terminates execution.
+If no input file is given,
+.I deroff
+reads from the standard input file.
+.PP
+The options are
+.TP
+.B \-w
+Output a word list, one `word' (string of letters, digits, and apostrophes,
+beginning with a letter; apostrophes are removed) per line, and all other characters ignored.
+Otherwise, the output follows the original, with the deletions mentioned above.
+.TP
+.B \-i
+Ignore `.so' and `.nx' requests.
+.TP
+.BR \-ms ,\  \-mm
+Follow the conventions of
+.IR ms (7)
+or
+.I mm
+macros.
+.TP
+.B \-ml
+Follow the conventions of
+.I mm
+and suppress lists.
+.SH "SEE ALSO"
+troff(1), eqn(1), tbl(1), pic(1), refer(1)
+.SH BUGS
+.I Deroff
+is not a complete
+.I troff
+interpreter; it can be confused.
+In particular, 
+.I troff
+macro definitions containing `\\$' cause chaos when the popular `$$'
+delimiters for
+.I eqn
+are in effect.

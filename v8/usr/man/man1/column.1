@@ -1,0 +1,114 @@
+.TH COLUMN 1
+.SH NAME
+col, 2-6, mc, fold, expand \- column alignment
+.SH SYNOPSIS
+.B col
+[
+.B \-bfx 
+]
+.PP
+.B 2
+[ file ]
+.PP
+.B ind
+[ prefix ]
+.PP
+.B fold
+[
+.BR \- N
+] [ file ] ...
+.PP
+.B mc
+[
+.B \-
+] [
+.BR \- N
+] [
+.B \-t
+] [ file ] ...
+.PP
+.B expand
+[
+.BR \- stops
+] [ file ] ...
+.SH DESCRIPTION
+These programs rearrange files for appearance's sake.
+All read the standard input and write the standard output.
+Some optionally read from files instead.
+.PP
+.I Col
+overlays lines to expunge reverse line feeds
+(ESC-7)
+and half line feeds (ESC-9 and ESC-8)
+as produced by
+.I nroff
+for .2C in
+.IR ms (7)
+and for 
+.IR tbl (1).
+It normally emits only full line feeds;
+option 
+.B \-f
+(fine) allows half line feeds too.
+Option 
+.B \-b
+removes backspaces, printing just one of each pile of overstruck
+characters.
+.I Col
+normally converts white space to tabs;
+option
+.B \-x
+overrides this feature.
+Other escaped characters and non-printing characters, except for
+SO and SI, are ignored.
+.PP
+.I Col
+should not be used for printing on an HP ThinkJet printer with
+.IR think (9.1),
+which performs the
+.I col
+function itself.
+.PP
+Commands
+.I "2, 3, 4, 5, 6"
+convert their input to 2-, 3-, 4-, 5-, or 6-column form.
+.PP
+.I Mc
+prints in as many columns as will fit on
+.IR N -column 
+`paper' (default
+.IR n = 80).
+If an input line ends in a colon `:', a `break' occurs; thus
+`ls directory1 directory2 | mc' lists each directory
+separately.
+This feature is suppressed if option
+.B \-
+is present, or if input is from a file.
+On output, multiple spaces are converted to tabs; this
+is suppressed by option
+.BR \-t .
+.PP
+.I Expand
+replaces tabs by spaces.
+The optional
+.I stops
+argument is a comma-separated of tab stop postions, counted from 0;
+default is every 8 columns.
+.PP
+.I Fold
+inserts newlines after each
+.I N
+characters (default
+.IR n =80)
+of long lines.
+.SH EXAMPLE
+tbl file \(bv nroff -ms \(bv col \(bv hp
+.SH FILES
+/etc/termcap
+.SH SEE ALSO
+pr(1)
+.SH BUGS
+.I Col
+can't back up more than 128 lines or
+handle more than 800 characters per line,
+and understands VT (013) as reverse line feed.

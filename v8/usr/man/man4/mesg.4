@@ -1,0 +1,132 @@
+.TH MESG 4
+.SH NAME
+mesg, rmesg \- message line discipline modules
+.SH SYNOPSIS
+.B #include <sys/stream.h>
+.SH DESCRIPTION
+After the
+.I mesg_ld
+line discipline module has been pushed on a stream (see
+.IR stream (4)),
+all data and control blocks appearing on the stream are turned
+into structured messages to be read by the user process, and 
+information written on the stream is interpreted as messages in the same
+format.
+The
+.I rmesg_ld
+line discipline is exactly the opposite:
+writes, and control operations, on the stream are turned into
+data messages, and arriving data messages are turned into controls.
+.PP
+Messages written on a stream are interpreted as containing a header of
+the form
+.PP
+.nf
+.ta 5m 10m 15m 20m 25m 30m 35m 40m 45m 50m
+	struct {
+		short	type;
+		short	size;
+	};
+.fi
+.DT
+.LP
+followed by the contents of the message.
+The size is the size of the message exclusive of header.
+It is limited, but to a large number (at least 4KB).
+Messages may be written piecemeal, and several messages may be written
+at once, but messages will be read at most one at a time.
+If an impossible message is written, the stream is shut down.
+.PP
+These message types are possible:
+.TP "\w'M_HANGUP 'u"
+M_DATA
+(0)
+Ordinary data.
+.TP
+M_BREAK
+(01)
+A line break on an RS232-style asynchronous connection.
+No associated data.
+.TP
+M_HANGUP
+(02)
+When received, indicates that the other side has gone away.
+It is interpreted by the message processor as well as transmitted,
+and after it is read the stream is useless.
+No associated data.
+.TP
+M_DELIM
+(03)
+A delimiter that introduces a record boundary in the data.
+No associated data.
+.TP
+M_IOCTL
+(06)
+An
+.IR ioctl (4)
+request.
+The associated data is an integer containing the ioctl code,
+followed by the object passed with the ioctl call that generated the message.
+It is mandatory to reply with
+.I M_IOCACK
+or
+.IR M_IOCNAK .
+.TP
+M_DELAY
+(07)
+A real-time delay.
+One byte of data, giving the number of sixtieths (fiftieths) of a second
+delay time.
+.TP
+M_CTL
+(010)
+Device-specific control message.
+.TP
+M_SIGNAL
+(0101)
+Generate signal number given in the 1-byte message.
+.TP
+M_FLUSH
+(0102)
+Flush input and output queue if possible.
+.TP
+M_STOP
+(0103)
+Stop transmission immediately (used, for example, in conjunction with
+XON-XOFF flow control.
+.TP
+M_START
+(0104)
+Restart transmission after
+.IR M_STOP .
+.TP
+M_IOCACK
+(0105)
+Positive acknowledgement of
+.I M_IOCTL
+message.
+At the other end, any included data will be stored through the
+pointer given in the ioctl call.
+.TP
+M_IOCNAK
+(0106)
+Negative acknowledgement of
+.IR M_IOCTL .
+A 1-byte message, if present, will be used as the return code
+for the failing ioctl.
+.TP
+M_CLOSE
+(0107)
+Used internally in Datakit call supervision.
+.PP
+.SH SEE ALSO
+stream(4)
+.SH BUGS
+The format of arguments to
+.I M_IOCTL
+is machine dependent.
+Sufficient unto the day is the nonportability thereof.
+.br
+If incorrectly formatted data is written to
+.IR mesg ,
+the stream may be irretrievably clogged.

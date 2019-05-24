@@ -1,0 +1,1 @@
+exec /bin/pr -t -w78 -l${PAGESIZE-1} -$0 $*

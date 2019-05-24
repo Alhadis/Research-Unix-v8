@@ -1,0 +1,91 @@
+.TH JX 9.1
+.SH NAME
+jx \- jerq execution and stdio interpreter
+.SH SYNOPSIS
+.B jx
+file
+[ arguments ]
+.SH DESCRIPTION
+.I Jx
+downloads the program in
+.I file
+to the jerq or layer on its controlling tty
+and runs it there, simulating standard I/O functions of
+.IR stdio (3).
+.I Jx
+works either stand-alone or in a layer.
+.PP
+.I Stdout
+and
+.I stderr,
+if directed to the controlling terminal, will be squirreled away during
+execution to be cat'ed after the terminal program has
+been rebooted.
+.PP
+Programs to be run by
+.I jx
+should include <jerqio.h>
+and call exit() upon termination in order to
+restart the default terminal program.
+Programs to be run stand-alone
+should be compiled with
+the
+.I \-J
+option of
+.IR 3cc (9.1).
+No special options are required for running in a layer.
+.PP
+Stdio functions available under
+.I jx
+are
+.IP
+.ta 6m +6m +6m +6m +6m +6m
+getc	putc	fopen	popen	printf	fread
+.br
+getchar	putchar	freopen	pclose	sprintf	fwrite
+.br
+fgets	puts	fclose		fprintf
+.br
+	fputs	access
+.br
+	fflush
+.br
+.PP
+Unlike in
+.IR stdio (3S),
+.I getc
+and
+.I putc
+are functions, not macros.
+.I Printf
+has only %d, %s, %c, %o and %x.
+%u prints an unsigned decimal number.
+%D prints an unsigned long decimal number.
+.PP
+Since
+.I jx
+uses
+.IR sendchar ,
+.IR sendnchars ,
+and
+.IR rcvchar ,
+.I jx
+programs should avoid these,
+and use only the standard I/O routines.
+.SH FILES
+.ta \w'/usr/jerq/include/blitio.h  'u
+/usr/jerq/include/jerqio.h
+.br
+/usr/jerq/lib/sysint		standard I/O interpreter
+.br
+$HOME/.jxout		saved standard output
+.br
+$HOME/.jxerr		saved standard diagnostic output
+.SH SEE ALSO
+request(9.2)
+.SH BUGS
+Keyboard standard input doesn't work; use
+.IR kbdchar (9.2).
+.br
+Stand-alone programs do not receive arguments.
+

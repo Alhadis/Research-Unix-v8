@@ -1,0 +1,20 @@
+# NOT the 4.2 /etc/networks format!
+127.0		loopback-net
+192.11.1.0	att-net-reserve
+192.11.2.0	cb-bb-net
+192.11.3.0	ho-bb-net
+192.11.4.0	mh-bb-net
+192.11.5.0	wb-bb-net
+192.11.6.0	al-bb-net
+192.11.33.0	ho-l1135-net
+192.11.34.0	mh-homer-net
+192.11.35.0	mh-tempo-net
+192.11.36.0	mh-chip-net
+192.11.37.0	ho-hill-net
+192.11.38.0	ho-isdn-net
+192.11.39.0	mh-l127-net
+192.11.40.0	mh-dk127-net
+192.11.41.0	mh-astro-net
+192.11.42.0	mh-wise-net
+192.11.134.0	cso-bb-net
+192.11.159.0	mh-vig-net

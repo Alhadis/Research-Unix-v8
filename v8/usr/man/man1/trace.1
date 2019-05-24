@@ -1,0 +1,190 @@
+.TH TRACE 1 arend
+.SH NAME
+pret, trace \- protocol compiler and analyzer
+.SH SYNOPSIS
+.B pret
+[
+.B \-v
+] file
+.PP
+.B trace
+[
+.BR \- options
+] [ arguments ... ]
+.SH DESCRIPTION
+.I Trace
+analyzes the consistency of medium-sized
+data communication protocols.
+A protocol is specified in a nondeterministic guarded command
+language, `Argos,'
+that includes case selection, do-loops, variables, procedures, and macros.
+The analyzer can be used to trace deadlocks, unspecified receptions,
+timing problems, errors caused by value passing,
+and violations of user-specified `assertions.'
+.LP
+.I Pret
+reads the protocol specifications for a set
+of interacting processes from the file specified,
+checks its syntax and completeness,
+and prepares a file
+.I pret.out
+for the analyzer containing
+a finite state machine description of the protocol.
+Under option
+.B \-v
+.I pret
+lists the numbers of states
+in the state machines, reports if any states are unreachable,
+and lists the queue sort for each message queue declared.
+.LP
+Tracing Options:
+.LP
+In most cases the options 
+.BR c ,
+.BR f ,
+.BR l ,
+and
+.B v
+will suffice to perform
+protocol analyses.
+The primary tools for reducing search times are 
+.BR m ,
+.BR q ,
+and
+.BR x .
+Options 
+.BR a ,
+.BR k ,
+and
+.B n
+are for advanced use;
+.BR i ,
+.BR t ,
+and
+.B y
+are experimental.
+.LP
+Option flags are listed after a single minus sign, followed by a
+list of zero or more arguments.
+Options that take an argument are matched with an argument from
+the argument list in the order in which they occur in the option list.
+.TP
+.B a
+List all prefix paths that were explored up to the
+point where they joined a previously analyzed path.
+See also option
+.BR l .
+.TP
+.B b
+Blast search.
+The fastest scan of the state space available.
+At each step in the analysis select one and only
+one execution option to be explored.
+Will not analyze
+non-determinism within process descriptions, nor the effect of the
+arbitrary interleaving of process executions. 
+See also option
+.BR x .
+.TP
+.BI c " N"
+Invoke a class N validation, where N can be chosen between 0 and 5
+inclusive.
+A class 0 search is fast and very partial; a class 5 search
+is not necessarily fast but fairly complete.
+.TP
+.BR f " or " F
+Two different ways to format the output sequences.
+Option
+.B f
+gives queue histories, in which
+every bracketed message indicates a message sent but not received at
+the time of the error.
+.B F
+gives a time ordered queue history,
+where each column corresponds to a queue, and each line to a time step.
+.TP
+.B i
+Ignore variables.
+Second order state space folding tool.
+.TP
+.B j
+Find first error sequence and quit.
+.TP
+.BI k " N"
+Set size of state space cache to
+.RI 1024* N
+(default N=30).
+When the caches is filled, one state will be deleted for
+each state added.
+.TP
+.B l
+List execution loops.
+Warning, there are usually many, and they are hard to interpret.
+.TP
+.BI m " N"
+Restrict search depth to
+.I N
+steps.
+By default the search depth is restricted
+to a limit that excludes only pathetic executions (e.g. tenfold overlaps).
+The default limit is always printed on the standard error file at the start of a run.
+.TP
+.B n
+Override timeout heuristic.
+Override the heuristic that avoids generating
+an abundance of `microsecond' timeouts.
+Normally a timeout is only considered
+if it can resolve a pending lockup.
+.TP
+.BI q " N"
+Restrict the maximum queue size 
+to N slots, for all queues.
+.TP
+.BI r " N"
+Restrict the runtime to 
+.I N
+minutes.
+This option cannot be
+used in combination with
+.BR R .
+.TP
+.BI R " N"
+Report on progress every
+.I N
+minutes of real time.
+By default
+.IR N =2.
+.TP
+.B s
+Show finite state machine transition tables graphically.
+Do not perform an analysis.
+.TP
+.BR t " N"
+Ignore the state of process
+.I N
+in state-matching operations.
+The value of this mechanism remains unproven.
+Try other options first.
+.TP
+.B v
+Verbose.
+List execution times, size of the state space,
+number of levels searched, etc. at the end of the run.
+.TP
+.B x
+Perform a fast partial search. 
+At each step in the analysis select one
+process capable of executing and explore all options in that
+one process.
+Will not explore all possible interleavings.
+.TP
+.B y
+Ignore the state of queues in state-matching operations.
+.SH SEE ALSO
+G. J. Holzmann,
+.I Trace \- a protocol analyzer,
+AT&T Bell Laboratories, 1984
+.br
+G. J. Holzmann,
+.I Automated protocol validation in Argos,
+AT&T Bell Laboratories, 1984

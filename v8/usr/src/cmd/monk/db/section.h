@@ -1,0 +1,6 @@
+|define_counter(chapter_counter, CH)
+|define_counter(section_counter, S0)
+|define_counter(subsection_counter, S1)
+|define_counter(subsubsection_counter, S2)
+|define_counter(paragraph_counter, S3)
+|define_counter(appendix_counter, AC)

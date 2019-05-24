@@ -1,0 +1,42 @@
+.TH BUNDLE 1 
+.SH NAME
+bundle \-  collect files for distribution
+.SH SYNOPSIS
+.B bundle
+.I files
+.SH DESCRIPTION
+.I Bundle
+writes on its standard output a shell 
+.RI ( sh (1))
+file that, when executed,
+will recreate the original
+.IR files .
+Its main use is for distributing small numbers of text files by
+.IR mail (1).
+.PP
+Although less refined than standard archive from
+.IR ar (1),
+.IR cpio (1),
+or
+.IR tar (1),
+a
+.IR bundle
+file
+is self-documenting and complete; little preparation is required on
+the receiving machine.
+.SH EXAMPLES
+.TP
+bundle makefile *.[ch] | mail elsewhere!mark
+Send mark a makefile with related `.c' and `.h' files.
+Upon receving the mail, mark may save the file,
+in `gift/horse' for example,
+edit out the postmark, then do
+.TP
+cd gift; sh horse; make
+.SH SEE ALSO
+ar(1), cpio(1), tar(1), mail(1)
+.SH BUGS
+.I Bundle
+will not create directories and is unsatisfactory for non-ASCII files.
+.br
+Beware of gift horses.

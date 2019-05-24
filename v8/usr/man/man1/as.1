@@ -1,0 +1,71 @@
+.TH AS 1 
+.SH NAME
+as \- assembler
+.SH SYNOPSIS
+.B as
+[option ] ... [ name ] ...
+.SH DESCRIPTION
+.I As
+assembles the named files, or the standard input if no file name is specified.
+The options are:
+.TP
+.BI \-d n
+Specifies the number of bytes
+.I n
+(1, 2, or 4) to be assembled for offsets
+which involve forward or external references, and which have sizes unspecified
+in the assembly language.
+Default is 
+.B \-d4.
+.TP
+.B \-L
+Save defined labels beginning with a `L', which are normally discarded
+to save space in the resultant symbol table.
+The compilers generate such temporary labels.
+.TP
+.B \-V
+Use virtual memory for intermediate storage, rather than a temporary file.
+.TP
+.B \-W
+Do not complain about errors.
+.TP
+.B \-J
+Use long branches to resolve jumps when byte-displacement branches are
+insufficient.  This must be used when a compiler-generated assembly contains
+branches of more than 32k bytes.
+.TP
+.B \-R
+Make initialized data segments read-only, by concatenating them to
+the text segments.
+This obviates the need to run editor scripts on assembly
+code to make initialized data read-only and shared.
+.TP
+.B \-t
+Specifies a directory to receive the temporary file, other than
+the default /tmp.
+.TP
+.BI \-o obj
+Place output in file
+.I obj.
+Default is `a.out'.
+.PP
+All undefined symbols in the assembly
+are treated as global.
+.SH FILES
+.ta 1.5i
+/tmp/as\(**	default temporary file
+.br
+a.out		default object file
+.SH "SEE ALSO"
+ld(1),
+nm(1),
+adb(1),
+pi(9.1),
+a.out(5)
+.br
+Auxiliary documentation
+.I Assembler Reference Manual.
+.SH BUGS
+.B \-J
+should be eliminated; the assembler should automatically choose among
+byte, word and long branches.

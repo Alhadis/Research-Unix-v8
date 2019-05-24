@@ -1,0 +1,395 @@
+total 9
+crw--w--w-  1  root    0      0,  0 Aug  1 03:00 console
+drwxrwxr-x  2  root    sys     1552 Sep 13  1984 dk
+crw-rw-rw-  1  root    bin   19,128 Aug  8  1983 dn0
+crw-r--r--  1  root    man    7,  0 Mar 28  1983 drum
+drwxr-xr-x  2  root    other   2080 Dec 31  1984 fd
+crw-rw-rw-  1  root    bin   42,  0 Nov 29  1984 ip0
+crw-rw-rw-  1  root    bin   42, 16 Jul 19 16:58 ip16
+crw-rw-rw-  1  root    bin   42, 17 Nov 29  1984 ip17
+crw-rw-rw-  1  root    bin   42,  6 Nov 29  1984 ip6
+crw-------  1  root    sys    3,  3 Mar 28  1983 kUmem
+crw-rw-rw-  1  root    sys   26,  0 Jul 26 12:02 kmc0
+crw-r--r--  1  root    sys    3,  1 May 29 06:15 kmem
+cr--r--r--  1  root    bin    3,  4 Jun 26 22:03 kmemr
+crw-r--r--  1  root    sys    3,  0 Jul 26 12:02 mem
+brw-rw-rw-  1  root    sys    8,  0 Sep 20  1983 mt1
+brw-rw-rw-  1  root    sys    8,  8 Jul 19 13:19 mt2
+brw-rw-rw-  1  root    sys    8,  4 Sep 20  1983 mt5
+brw-rw-rw-  1  root    sys    8, 12 Sep 20  1983 mt6
+crw-------  1  root    0      3,  5 Mar  1 07:53 mtpr
+brw-rw-rw-  1  root    sys    8,  4 Sep 20  1983 nmt1
+brw-rw-rw-  1  root    sys    8, 12 Sep 20  1983 nmt2
+crw-rw-rw-  1  root    sys   22,  4 Jul 31 15:26 nrmt1
+crw-rw-rw-  1  root    sys   22, 12 Jul 19 15:40 nrmt2
+crw-rw-rw-  1  root    man    3,  2 Jul 31 03:44 null
+drwxr-xr-x  2  pjw     other   1072 Aug  3  1984 pt
+brw-r-----  1  root    sys    7, 64 Jul 26 11:52 ra00
+brw-r-----  1  root    sys    7,  1 Jun 17 00:20 ra01
+brw-r-----  1  root    sys    7, 66 Jul 26 11:58 ra02
+brw-r-----  1  root    sys    7, 67 Jul 18 14:16 ra03
+brw-r-----  1  root    sys    7, 68 Jul 26 12:01 ra04
+brw-r-----  1  root    sys    7, 69 Jul 26 11:52 ra05
+brw-r-----  1  root    sys    7, 70 Mar 28  1983 ra06
+brw-r-----  1  root    sys    7, 72 Apr 22 14:13 ra10
+brw-r-----  1  root    sys    7,  9 May 12  1983 ra11
+brw-r-----  1  root    sys    7, 74 Jul 26 11:57 ra12
+brw-r-----  1  root    sys    7, 75 Jul 26 12:01 ra13
+brw-r-----  1  root    sys    7, 76 Jul 26 11:53 ra14
+brw-r-----  1  root    sys    7, 77 Jul 26 12:02 ra15
+brw-r-----  1  root    sys    7, 78 Jun 20  1983 ra16
+brw-rw-r--  1  root    bin    7, 80 May 10 18:00 ra20a
+brw-r-----  1  root    sys    7, 17 Sep 19  1984 ra21
+brw-rw-r--  1  root    bin    7, 18 May 28 18:36 ra22
+brw-r-----  1  root    sys    7, 83 Jul 26 12:00 ra23
+brw-r-----  1  root    sys    7, 84 Jul 24 00:47 ra24
+brw-r-----  1  root    sys    7, 85 Feb  1  1985 ra25
+brw-r-----  1  root    sys    7, 22 Feb 19 13:53 ra26
+crw-rw-rw-  1  root    sys   22,  0 Jul 31 14:50 rmt1
+crw-rw-rw-  1  root    sys   22,  8 Jul 31 13:17 rmt2
+crw-rw-rw-  1  root    sys   22,  4 Jun 25  1984 rmt5
+crw-rw-rw-  1  root    sys   22, 12 Jan 14  1985 rmt6
+crw-r-----  1  root    sys   28,  0 Mar 28  1983 rra00
+crw-r-----  1  root    sys   28,  1 Mar 28  1983 rra01
+crw-r-----  1  root    sys   28,  2 Jan 21  1985 rra02
+crw-r-----  1  root    sys   28,  3 Jul 18 14:14 rra03
+crw-r-----  1  root    sys   28,  4 Jan 21  1985 rra04
+crw-r-----  1  root    sys   28,  5 Mar 28  1983 rra05
+crw-r-----  1  root    sys   28,  6 Sep 19  1983 rra06
+crw-r-----  1  root    sys   28,  7 Jan 20  1985 rra07
+crw-rw----  1  root    sys   28,  8 Mar 19  1984 rra10
+crw-r-----  1  root    sys   28,  9 Mar 28  1983 rra11
+crw-r-----  1  root    sys   28, 10 Sep 29  1983 rra12
+crw-r-----  1  root    sys   28, 11 Aug  9  1984 rra13
+crw-r-----  1  root    sys   28, 12 Sep  2  1983 rra14
+crw-r-----  1  root    sys   28, 13 Sep 14  1983 rra15
+crw-rw----  1  root    sys   28, 14 Dec 30  1983 rra16
+crw-r-----  1  root    sys   28, 15 Jan 15  1985 rra17
+crw-r-----  1  root    sys   28, 16 Feb 15 16:49 rra20
+crw-r-----  1  root    sys   28, 17 Mar 28  1983 rra21
+crw-r-----  1  root    sys   28, 18 May 28 18:39 rra22
+crw-r-----  1  root    sys   28, 19 Mar 28  1983 rra23
+crw-r-----  1  root    sys   28, 20 Jul 23 22:36 rra24
+crw-r-----  1  root    sys   28, 21 Mar 28  1983 rra25
+crw-r-----  1  root    sys   28, 22 Mar 20 18:16 rra26
+crw-r-----  1  root    sys   28, 23 Mar 10 13:36 rra27
+crw-rw-rw-  2  root    other 40,  2 Nov  6  1984 stderr
+crw-rw-rw-  2  root    other 40,  0 Nov  6  1984 stdin
+crw-rw-rw-  2  root    other 40,  1 Nov  6  1984 stdout
+crw-------  1  root    other 43,  0 Nov 29  1984 tcp00
+crw-rw-rw-  1  root    bin   43,  1 Nov 29  1984 tcp01
+crw-------  1  root    other 43,  2 Nov 29  1984 tcp02
+crw-rw-rw-  1  root    bin   43,  3 Nov 29  1984 tcp03
+crw-------  1  root    other 43,  4 Nov 29  1984 tcp04
+crw-rw-rw-  1  root    bin   43,  5 Nov 29  1984 tcp05
+crw-------  1  root    bin   43,  6 Nov 29  1984 tcp06
+crw-rw-rw-  1  root    bin   43,  7 Nov 29  1984 tcp07
+crw-------  1  root    bin   43,  8 Nov 29  1984 tcp08
+crw-rw-rw-  1  root    bin   43,  9 Nov 29  1984 tcp09
+crw-------  1  root    bin   43, 10 Nov 29  1984 tcp10
+crw-rw-rw-  1  root    bin   43, 11 Nov 29  1984 tcp11
+crw-rw-rw-  2  root    other 40,  3 Nov  6  1984 tty
+crw--w--w-  1  root    0      1,  0 Jul 15 13:29 tty00
+crw--w--w-  1  root    0      1,  1 Sep  9  1983 tty01
+crw--w--w-  1  root    0      1,  2 Aug  8  1983 tty02
+crw--w--w-  1  root    0      1,  3 Aug  7  1983 tty03
+crw--w--w-  1  root    0      1,  4 Jul 26  1983 tty04
+crw--w--w-  1  root    0      1,  5 Jul 10  1983 tty05
+crw--w--w-  1  root    0      1,  6 May  8 23:44 tty06
+crw--w--w-  1  root    0      1,  7 Mar 27 06:23 tty07
+
+dk:
+total 0
+crw-------  1  root    sys   31,  1 Aug  1 03:07 dk01
+crw--w--w-  1  presotto bin  31,  2 Aug  1 03:11 dk02
+crw-rw-rw-  1  root    sys   31,  3 Jul 31 17:29 dk03
+crw--w--w-  1  norman  other 31,  4 Aug  1 03:10 dk04
+crw-rw-rw-  1  root    sys   31,  5 Jul 26 12:02 dk05
+crw-r--r--  1  uucp    other 31,  6 Jul 31 11:19 dk06
+crw-rw-rw-  1  root    sys   31,  7 Jul 31 12:23 dk07
+crw--w--w-  1  daemon  other 31,  8 Aug  1 03:10 dk08
+crw-rw-rw-  1  root    sys   31,  9 Jul 26 12:02 dk09
+crw-r--r--  1  uucp    other 31, 10 Aug  1 03:10 dk10
+crw-rw-rw-  1  root    sys   31, 11 Jul 26 12:02 dk11
+crw--w--w-  1  rfc     other 31, 12 Jul 31 18:15 dk12
+crw-rw-rw-  1  root    sys   31, 13 Jul 29 13:44 dk13
+crw--w--w-  1  daemon  other 31, 14 Aug  1 03:10 dk14
+crw-rw-rw-  1  root    sys   31, 15 Jul 26 12:02 dk15
+crw--w--w-  1  dmr     bin   31, 16 Aug  1 03:11 dk16
+crw-rw-rw-  1  root    sys   31, 17 Jul 31 02:34 dk17
+crw--w--w-  1  rje     other 31, 18 Aug  1 03:10 dk18
+crw-rw-rw-  1  root    other 31, 19 Jul 31 14:45 dk19
+crw--w--w-  1  dmr     bin   31, 20 Aug  1 03:10 dk20
+crw-rw-rw-  1  root    sys   31, 21 Jul 26 12:03 dk21
+crwx-w--w-  1  reeds   other 31, 22 Aug  1 03:10 dk22
+crw-rw-rw-  1  root    sys   31, 23 Jul 26 12:03 dk23
+crw--w--w-  1  daemon  other 31, 24 Aug  1 03:10 dk24
+crw-rw-rw-  1  root    sys   31, 25 Jul 31 17:49 dk25
+crw--w--w-  1  tdk     other 31, 26 Aug  1 03:10 dk26
+crw-rw-rw-  1  root    sys   31, 27 Jul 27 22:35 dk27
+crw--w--w-  1  wtm     other 31, 28 Aug  1 03:11 dk28
+crw-rw-rw-  1  root    sys   31, 29 Jul 26 15:26 dk29
+crw--w--w-  1  reeds   other 31, 30 Aug  1 03:10 dk30
+crw-rw-rw-  1  root    sys   31, 31 Jul 26 15:26 dk31
+crwx-w--w-  1  kahrs   other 31, 32 Aug  1 03:10 dk32
+crw-rw-rw-  1  root    sys   31, 33 Aug  1 00:14 dk33
+crw--w--w-  1  mat     other 31, 34 Aug  1 03:11 dk34
+crw-rw-rw-  1  root    sys   31, 35 Jul 26 15:46 dk35
+crw--w--w-  1  norman  other 31, 36 Aug  1 03:11 dk36
+crw-rw-rw-  1  root    other 31, 37 Jul 26 12:03 dk37
+crw--w--w-  1  daemon  other 31, 38 Aug  1 03:11 dk38
+crw-rw-rw-  1  root    sys   31, 39 Jul 26 12:03 dk39
+crw--w--w-  1  norman  other 31, 40 Jul 31 21:33 dk40
+crw-rw-rw-  1  root    sys   31, 41 Aug  1 03:02 dk41
+crw--w--w-  1  hsb     other 31, 42 Aug  1 03:11 dk42
+crw-rw-rw-  1  root    sys   31, 43 Jul 31 12:23 dk43
+crw--w--w-  1  rob     other 31, 44 Aug  1 03:11 dk44
+crw-rw-rw-  1  root    other 31, 45 Jul 31 16:49 dk45
+crw--w--w-  1  bin     bin   31, 46 Aug  1 03:10 dk46
+crw-rw-rw-  1  root    other 31, 47 Jul 31 18:06 dk47
+crw--w--w-  1  bin     bin   31, 48 Aug  1 03:11 dk48
+crw-rw-rw-  1  root    sys   31, 49 Jul 31 13:47 dk49
+crw--w--w-  1  pjw     bin   31, 50 Aug  1 03:11 dk50
+crw-rw-r--  1  root    sys   31, 51 Jul 31 14:05 dk51
+crw--w--w-  1  presotto bin  31, 52 Aug  1 03:10 dk52
+crw-rw-r--  1  root    sys   31, 53 Jun 25 19:15 dk53
+crw--w--w-  1  daemon  other 31, 54 Aug  1 03:10 dk54
+crw-rw-r--  1  root    sys   31, 55 May 21 12:04 dk55
+crw--w--w-  1  daemon  other 31, 56 Aug  1 03:10 dk56
+crw-rw-r--  1  root    sys   31, 57 Jun 27  1984 dk57
+crw-r--r--  1  uucp    other 31, 58 Aug  1 03:10 dk58
+crw-rw-r--  1  root    sys   31, 59 Jun 27  1984 dk59
+crw--w--w-  1  dmr     bin   31, 60 Aug  1 03:10 dk60
+crw-rw-r--  1  root    sys   31, 61 Jun 27  1984 dk61
+crw--w--w-  1  dmr     bin   31, 62 Aug  1 03:10 dk62
+crw-rw-r--  1  root    sys   31, 63 Jun 27  1984 dk63
+crw--w--w-  1  dmr     bin   31, 64 Aug  1 03:11 dk64
+crw-rw-r--  1  root    bin   31, 65 Jul 31 14:00 dk65
+crwx-w--w-  1  reeds   other 31, 66 Aug  1 03:10 dk66
+crw-rw-r--  1  root    bin   31, 67 Jul 25 01:15 dk67
+crw--w--w-  1  daemon  other 31, 68 Aug  1 03:11 dk68
+crw-rw-r--  1  root    bin   31, 69 Jan 15  1985 dk69
+crw--w--w-  1  tac     other 31, 70 Aug  1 02:53 dk70
+crw-rw-r--  1  root    bin   31, 71 Sep 13  1984 dk71
+crw--w--w-  1  presotto bin  31, 72 Aug  1 00:13 dk72
+crw-rw-r--  1  root    bin   31, 73 Sep 13  1984 dk73
+crw--w--w-  1  dmr     bin   31, 74 Jul 31 18:03 dk74
+crw-rw-r--  1  root    bin   31, 75 Sep 13  1984 dk75
+crw--w--w-  1  mjs     bin   31, 76 Jul 31 17:47 dk76
+crw-rw-r--  1  root    bin   31, 77 Sep 13  1984 dk77
+crw--w--w-  1  dmr     bin   31, 78 Jul 31 16:41 dk78
+crw-rw-r--  1  root    bin   31, 79 Sep 13  1984 dk79
+crw--w--w-  1  jlb     other 31, 80 Jul 30 16:24 dk80
+crw-rw-r--  1  root    bin   31, 81 Sep 13  1984 dk81
+crw--w--w-  1  norman  other 31, 82 Jul 25 16:22 dk82
+crw-rw-r--  1  root    bin   31, 83 Sep 13  1984 dk83
+crw--w--w-  1  norman  other 31, 84 Jul 25 16:22 dk84
+crw-rw-r--  1  root    bin   31, 85 Sep 13  1984 dk85
+crw--w--w-  1  srm     other 31, 86 Jul 19 07:51 dk86
+crw-rw-r--  1  root    bin   31, 87 Sep 13  1984 dk87
+crw--w--w-  1  norman  other 31, 88 Jul 19 06:49 dk88
+crw-rw-r--  1  root    bin   31, 89 Jan  3  1985 dk89
+crw--w--w-  1  kam     other 31, 90 Jul 16 13:00 dk90
+crw-rw-r--  1  root    bin   31, 91 Sep 13  1984 dk91
+crw-r--r--  1  uucp    other 31, 92 Apr 16 18:23 dk92
+crw-rw-r--  1  root    bin   31, 93 Sep 13  1984 dk93
+crw--w--w-  1  presotto other 31, 94 Apr 16 18:35 dk94
+crw-rw-r--  1  root    bin   31, 95 Sep 13  1984 dk95
+
+fd:
+total 0
+crw-rw-rw-  2  root    other 40,  0 Nov  6  1984 0
+crw-rw-rw-  2  root    other 40,  1 Nov  6  1984 1
+crw-rw-rw-  1  root    other 40, 10 Nov  6  1984 10
+crw-rw-rw-  1  root    other 40,100 Nov  6  1984 100
+crw-rw-rw-  1  root    other 40,101 Nov  6  1984 101
+crw-rw-rw-  1  root    other 40,102 Nov  6  1984 102
+crw-rw-rw-  1  root    other 40,103 Nov  6  1984 103
+crw-rw-rw-  1  root    other 40,104 Nov  6  1984 104
+crw-rw-rw-  1  root    other 40,105 Nov  6  1984 105
+crw-rw-rw-  1  root    other 40,106 Nov  6  1984 106
+crw-rw-rw-  1  root    other 40,107 Nov  6  1984 107
+crw-rw-rw-  1  root    other 40,108 Nov  6  1984 108
+crw-rw-rw-  1  root    other 40,109 Nov  6  1984 109
+crw-rw-rw-  1  root    other 40, 11 Nov  6  1984 11
+crw-rw-rw-  1  root    other 40,110 Nov  6  1984 110
+crw-rw-rw-  1  root    other 40,111 Nov  6  1984 111
+crw-rw-rw-  1  root    other 40,112 Nov  6  1984 112
+crw-rw-rw-  1  root    other 40,113 Nov  6  1984 113
+crw-rw-rw-  1  root    other 40,114 Nov  6  1984 114
+crw-rw-rw-  1  root    other 40,115 Nov  6  1984 115
+crw-rw-rw-  1  root    other 40,116 Nov  6  1984 116
+crw-rw-rw-  1  root    other 40,117 Nov  6  1984 117
+crw-rw-rw-  1  root    other 40,118 Nov  6  1984 118
+crw-rw-rw-  1  root    other 40,119 Nov  6  1984 119
+crw-rw-rw-  1  root    other 40, 12 Nov  6  1984 12
+crw-rw-rw-  1  root    other 40,120 Nov  6  1984 120
+crw-rw-rw-  1  root    other 40,121 Nov  6  1984 121
+crw-rw-rw-  1  root    other 40,122 Nov  6  1984 122
+crw-rw-rw-  1  root    other 40,123 Nov  6  1984 123
+crw-rw-rw-  1  root    other 40,124 Nov  6  1984 124
+crw-rw-rw-  1  root    other 40,125 Nov  6  1984 125
+crw-rw-rw-  1  root    other 40,126 Nov  6  1984 126
+crw-rw-rw-  1  root    other 40,127 Nov  6  1984 127
+crw-rw-rw-  1  root    other 40, 13 Nov  6  1984 13
+crw-rw-rw-  1  root    other 40, 14 Nov  6  1984 14
+crw-rw-rw-  1  root    other 40, 15 Nov  6  1984 15
+crw-rw-rw-  1  root    other 40, 16 Nov  6  1984 16
+crw-rw-rw-  1  root    other 40, 17 Nov  6  1984 17
+crw-rw-rw-  1  root    other 40, 18 Nov  6  1984 18
+crw-rw-rw-  1  root    other 40, 19 Nov  6  1984 19
+crw-rw-rw-  2  root    other 40,  2 Nov  6  1984 2
+crw-rw-rw-  1  root    other 40, 20 Nov  6  1984 20
+crw-rw-rw-  1  root    other 40, 21 Nov  6  1984 21
+crw-rw-rw-  1  root    other 40, 22 Nov  6  1984 22
+crw-rw-rw-  1  root    other 40, 23 Nov  6  1984 23
+crw-rw-rw-  1  root    other 40, 24 Nov  6  1984 24
+crw-rw-rw-  1  root    other 40, 25 Nov  6  1984 25
+crw-rw-rw-  1  root    other 40, 26 Nov  6  1984 26
+crw-rw-rw-  1  root    other 40, 27 Nov  6  1984 27
+crw-rw-rw-  1  root    other 40, 28 Nov  6  1984 28
+crw-rw-rw-  1  root    other 40, 29 Nov  6  1984 29
+crw-rw-rw-  2  root    other 40,  3 Nov  6  1984 3
+crw-rw-rw-  1  root    other 40, 30 Nov  6  1984 30
+crw-rw-rw-  1  root    other 40, 31 Nov  6  1984 31
+crw-rw-rw-  1  root    other 40, 32 Nov  6  1984 32
+crw-rw-rw-  1  root    other 40, 33 Nov  6  1984 33
+crw-rw-rw-  1  root    other 40, 34 Nov  6  1984 34
+crw-rw-rw-  1  root    other 40, 35 Nov  6  1984 35
+crw-rw-rw-  1  root    other 40, 36 Nov  6  1984 36
+crw-rw-rw-  1  root    other 40, 37 Nov  6  1984 37
+crw-rw-rw-  1  root    other 40, 38 Nov  6  1984 38
+crw-rw-rw-  1  root    other 40, 39 Nov  6  1984 39
+crw-rw-rw-  1  root    other 40,  4 Nov  6  1984 4
+crw-rw-rw-  1  root    other 40, 40 Nov  6  1984 40
+crw-rw-rw-  1  root    other 40, 41 Nov  6  1984 41
+crw-rw-rw-  1  root    other 40, 42 Nov  6  1984 42
+crw-rw-rw-  1  root    other 40, 43 Nov  6  1984 43
+crw-rw-rw-  1  root    other 40, 44 Nov  6  1984 44
+crw-rw-rw-  1  root    other 40, 45 Nov  6  1984 45
+crw-rw-rw-  1  root    other 40, 46 Nov  6  1984 46
+crw-rw-rw-  1  root    other 40, 47 Nov  6  1984 47
+crw-rw-rw-  1  root    other 40, 48 Nov  6  1984 48
+crw-rw-rw-  1  root    other 40, 49 Nov  6  1984 49
+crw-rw-rw-  1  root    other 40,  5 Nov  6  1984 5
+crw-rw-rw-  1  root    other 40, 50 Nov  6  1984 50
+crw-rw-rw-  1  root    other 40, 51 Nov  6  1984 51
+crw-rw-rw-  1  root    other 40, 52 Nov  6  1984 52
+crw-rw-rw-  1  root    other 40, 53 Nov  6  1984 53
+crw-rw-rw-  1  root    other 40, 54 Nov  6  1984 54
+crw-rw-rw-  1  root    other 40, 55 Nov  6  1984 55
+crw-rw-rw-  1  root    other 40, 56 Nov  6  1984 56
+crw-rw-rw-  1  root    other 40, 57 Nov  6  1984 57
+crw-rw-rw-  1  root    other 40, 58 Nov  6  1984 58
+crw-rw-rw-  1  root    other 40, 59 Nov  6  1984 59
+crw-rw-rw-  1  root    other 40,  6 Dec 30  1984 6
+crw-rw-rw-  1  root    other 40, 60 Nov  6  1984 60
+crw-rw-rw-  1  root    other 40, 61 Nov  6  1984 61
+crw-rw-rw-  1  root    other 40, 62 Nov  6  1984 62
+crw-rw-rw-  1  root    other 40, 63 Nov  6  1984 63
+crw-rw-rw-  1  root    other 40, 64 Nov  6  1984 64
+crw-rw-rw-  1  root    other 40, 65 Nov  6  1984 65
+crw-rw-rw-  1  root    other 40, 66 Nov  6  1984 66
+crw-rw-rw-  1  root    other 40, 67 Nov  6  1984 67
+crw-rw-rw-  1  root    other 40, 68 Nov  6  1984 68
+crw-rw-rw-  1  root    other 40, 69 Nov  6  1984 69
+crw-rw-rw-  1  root    other 40,  7 Nov  6  1984 7
+crw-rw-rw-  1  root    other 40, 70 Nov  6  1984 70
+crw-rw-rw-  1  root    other 40, 71 Nov  6  1984 71
+crw-rw-rw-  1  root    other 40, 72 Nov  6  1984 72
+crw-rw-rw-  1  root    other 40, 73 Nov  6  1984 73
+crw-rw-rw-  1  root    other 40, 74 Nov  6  1984 74
+crw-rw-rw-  1  root    other 40, 75 Nov  6  1984 75
+crw-rw-rw-  1  root    other 40, 76 Nov  6  1984 76
+crw-rw-rw-  1  root    other 40, 77 Nov  6  1984 77
+crw-rw-rw-  1  root    other 40, 78 Nov  6  1984 78
+crw-rw-rw-  1  root    other 40, 79 Nov  6  1984 79
+crw-rw-rw-  1  root    other 40,  8 Nov  6  1984 8
+crw-rw-rw-  1  root    other 40, 80 Nov  6  1984 80
+crw-rw-rw-  1  root    other 40, 81 Nov  6  1984 81
+crw-rw-rw-  1  root    other 40, 82 Nov  6  1984 82
+crw-rw-rw-  1  root    other 40, 83 Nov  6  1984 83
+crw-rw-rw-  1  root    other 40, 84 Nov  6  1984 84
+crw-rw-rw-  1  root    other 40, 85 Nov  6  1984 85
+crw-rw-rw-  1  root    other 40, 86 Nov  6  1984 86
+crw-rw-rw-  1  root    other 40, 87 Nov  6  1984 87
+crw-rw-rw-  1  root    other 40, 88 Nov  6  1984 88
+crw-rw-rw-  1  root    other 40, 89 Nov  6  1984 89
+crw-rw-rw-  1  root    other 40,  9 Nov  6  1984 9
+crw-rw-rw-  1  root    other 40, 90 Nov  6  1984 90
+crw-rw-rw-  1  root    other 40, 91 Nov  6  1984 91
+crw-rw-rw-  1  root    other 40, 92 Nov  6  1984 92
+crw-rw-rw-  1  root    other 40, 93 Nov  6  1984 93
+crw-rw-rw-  1  root    other 40, 94 Nov  6  1984 94
+crw-rw-rw-  1  root    other 40, 95 Nov  6  1984 95
+crw-rw-rw-  1  root    other 40, 96 Nov  6  1984 96
+crw-rw-rw-  1  root    other 40, 97 Nov  6  1984 97
+crw-rw-rw-  1  root    other 40, 98 Nov  6  1984 98
+crw-rw-rw-  1  root    other 40, 99 Nov  6  1984 99
+
+pt:
+total 0
+crw-rw-rw-  1  root    sys   18,  0 Jul 31 15:07 pt00
+crw-rw-rw-  1  root    sys   18,  1 Jul 31 15:07 pt01
+crw-rw-rw-  1  root    other 18,  2 Jul 31 14:18 pt02
+crw-rw-rw-  1  root    other 18,  3 Jul 31 15:07 pt03
+crw-rw-rw-  1  jerq    bin   18,  4 Jul 31 15:06 pt04
+crw-rw-rw-  1  root    other 18,  5 Jul 31 15:07 pt05
+crw-rw-rw-  1  root    other 18,  6 Jul 25 02:44 pt06
+crw-rw-rw-  1  root    other 18,  7 Jul 24 23:22 pt07
+crw-rw-rw-  1  root    other 18,  8 Jul 25 02:36 pt08
+crw-rw-rw-  1  root    other 18,  9 Jul 25 02:36 pt09
+crw-rw-rw-  1  root    other 18, 10 Jul 16 12:38 pt10
+crw-rw-rw-  1  root    other 18, 11 Jul 16 12:38 pt11
+crw-rw-rw-  1  root    other 18, 12 Jul 12 08:28 pt12
+crw-rw-rw-  1  root    other 18, 13 Jul 12 08:28 pt13
+crw-rw-rw-  1  root    other 18, 14 Jun 25 12:49 pt14
+crw-rw-rw-  1  root    other 18, 15 Jun 25 12:49 pt15
+crw-rw-rw-  1  jerq    bin   18, 16 Mar 25 12:28 pt16
+crw-rw-rw-  1  root    other 18, 17 Mar 25 12:28 pt17
+crw-rw-rw-  1  root    other 18, 18 Feb 22 15:00 pt18
+crw-rw-rw-  1  root    other 18, 19 Feb 22 15:00 pt19
+crw-rw-rw-  1  root    sys   18, 20 Feb 17 21:04 pt20
+crw-rw-rw-  1  root    sys   18, 21 Feb 17 21:04 pt21
+crw-rw-rw-  1  root    sys   18, 22 Feb 17 22:49 pt22
+crw-rw-rw-  1  root    sys   18, 23 Feb 17 22:49 pt23
+crw-rw-rw-  1  root    sys   18, 24 Feb 17 21:04 pt24
+crw-rw-rw-  1  root    sys   18, 25 Feb 17 11:16 pt25
+crw-rw-rw-  1  root    sys   18, 26 Jan 29  1985 pt26
+crw-rw-rw-  1  root    sys   18, 27 Jan 29  1985 pt27
+crw-rw-rw-  1  root    sys   18, 28 Jan 19  1985 pt28
+crw-rw-rw-  1  root    sys   18, 29 Jan 19  1985 pt29
+crw-rw-rw-  1  root    sys   18, 30 Jan 19  1985 pt30
+crw-rw-rw-  1  root    sys   18, 31 Jan 19  1985 pt31
+crw-rw-rw-  1  root    sys   18, 32 Jan 19  1985 pt32
+crw-rw-rw-  1  root    sys   18, 33 Jan 19  1985 pt33
+crw-rw-rw-  1  root    sys   18, 34 Feb 13  1984 pt34
+crw-rw-rw-  1  root    sys   18, 35 Feb 13  1984 pt35
+crw-rw-rw-  1  root    sys   18, 36 Aug  4  1983 pt36
+crw-rw-rw-  1  root    sys   18, 37 Aug  4  1983 pt37
+crw-rw-rw-  1  root    sys   18, 38 Aug  4  1983 pt38
+crw-rw-rw-  1  root    sys   18, 39 Aug  4  1983 pt39
+crw-rw-rw-  1  root    sys   18, 40 Aug  4  1983 pt40
+crw-rw-rw-  1  root    sys   18, 41 Aug 27  1984 pt41
+crw-rw-rw-  1  root    sys   18, 42 Mar 28  1983 pt42
+crw-rw-rw-  1  root    sys   18, 43 Mar 28  1983 pt43
+crw-rw-rw-  1  root    sys   18, 44 Mar 28  1983 pt44
+crw-rw-rw-  1  root    sys   18, 45 Mar 28  1983 pt45
+crw-rw-rw-  1  root    sys   18, 46 Mar 28  1983 pt46
+crw-rw-rw-  1  root    sys   18, 47 Mar 28  1983 pt47
+crw-rw-rw-  1  root    sys   18, 48 Mar 28  1983 pt48
+crw-rw-rw-  1  root    sys   18, 49 Mar 28  1983 pt49
+crw-rw-rw-  1  root    sys   18, 50 Mar 28  1983 pt50
+crw-rw-rw-  1  root    sys   18, 51 Aug 27  1984 pt51
+crw-rw-rw-  1  root    sys   18, 52 Mar 28  1983 pt52
+crw-rw-rw-  1  root    sys   18, 53 Mar 28  1983 pt53
+crw-rw-rw-  1  root    sys   18, 54 Mar 28  1983 pt54
+crw-rw-rw-  1  root    sys   18, 55 Mar 28  1983 pt55
+crw-rw-rw-  1  root    sys   18, 56 Mar 28  1983 pt56
+crw-rw-rw-  1  root    sys   18, 57 Mar 28  1983 pt57
+crw-rw-rw-  1  root    sys   18, 58 Mar 28  1983 pt58
+crw-rw-rw-  1  root    sys   18, 59 Mar 28  1983 pt59
+crw-rw-rw-  1  root    sys   18, 60 Mar 28  1983 pt60
+crw-rw-rw-  1  root    sys   18, 61 Mar 28  1983 pt61
+crw-rw-rw-  1  root    sys   18, 62 Mar 28  1983 pt62
+crw-rw-rw-  1  root    sys   18, 63 Mar 28  1983 pt63

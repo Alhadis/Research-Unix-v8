@@ -1,0 +1,206 @@
+.TH REFER 1 alice
+.SH NAME
+refer, lookbib, pubindex \- find and insert literature references in documents
+.SH SYNOPSIS
+.B refer
+[ option ] ...
+.PP
+.B lookbib
+[ file ] ...
+.PP
+.B pubindex
+file ...
+.SH DESCRIPTION
+.I Lookbib
+accepts keywords from the standard input 
+and searches a bibliographic data base for references
+that contain those keywords anywhere in title, author,
+journal name, etc.
+Matching references are printed on the standard output.
+Blank lines are taken as delimiters between queries.
+.PP
+.I Refer
+is a preprocessor for
+.I nroff
+or
+.IR troff (1)
+that finds and formats references.
+The input files (standard input default) are copied to the standard output,
+except for lines between .[ and .]
+which are assumed to contain keywords 
+and are replaced by information from the bibliographic data base.
+The user may avoid the search, override fields from it, or
+add new fields.
+The reference data, from whatever source, are assigned to a set of
+.I troff
+strings.
+Macro packages such as
+.IR ms (7)
+print the finished reference text from these strings.
+A flag is placed in the text at the point of reference;
+by default the references are indicated by numbers.
+.PP
+The following options are available:
+.TP
+.BI \-a r
+Reverse the first
+.I r
+author names (Jones, J. A. instead of J. A. Jones).
+If
+.I r
+is omitted all author names are reversed.
+.TP
+.B \-b
+Bare mode: do not put any flags in text (neither numbers nor labels).
+.TP
+.BI \-c string
+Capitalize (with C\s-2APS\s0 S\s-2MALL\s+2 C\s-2APS\s0)
+the fields whose key-letters are in
+.IR string .
+.TP
+.B \-e
+Instead of leaving the references where encountered,
+accumulate them
+until a sequence of the form
+.nf
+		.[
+		$LIST$
+		.]
+.fi
+is encountered, and then write out all references
+collected so far.  Collapse references to the same source.
+.TP
+.BI \-k x
+Instead of numbering references, use labels as specified in
+a
+reference data line
+beginning
+.I %x;
+by default 
+.I x
+is
+.B L.
+.TP
+.BI \-l m , n
+Instead of numbering references, use labels made from
+the senior author's last name and the year of publication.
+Only the first
+.I m
+letters of the last name
+and the last
+.I n
+digits of the date are used.
+If either
+.I m
+or
+.I n
+is omitted the entire name or date respectively is used.
+.TP
+.B \-p
+Take the next argument as a file of
+references to be searched.
+The default file is searched last.
+.TP
+.B \-n
+Do not search the default file.
+.TP
+.BI \-s keys
+Sort references by fields whose key-letters are in
+the
+.I keys
+string;
+permute
+reference numbers in text accordingly.
+Implies
+.BR \-e .
+The key-letters in
+.I keys
+may be followed by a number to indicate how many such fields
+are used, with
+.B +
+taken as a very large number.
+The default is
+.B AD
+which sorts on the senior author and then date; to sort, for example,
+on all authors and then title use
+.BR \-sA+T .
+.PP
+A bibliographic reference in a
+.B \-p
+file is a set of lines
+that contain bibliographic information fields.
+Empty lines separate references.
+Each field starts on a line beginning with a `%', followed
+by a key-letter, followed by a blank, and followed by the
+contents of the field, which continues until the next line
+starting with `%'.
+The most common key-letters and the corresponding fields are:
+.IP
+.nf
+A	Author name
+B	Title of book containing article referenced
+C	City
+D	Date
+d	Alternate date
+E	Editor of book containing article referenced
+G	Government (CFSTI) order number
+I	Issuer (publisher)
+J	Journal
+K	Other keywords to use in locating reference
+M	Technical memorandum number
+N	Issue number within volume
+O	Other commentary to be printed at end of reference
+P	Page numbers
+R	Report number
+r	Alternate report number
+T	Title of article, book, etc.
+V	Volume number
+X	Commentary unused by \fIpubindex\fR
+.fi
+.PP
+Except for `A', each field should only be given once.
+Only relevant fields should be supplied.
+An example is:
+.IP
+.nf
+%T 5-by-5 Palindromic Word Squares
+%A M. D. McIlroy
+%J Word Ways
+%V 9
+%P 199-202
+%D 1976
+.fi
+.PP
+When
+.I refer
+is used with
+.I eqn,
+.I neqn
+or
+.I tbl,
+.I refer
+should be first, to minimize the volume
+of data passed through
+pipes.
+.PP
+.I Pubindex
+makes a hashed inverted index to
+the named
+.I files
+for use by
+.I refer.
+The
+.I files
+contain bibliographic references.
+.SH FILES
+.ta \w'/usr/dict/papers  'u
+/usr/dict/papers	directory of default publication lists and indexes
+.br
+/usr/lib/refer	directory of programs
+.br
+\fIx\FR.ia, \fIx\FR.ib, \fIx\FR.ic	where 
+.I x
+is the first argument to
+.I pubindex
+.SH SEE ALSO
+troff(1), doctype(1)

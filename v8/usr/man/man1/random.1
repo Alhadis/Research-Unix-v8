@@ -1,0 +1,32 @@
+.TH RANDOM 1
+.SH NAME
+random \- sample lines from a file or provide random exit code
+.SH SYNOPSIS
+.B random
+[
+.B \-e
+] [ n ]
+.SH DESCRIPTION
+.I Random
+reads the standard input and copies each line to the
+standard output with probability
+.RI 1/ n.
+.PP
+Option
+.B \-e
+writes no output and returns a random exit code in the
+range
+.RI [0, n \-1].
+.PP
+The default value of 
+.I n
+is 2.
+.PP
+To select just one line randomly from a file use
+.IR fortune (6).
+.SH BUGS
+Successive results of option
+.B \-e
+are highly correlated if
+.I random
+is called more than once per second.

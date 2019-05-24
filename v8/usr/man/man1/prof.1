@@ -1,0 +1,84 @@
+.TH PROF 1 
+.SH NAME
+prof \- display profile data
+.SH SYNOPSIS
+.B prof
+[ option ] ...
+[ a.out
+[ mon.out ... ] ]
+.SH DESCRIPTION
+.I Prof
+interprets files
+produced by 
+.IR monitor (3)
+or the
+.B \-p
+option of 
+.I cc, f77,
+or
+.IR pascal (1).
+The symbol table in the
+named object file
+(`a.out' by default)
+is read and correlated with the
+profile file (`mon.out' by default).
+For each external symbol, the percentage
+of time spent executing between that symbol
+and the next
+is printed (in decreasing order),
+together with the number of times that routine was called
+and the number of milliseconds per call.
+If more than one profile file is specified,
+the output represents the sum of the profiles.
+.PP
+Call counts are tallied for subroutines compiled
+under option
+.BR \-p ,
+which also causes a
+profile file to be produced automatically.
+.PP
+Options are:
+.TP
+.B \-a
+report all symbols, not
+just external symbols.
+.TP
+.B \-l
+sort the output by symbol value
+.TP
+.B \-n
+ sort the output by number of calls
+.TP
+.B \-s
+produce a summary profile file in
+.I mon.sum
+.TP
+.BI "\-v \-" low " \-" high
+produce a graphic profile
+on the standard output for display by the
+.IR  plot (1)
+filters; optional numbers
+.I low
+and 
+.I high,
+by default 0 and 100, select
+a percentage of the profile to be plotted
+.TP
+.B \-z
+include routines with zero usage in the output
+.SH FILES
+.ta \w'mon.out  'u
+mon.out	for profile
+.br
+a.out	for namelist
+.br
+mon.sum	for summary profile
+.SH "SEE ALSO"
+monitor(3), profil(2), cc(1), plot(1)
+.SH BUGS
+Beware of quantization errors.
+.br
+.I Prof
+is confused by
+.I f77
+which puts the entry points at the bottom of subroutines and functions.

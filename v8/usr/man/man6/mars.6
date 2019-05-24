@@ -1,0 +1,125 @@
+.TH MARS 6 5/20/84
+.CM 3
+.SH NAME
+mars \- memory array redcode simulator
+.SH SYNOPSIS
+mars [-dfhmp] [-cqs<value>]
+.I 
+file1 file2 ...
+.SH DESCRIPTION
+.PP
+.I Mars
+is a simulator for the 
+.I Redcode
+machine specified by Dr. Kee Dewdney in the
+"Computer Recreations" column in the May 1984 issue of
+.I Scientific American. 
+The command line contains any arguments followed by a list of object
+code file names.  The easiest way to create an object file is to use
+the 
+.IR redcode (6)
+command to a assemble the object file from a redcode
+source file.
+.SH OBJECT FILES
+.PP
+An object file contains three header lines indicating the name of the
+program, the length of the program, and the offset from the beginning
+of the starting location.
+Here is a sample redcode object file, for 
+the Dwarf program:
+.sp
+	name dwarf
+.br
+	length 4
+.br
+	start 1
+.br
+	00000007999
+.br
+	20000517999
+.br
+	10000027998
+.br
+	41799800000
+.SH INSTRUCTION FORMAT
+The instruction format is an 11 digit decimal string, as follows:
+.sp
+	0	1	2-5	6	7-10
+.br
+	+-------+-------+-------+-------+-------+
+.br
+	|opcode |mode1	|arg1	|mode2	|arg2	|
+.br
+	+-------+-------+-------+-------+-------+
+.SH OPTIONS
+.PP
+Options allow for tracing execution, for graphically displaying the
+progress of each program, and for analyzing and dumping memory before
+and after execution.  For example, the following command:
+.sp
+	mars -s1234 -f -c20000 dwarf.obj gemini.obj imp.obj
+.sp
+specifies that imp, dwarf, and gemini are to be run together, with a
+fullscreen display for 20000 cycles using a random number seed of 1234.
+.TP
+.B -cN
+.I 
+cycles
+option, determines the maximum number of cycles for this run.
+The default is 10000.
+.TP
+.B -d
+.I 
+debug
+option, causes the execution to be traced in excrutiating detail.
+.TP
+.B -f
+.I 
+fullscreen
+option, causes the execution to be displayed graphically on any
+terminal supported by
+.IR curses (3).
+.TP
+.B -h
+.I 
+holes
+option, causes a description of memory usage to be printed after
+execution terminates.
+.TP
+.B -m
+.I 
+memory dump
+option, causes memory to be dumped before and after execution terminates.
+.TP
+.B -p
+.I 
+procedure dump
+option, similar to 
+.B -m
+option, except only memory near each program counter is dumped.
+.TP
+.B -qN
+.I 
+quit
+option, indicates the minimum number of programs required to be alive.
+For example, if
+.B -q3
+is specified, execution terminates as soon as there are fewer than
+three programs still alive.
+.B -q1
+specifies that execution continues as long as any program is alive.
+The default is to quit when there is but one program still running.
+.TP
+.B -sN
+.I 
+random seed
+option, specifies a random seed for this run.  The default is 0 (i.e.
+a random seed based on the time).
+.SH SEE ALSO
+redcode(6)
+.SH BUGS
+None known.
+.SH HISTORY
+.TP
+20-May-84 Michael Mauldin (mlm) at CMU
+Created.

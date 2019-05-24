@@ -1,0 +1,18 @@
+.TH DK 4  local
+.SH NAME
+dk \- Datakit interface
+.SH DESCRIPTION
+A Datakit node consists of a fast digital switch
+and a number of line modules.
+Line modules are interfaced to computers, terminals,
+other digital devices.
+Certain line modules, referred to as
+.I trunks,
+connect Datakit nodes together.
+Each module may communicate with other modules through
+the switch on up to 510 logical channels.
+.PP
+The directory
+.I /dev/dk
+consists of character special files,
+each one associated with a logical channel.

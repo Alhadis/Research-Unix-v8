@@ -1,0 +1,92 @@
+.TH MP 3X
+.SH NAME
+itom, madd, msub, mmul, mdiv, msqrt, mgcd, mget, mput,
+mmov, mcmp,
+mexp, mpow \- multiple precision integer arithmetic
+.SH SYNOPSIS
+.nf
+.B "#include <mp.h>"
+.PP
+.B mint *itom(n)
+.B int n;
+.PP
+.B madd(a, b, c)
+.B msub(a, b, c)
+.B mmul(a, b, c)
+.B mgcd(a, b, c)
+.B mdiv(a, b, q, r)
+.B msqrt(a, b, r)
+.B mexp(a, b, c)
+.B mpow(a, b, m, c)
+.B mmov(a, b)
+.B mcmp(a, b)
+.B mget(a)
+.B mput(a)
+.B "mint *a, *b, *c, *m, *q, *r;"
+.PP
+.B sdiv(a, n, q, r)
+.B mint *a, *q;
+.B int n;
+.B short *r;
+.SH DESCRIPTION
+These routines perform arithmetic on arbitrary-length integers
+of defined type
+.I mint.
+The functions are obtained with
+.IR ld (1)
+option
+.BR -lmp .
+.PP
+Pointers to
+.I mint
+must be initialized using the function
+.IR itom ,
+which sets the initial value to
+.IR n .
+Thereafter space is managed automatically by the routines.
+.PP
+.I Madd, msub, mmul,
+and
+.I mgcd
+assign to their third arguments the sum, difference,
+product, and greatest common divisor, respectively, of their first two arguments.
+.PP
+.I Mdiv
+assigns the quotient and remainder, respectively,
+to its third and fourth arguments.
+.I Sdiv
+is like
+.I mdiv
+except that the divisor is an ordinary integer.
+.PP
+.I Msqrt
+assigns to its second and third arguments the square root and remainder,
+repsectively, of its first argument.
+.PP
+.I Mexp
+calculates
+.I a
+raised to the power
+.IR b ;
+.I mpow
+calculates this reduced modulo
+.IR m .
+.PP
+.IR Mmov
+assigns the value of its first argument to its second argument.
+.PP
+.IR Mcmp
+returns a negative, zero, or positive integer if the value of its 
+first argument is less than,
+equal to, or greater than, respectively,
+the value of its second argument.
+.PP
+.I Mget
+and
+.I mput
+do decimal conversion from
+`stdin' and to `stdout', respectively, of
+.IR stdio (3).
+.SH DIAGNOSTICS
+Illegal operations and running out of memory
+produce messages and core images.

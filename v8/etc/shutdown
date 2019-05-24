@@ -1,0 +1,22 @@
+set -p
+PATH=/bin:/usr/bin
+exitcmd="kill 1"
+case "$1" in
+-r) 	shift
+	exitcmd="/etc/reboot" ;;
+esac
+case "$1" in
+"")	;;
+*)	time=$1; shift
+	echo System shutdown in $time minutes "$*" | /etc/wall
+	sleep `expr 60 '*' $time`
+esac
+echo System going down in 30 sec | /etc/wall
+sleep 30
+cd /proc
+kill -9 `ls | egrep -v '^0*([012]|'$$')$'` > /dev/null 2>&1
+sync
+sync
+/etc/umount -a
+sync
+exec $exitcmd

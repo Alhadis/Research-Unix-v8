@@ -1,0 +1,34 @@
+.TH DOCTYPE 1 
+.SH NAME
+doctype \- guess command line for formatting a document
+.SH SYNOPSIS
+.B doctype
+[
+.B \-e
+]
+[ file ] ...
+.SH DESCRIPTION
+.I Doctype
+guesses the command line necessary for printing
+a document that uses 
+.IR troff (1),
+related preprocessors like
+.IR eqn ,
+and the 
+.I \-ms
+and
+.I \-mm
+macro packages.
+The optional argument
+.B \-e
+causes the command line to be executed.
+.SH SEE ALSO
+troff(1), eqn(1), tbl(1), refer(1), pic(1), ideal(1), grap(1),
+ms(7), mm(7)
+.SH BUGS
+It's pretty dumb about guessing the proper macro package.
+.br
+There is no way to supply non-filename arguments
+when
+.B \-e
+is used.

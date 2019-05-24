@@ -1,0 +1,77 @@
+.TH LINK 2 
+.SH NAME
+link, symlink, readlink \- link to a file
+.SH SYNOPSIS
+.nf
+.B link(name1, name2)
+.B char *name1, *name2;
+.LP
+.B symlink(name1, name2)
+.B char *name1, *name2;
+.LP
+.B readlink(name, buf, size)
+.B char *name, *buf;
+.fi
+.SH DESCRIPTION
+A link
+to
+.I name1
+is created;
+the link has the name
+.IR name2 .
+Either name may be an arbitrary path name.
+After
+.IR link ,
+.IR name2
+is entirely equivalent to
+.IR name1 ;
+it is a directory entry referring to the same file as
+.IR name1 .
+.PP
+After
+.IR symlink ,
+.I name2
+is a new symbolic link;
+when it is encountered in any path name,
+.IR name1
+is substituted for
+.IR name2 ,
+and path name parsing continues.
+If
+.IR name1 
+begins with the `/' character, it is interpreted with respect to the
+root directory; if not,
+it is interpreted with respect to the directory in which
+.IR name2
+resides.
+.PP
+The
+.I readlink
+call returns the contents of a 
+symbolic link
+.I name
+into
+.IR buf .
+No more than
+.IR size
+characters are returned.
+If there is room, the returned string will be null-padded.
+An error is reported if
+.I name
+is not a symbolic link.
+.SH "SEE ALSO"
+ln(1), unlink(2), stat(2)
+.SH DIAGNOSTICS
+Zero is returned when a link is made;
+\-1 is returned when
+.I name1
+cannot be found; when
+.I name2
+already exists; when the directory of
+.I name2
+cannot be written.
+With
+.IR link ,
+only the super-user may link to a directory.
+Furthermore, the target must exist
+in the same file system, and not have too many links.

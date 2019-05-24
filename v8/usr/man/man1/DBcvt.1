@@ -1,0 +1,20 @@
+.TH DBCVT 1
+.SH NAME
+DBcvt \- convert a database file between 3B and VAX formats
+.SH SYNOPSIS
+DBcvt
+.I source
+.SH DESCRIPTION
+.I DBcvt
+converts a database file between 3B and VAX formats.
+Although the conversion is performed `in place,' if the process is
+interrupted or fails for some other reason, the
+.I source
+file is unaffected, and in rare cases, a file named
+.IB source .cvt
+may remain.
+The exit code is 0 on success, 1 in other cases.
+.SH SEE ALSO
+.IR DB (1),
+.IR DBcp (1),
+.IR DB (3).

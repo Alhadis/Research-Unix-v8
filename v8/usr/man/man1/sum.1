@@ -1,0 +1,34 @@
+.TH SUM 1 
+.SH NAME
+sum \- sum and count blocks in a file
+.SH SYNOPSIS
+.B sum
+[
+file
+] ...
+.SH DESCRIPTION
+.I Sum
+calculates and prints a 16-bit checksum
+along with the
+length (in blocks) 
+and name of 
+each
+.IR file .
+If no files are given,
+the standard input is
+summed.
+If
+.I file
+is `\-',
+file names are read from standard input.
+.PP
+.I Sum
+is typically used to look for bad spots, or
+to validate a file communicated over
+some transmission line.
+.SH "SEE ALSO"
+wc(1).
+.SH DIAGNOSTICS
+`Read error'
+is indistinguishable from end of file on
+most devices; check the byte count.

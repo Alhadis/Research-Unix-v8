@@ -1,0 +1,53 @@
+.TH CONNLD 4
+.SH NAME
+connld \- unique stream connection
+.SH DESCRIPTION
+This stream module (see
+.IR stream (4))
+is used to provide unique connections
+to a server.
+The file descriptor
+.I fd
+should refer to an end of a stream\-usually a pipe\-that
+will subsequently be mounted onto a file by
+.IR gmount (2).
+When an
+.IR open
+or
+.IR creat (2)
+call is applied to a stream-associated file with this module installed,
+a new pipe is created internally.
+A message identical to that described for the
+FIOSNDFD
+request (see
+.IR stream (4))
+is sent along the stream to the process
+at the other end.
+This process must respond in one of these ways:
+it may simply write some data, or reply with
+.LP
+	ioctl(fd1, FIOACCEPT, (char *)NULL);
+.LP
+Then the attempt to open the stream succeeds,
+and the returned file descriptor refers to the new pipe,
+whose other end is held by the server process.
+It may also respond by passing a new file descriptor,
+using
+.LP
+	ioctl(fd1, FIOSNDFD, &fd2);
+.LP
+Then the local end of the internally-created pipe is discarded, and
+the returned file descriptor refers to the transmitted file.
+.PP 
+On the other hand, if the server process closes the transmitted file descriptor,
+or does
+.LP
+	ioctl(fd1, FIOREJECT, (char *)NULL);
+.LP
+then the attempt to open fails.
+.PP
+Finally, if the entity, whether process or device, that receives
+the FIOSNDFD message fails to respond in some appropriate way,
+the process attempting to open the file will wait until it is sent
+a signal, or the system is rebooted, or the end of eternity,
+whichever comes first.

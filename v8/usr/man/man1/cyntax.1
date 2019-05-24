@@ -1,0 +1,115 @@
+.TH CYNTAX 1
+.SH NAME
+cyntax, cem \- C syntax checker
+.SH SYNOPSIS
+.B cyntax
+[ options ] ... files ...
+.PP
+.B /usr/lib/cyntax/cem
+[ options ] ... files ...
+.SH DESCRIPTION
+.I Cyntax
+is a C compiler front end.
+.I Cem
+(cemantics) is a link editor for
+.IR cyntax .
+Together they obsolete
+.IR lint (1).
+.PP
+.I Cyntax
+assumes that files whose names end with `.c' are
+C source programs; they are compiled to an
+object file 
+whose name is that of the source with `.O' substituted
+for `.c'.
+If all goes well
+it will invoke the link editor
+on the resulting object files plus any arguments
+whose names end with `.O'.
+Object files contain type information \- no code.
+.PP
+Options
+.BR \-D ,
+.BR \-I ,
+.BR \-U ,
+.BR \-o ,
+.BR \-l
+are as in
+.IR cc (1).
+Options
+.BR \-O ,
+.BR \-g ,
+and
+.BR \-p
+are ignored.
+Other options are:
+.TP
+.B \-c
+Suppress link editing.
+.PD 0
+.TP
+.B \-h
+Base object files on the basename of the source file
+rather than the full pathname.
+.TP
+.B \-j
+Change default directory of include files to
+`/usr/jerq/include'.
+.TP
+.B \-w
+Enable pedantic warning diagnostics.
+.TP
+.B \-m
+equivalent to `\-j \-DMUX'.
+.TP
+.B \-v
+Report what
+.I cyntax 
+is actually doing.
+.TP
+.BI \-V func : n
+Declare function
+.I func
+to have a variable number of arguments, the first
+.I n
+of which are to be type checked.
+.PD
+.PP
+.I Cem
+is normally invoked only by
+.IR cyntax .
+It also has options, some of which
+.I cyntax
+can't be coerced into providing.
+Besides
+.B \-o
+and
+.B \-l
+already mentioned, they are:
+.TP
+.B \-m
+Don't believe file modification times.
+These are normally used to avert redundant type checking.
+.TP
+.B \-p
+Be pedantic about type checking.
+.TP
+.B \-t
+Unconditionally include file modification times in diagnostics.
+.TP
+.B \-v
+Use a verbose format for type names.
+.SH FILES
+.nf
+*.c
+*.O
+a.out
+/usr/include/*
+In /usr/lib/cyntax:
+ccom	cyntax proper
+cem	cemantics
+libc	type library
+libj
+.fi
+.SH SEE ALSO
+cc(1), ld(1), lint(1)

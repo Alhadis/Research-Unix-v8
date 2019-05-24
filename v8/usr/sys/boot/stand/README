@@ -1,0 +1,5 @@
+1. this stuff is experimental, for 1k and 4k file systems
+2. make sure boot is no more than 10 blocks!!!!
+3. this version of boot will only boot from ra's and up's
+do the dev tables in boot.c and conf.c have to agree?
+what is the connection with /usr/sys/dev/conf.c?

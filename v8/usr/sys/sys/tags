@@ -1,0 +1,400 @@
+HASH	slp.c	?^#define HASH(x)	(( (int) x >> 5) & (SQSIZE-1))$?
+INOHASH	iget.c	?^#define	INOHASH(dev,ino,fstyp)	(((dev)+(ino)+(fsty?
+P1OFF	proca.c	?^#define P1OFF(p)	(SYSP - (p)->p_szpt*NPTEPG)$?
+REGADR	proca.c	?^#define REGADR(i)	((caddr_t)(regbase + i))$?
+Xmba0int	Locore.c	?^Xmba0int() { }$?
+Xmba1int	Locore.c	?^Xmba1int() { }$?
+Xmba2int	Locore.c	?^Xmba2int() { }$?
+Xmba3int	Locore.c	?^Xmba3int() { }$?
+Xp	vmpt.c	?^#define	Xp(a)	t = p->a; p->a = q->a; q->a = t;$?
+Xpp	vmpt.c	?^#define	Xpp(a)	tp = p->a; p->a = q->a; q->a = tp;$?
+Xu	vmpt.c	?^#define	Xu(a)	t = up->u_pcb.a; up->u_pcb.a = uq ->?
+Xup	vmpt.c	?^#define	Xup(a)	tp = up->u_pcb.a; up->u_pcb.a = uq ?
+Xustray	Locore.c	?^Xustray() { }$?
+access	fio.c	?^access(ip, mode)$?
+acct	acct.c	?^acct()$?
+addupc	Locore.c	?^addupc(pc, prof, n) int pc; struct uprof *prof; { ?
+alarm	sys4.c	?^alarm()$?
+alloc	alloc.c	?^alloc(dev, prev)$?
+ave	OLDclock.c	?^#define	ave(a,b) ((int)(((int)(a*b))/(b+1)))$?
+ave	clock.c	?^#define	ave(a,b) ((int)(((int)(a*b))/(b+1)))$?
+badaddr	Locore.c	?^badaddr(addr, len) caddr_t addr; int len; { return?
+badblock	alloc.c	?^badblock(fp, bn)$?
+bcopy	Locore.c	?^bcopy(from, to, count) caddr_t to, from; unsigned ?
+binit	main.c	?^binit()$?
+bit	sig.c	?^#define bit(a) (1<<(a-1))$?
+bmap	subr.c	?^bmap(ip, bn, rwflg)$?
+boot	OLDmachdep.c	?^boot(paniced, arghowto)$?
+boot	machdep.c	?^boot(paniced, arghowto)$?
+bswinit	main.c	?^bswinit()$?
+calloc	calloc.c	?^calloc(size)$?
+chdir	sys4.c	?^chdir()$?
+chdirec	sys4.c	?^chdirec(ipp)$?
+chgprot	vmpt.c	?^chgprot(p, addr, tprot)$?
+chksize	vmproc.c	?^chksize(ts, ds, ss)$?
+chmod	sys4.c	?^chmod()$?
+chown	sys4.c	?^chown()$?
+chroot	sys4.c	?^chroot()$?
+cleanup	vmpage.c	?^cleanup()$?
+clearseg	Locore.c	?^clearseg(pf) unsigned pf; { CMAP2 = CMAP2; CADDR2[?
+clkinit	OLDmachdep.c	?^clkinit(base)$?
+clkinit	machdep.c	?^clkinit(base)$?
+clkset	OLDmachdep.c	?^clkset()$?
+clkset	machdep.c	?^clkset()$?
+clktrim	machdep.c	?^clktrim()$?
+close	sys2.c	?^close()$?
+closef	fio.c	?^closef(fp)$?
+compress	acct.c	?^compress(t)$?
+consdin	Locore.c	?^consdin() { }$?
+consdout	Locore.c	?^consdout() { }$?
+copyin	Locore.c	?^copyin(udaddr, kaddr, n) caddr_t udaddr, kaddr; un?
+copyout	Locore.c	?^copyout(kaddr, udaddr, n) caddr_t kaddr, udaddr; u?
+copyseg	Locore.c	?^copyseg(udaddr, pf) caddr_t udaddr; unsigned pf; {$?
+core	sig.c	?^core()$?
+cpass	subr.c	?^cpass()$?
+creat	sys2.c	?^creat()$?
+distpte	vmpt.c	?^distpte(xp, tp, dpte)$?
+doadump	Locore.c	?^doadump() { dumpsys(); }$?
+dorti	OLDmachdep.c	?^dorti()$?
+dorti	machdep.c	?^dorti()$?
+dpageout	vmpage.c	?^dpageout(p, dp, n)$?
+dumpsys	OLDmachdep.c	?^dumpsys()$?
+dumpsys	machdep.c	?^dumpsys()$?
+dup	sys3.c	?^dup()$?
+dzdma	Locore.c	?^dzdma() { dzxint((struct tty *)0); }$?
+exec	sys1.c	?^exec()$?
+exece	sys1.c	?^exece()$?
+exit	sys1.c	?^exit(rv)$?
+expand	vmproc.c	?^expand(change, region)$?
+falloc	fio.c	?^falloc()$?
+fchmod	sys4.c	?^fchmod()$?
+fchown	sys4.c	?^fchown()$?
+ffs	Locore.c	?^ffs(i) { return (0); }$?
+ffs	sig.c	?^ffs(mask)$?
+forceclose	vmsys.c	?^forceclose(sptr)$?
+fork	sys1.c	?^fork()$?
+fork1	sys1.c	?^fork1(isvfork)$?
+free	alloc.c	?^free(dev, bno)$?
+fserr	alloc.c	?^fserr(fp, cp)$?
+fstat	sys3.c	?^fstat()$?
+ftime	sys4.c	?^ftime()$?
+fubyte	Locore.c	?^fubyte(base) caddr_t base; { return (0); }$?
+fuiword	Locore.c	?^fuiword(base) caddr_t base; { return (0); }$?
+futz	vmsys.c	?^futz()$?
+fuword	Locore.c	?^fuword(base) caddr_t base; { return (0); }$?
+getf	fio.c	?^getf(f)$?
+getfs	alloc.c	?^	getfs(dev)$?
+getfsx	alloc.c	?^getfsx(dev)$?
+getgid	sys4.c	?^getgid()$?
+getmdev	sys3.c	?^getmdev()$?
+getmemc	vmsubr.c	?^getmemc(addr)$?
+getpid	sys4.c	?^getpid()$?
+getuid	sys4.c	?^getuid()$?
+getxfile	sys1.c	?^getxfile(ip, nargc, uid, gid)$?
+gmount	sys3.c	?^gmount()$?
+grow	sig.c	?^grow(sp)$?
+gsignal	sig.c	?^gsignal(pgrp, sig)$?
+gtime	sys4.c	?^gtime()$?
+hardclock	OLDclock.c	?^hardclock(pc, ps)$?
+hardclock	clock.c	?^hardclock(pc, ps)$?
+harderr	prf.c	?^harderr(bp, cp)$?
+ialloc	alloc.c	?^ialloc(dev)$?
+iexpand	iget.c	?^iexpand(ip, dp)$?
+ifind	iget.c	?^ifind(dev, ino, fstyp)$?
+ifree	alloc.c	?^ifree(dev, ino)$?
+iget	iget.c	?^iget(dev, ino, fstyp)$?
+ihinit	iget.c	?^ihinit()$?
+iinit	main.c	?^iinit()$?
+imax	subr.c	?^imax(a, b)$?
+imin	subr.c	?^imin(a, b)$?
+inferior	sys4.c	?^inferior(p)$?
+int	Locore.c	?^int	(*UNIvec[128])();$?
+int	vmpt.c	?^	int (*pmemall)();$?
+ioctl	ioctl.c	?^ioctl()$?
+iomove	rdwri.c	?^iomove(cp, n, flag)$?
+iput	iget.c	?^iput(ip)$?
+issig	sig.c	?^issig()$?
+istread	streamio.c	?^istread(ip, addr, count)$?
+istwrite	streamio.c	?^istwrite(ip, addr, count)$?
+itrunc	iget.c	?^itrunc(ip)$?
+iupdat	iget.c	?^iupdat(ip, ta, tm, waitfor)$?
+kernacc	Locore.c	?^kernacc(addr, bcnt, rw) caddr_t addr; unsigned bcn?
+kill	sys4.c	?^kill()$?
+klok	vmpage.c	?^klok(pte, rw)$?
+kluster	vmpage.c	?^kluster(p, v, pte0, rw, pkl, klsize, bn0)$?
+kmcopy	vmpt.c	?^kmcopy(to, from, count)$?
+link	sys2.c	?^link()$?
+loadav	vmsched.c	?^loadav(avg, n)$?
+longjmp	Locore.c	?^longjmp(lp) label_t lp; { /*NOTREACHED*/ }$?
+lowinit	Locore.c	?^lowinit()$?
+lstat	sys3.c	?^lstat()$?
+machinecheck	OLDmachdep.c	?^machinecheck(cmcf)$?
+machinecheck	machdep.c	?^machinecheck(cmcf)$?
+main	main.c	?^main(firstaddr)$?
+max	rdwri.c	?^max(a, b)$?
+memall	vmmem.c	?^memall(pte, size, p, type)$?
+memenable	OLDmachdep.c	?^memenable()$?
+memenable	machdep.c	?^memenable()$?
+memerr	OLDmachdep.c	?^memerr()$?
+memerr	machdep.c	?^memerr()$?
+memfree	vmmem.c	?^memfree(pte, size, detach)$?
+meminit	vmmem.c	?^meminit(first, last)$?
+mfind	vmmem.c	?^mfind(dev, bn)$?
+mfpr	Locore.c	?^mfpr(reg) int reg; { return (0); }$?
+mhash	vmmem.c	?^mhash(c, dev, bn)$?
+min	proca.c	?^#define min(a,b)	((a) <= (b) ?
+min	rdwri.c	?^min(a, b)$?
+mkdir	sys2.c	?^mkdir()$?
+mknod	sys2.c	?^mknod()$?
+mlock	vmmem.c	?^mlock(pf)$?
+mpurge	vmmem.c	?^mpurge(mdev)$?
+mtpr	Locore.c	?^mtpr(reg, value) int reg, value; { }$?
+munhash	vmmem.c	?^munhash(dev, bn)$?
+munlink	vmmem.c	?^munlink(pf)$?
+munlock	vmmem.c	?^munlock(pf)$?
+mwait	vmmem.c	?^mwait(pf)$?
+nafree	neta.c	?^nafree(ip)$?
+naget	neta.c	?^naget(dev, ino, ip)$?
+namei	nami.c	?^namei(func, flagp, follow)$?
+nanami	neta.c	?^nanami(p, pflagp, follow)$?
+naput	neta.c	?^naput(ip)$?
+naread	neta.c	?^naread(ip)$?
+nastat	neta.c	?^nastat(ip, ub, adj)$?
+natrunc	neta.c	?^natrunc(ip)$?
+naupdat	neta.c	?^naupdat(ip, ta, tm, waitfor)$?
+nawrite	neta.c	?^nawrite(ip)$?
+newproc	slp.c	?^newproc(isvfork)$?
+nice	sys4.c	?^nice()$?
+nilput	streamio.c	?^nilput(q, bp)$?
+nodev	subr.c	?^nodev()$?
+nosys	trap.c	?^nosys()$?
+nulldev	subr.c	?^nulldev()$?
+nullsys	trap.c	?^nullsys()$?
+nz	vmsched.c	?^#define	nz(x)	(x != 0 ?
+open	sys2.c	?^open()$?
+open1	sys2.c	?^open1(ip, mode, trf)$?
+openi	fio.c	?^openi(ip, rw)$?
+owner	fio.c	?^owner(follow)$?
+pagein	vmpage.c	?^pagein(virtaddr,uu)$?
+pageout	vmpage.c	?^pageout()$?
+panic	prf.c	?^panic(s)$?
+passc	subr.c	?^passc(c)$?
+pause	sys4.c	?^pause()$?
+pfind	subr.c	?^pfind(pid)$?
+pgtrace	vmpage.c	?^#define	pgtrace(e)	trace(e,v,uu->u_procp->p_pid)$?
+pipe	pipe.c	?^pipe()$?
+plock	pipe.c	?^plock(ip)$?
+prbufio	proca.c	?^prbufio(p,vaddr,bp)$?
+prele	pipe.c	?^prele(ip)$?
+prf	prf.c	?^prf(fmt, adx, touser)$?
+prfree	proca.c	?^prfree(ip)$?
+prget	proca.c	?^prget(dev, ino, ip)$?
+printf	prf.c	?^printf(fmt, x1)$?
+printn	prf.c	?^printn(n, b, touser)$?
+prioctl	proca.c	?^prioctl(ip, cmd, cmaddr)$?
+prlock	proca.c	?^prlock(p)$?
+prmount	proca.c	?^prmount()$?
+prnami	proca.c	?^prnami(p, pflagp, follow)$?
+procdup	vmproc.c	?^procdup(p, isvfork)$?
+procxmt	sig.c	?^procxmt()$?
+profil	sys4.c	?^profil()$?
+prput	proca.c	?^prput(ip)$?
+prread	proca.c	?^prread(ip)$?
+prstat	proca.c	?^prstat(ip, ub, adj)$?
+prtrunc	proca.c	?^prtrunc(ip)$?
+prunlock	proca.c	?^prunlock(p)$?
+prupdat	proca.c	?^prupdat(ip, ta, tm, waitfor)$?
+prusrio	proca.c	?^prusrio(p,flag)$?
+prvslock	proca.c	?^prvslock(p, base, count, bflags)$?
+prvsunlock	proca.c	?^prvsunlock(p, base, count, bflags)$?
+prwrite	proca.c	?^prwrite(ip)$?
+psig	sig.c	?^psig()$?
+psignal	sig.c	?^psignal(p, sig)$?
+ptetov	vmsubr.c	?^ptetov(p, pte)$?
+ptexpand	vmpt.c	?^ptexpand(change)$?
+ptrace	sig.c	?^ptrace()$?
+putchar	prf.c	?^putchar(c, touser)$?
+putmemc	vmsubr.c	?^putmemc(addr, val)$?
+qattach	streamio.c	?^qattach(qinfo, qp, dev)$?
+qdetach	streamio.c	?^qdetach(qp, flag)$?
+read	sys2.c	?^read()$?
+readi	rdwri.c	?^readi(ip)$?
+readlink	sys3.c	?^readlink()$?
+readp	pipe.c	?^readp(fp)$?
+reboot	sys4.c	?^reboot()$?
+remrq	Locore.c	?^remrq(p) struct proc *p; { }$?
+resuba	vmsys.c	?^resuba()$?
+resume	Locore.c	?^resume(pcbpf) unsigned pcbpf; { }$?
+rexit	sys1.c	?^rexit()$?
+rmalloc	rmap.c	?^rmalloc(mp, size)$?
+rmdir	sys2.c	?^rmdir()$?
+rmfree	rmap.c	?^rmfree(mp, size, addr)$?
+rminit	rmap.c	?^rminit(mp, size, addr, name, mapsize)$?
+rnami	nami.c	?^rnami(p, pflagp, follow)$?
+rqinit	slp.c	?^rqinit()$?
+saccess	sys2.c	?^saccess()$?
+sbreak	sys1.c	?^sbreak()$?
+schar	nami.c	?^schar()$?
+sched	vmsched.c	?^sched()$?
+seek	sys2.c	?^seek()$?
+segalloc	vmsys.c	?^segalloc()$?
+segfree	vmsys.c	?^segfree()$?
+segsync	vmsys.c	?^segsync()$?
+select	sys2.c	?^select()$?
+selscan	sys2.c	?^selscan(nfd, fds, nfdp, flag)$?
+selwakeup	sys2.c	?^selwakeup(p, coll)$?
+send	neta.c	?^send(cip, x, y)$?
+sendsig	OLDmachdep.c	?^sendsig(p, n)$?
+sendsig	machdep.c	?^sendsig(p, n)$?
+setgid	sys4.c	?^setgid()$?
+setjmp	Locore.c	?^setjmp(lp) label_t lp; { return (0); }$?
+setpgrp	sys4.c	?^setpgrp()$?
+setpri	slp.c	?^setpri(pp)$?
+setredzone	vmsubr.c	?^setredzone(pte, vaddr)$?
+setregs	sys1.c	?^setregs()$?
+setrq	Locore.c	?^setrq(p) struct proc *p; { }$?
+setrun	slp.c	?^setrun(p)$?
+settod	machdep.c	?^settod()$?
+settprot	vmpt.c	?^settprot(tprot)$?
+setuid	sys4.c	?^setuid()$?
+setupclock	vmsched.c	?^setupclock()$?
+sleep	slp.c	?^sleep(chan, pri)$?
+smount	sys3.c	?^smount()$?
+softclock	OLDclock.c	?^softclock(pc, ps)$?
+softclock	clock.c	?^softclock(pc, ps)$?
+spgrp	sys4.c	?^spgrp(top, npgrp)$?
+spl0	Locore.c	?^spl0() { return (0); }$?
+spl4	Locore.c	?^spl4() { return (0); }$?
+spl5	Locore.c	?^spl5() { return (0); }$?
+spl6	Locore.c	?^spl6() { return (0); }$?
+spl7	Locore.c	?^spl7() { return (0); }$?
+splx	Locore.c	?^splx(s) int s; { }$?
+ssig	sys4.c	?^ssig()$?
+startup	OLDmachdep.c	?^startup(firstaddr)$?
+startup	machdep.c	?^startup(firstaddr)$?
+stat	sys3.c	?^stat()$?
+stat1	sys3.c	?^stat1(ip, ub, pipeadj)$?
+stclose	streamio.c	?^stclose(ip, sleepOK)$?
+stenter	streamio.c	?^stenter(ip)$?
+stexit	streamio.c	?^stexit(ip)$?
+stime	sys4.c	?^stime()$?
+stioctl	streamio.c	?^stioctl(ip, cmd, arg)$?
+stop	sig.c	?^stop(p)$?
+stopen	streamio.c	?^stopen(dev, flag, ip)$?
+stread	streamio.c	?^stread(ip)$?
+streadable	streamio.c	?^streadable(q)$?
+strput	streamio.c	?^strput(q, bp)$?
+stselect	streamio.c	?^stselect(stp, rw, anyyet)$?
+stwrite	streamio.c	?^stwrite(ip)$?
+stwsrv	streamio.c	?^stwsrv(q)$?
+subyte	Locore.c	?^subyte(base, i) caddr_t base; { return (0); }$?
+suibyte	Locore.c	?^suibyte(base, i) caddr_t base; { return (0); }$?
+suiword	Locore.c	?^suiword(base, i) caddr_t base; { return (0); }$?
+sumount	sys3.c	?^sumount()$?
+suser	fio.c	?^suser()$?
+suword	Locore.c	?^suword(base, i) caddr_t base; { return (0); }$?
+swapin	vmswap.c	?^swapin(p)$?
+swapout	vmswap.c	?^swapout(p, ds, ss)$?
+swappable	vmsched.c	?^#define	swappable(p) (((p)->p_flag & \$?
+swdspt	vmswap.c	?^swdspt(p, utl, rdwri)$?
+swpexpand	vmdrum.c	?^swpexpand(ds, ss, dmp, smp)$?
+swpt	vmswap.c	?^swpt(rdwri, p, doff, a, n)$?
+swtch	Locore.c	?^swtch() { if (whichqs) whichqs = 0; }$?
+syioctl	sys.c	?^syioctl(dev, cmd, addr, flag)$?
+symlink	sys3.c	?^symlink()$?
+sync	sys4.c	?^sync()$?
+syopen	sys.c	?^syopen(dev, flag)$?
+syread	sys.c	?^syread(dev)$?
+sysacct	acct.c	?^sysacct()$?
+syscall	trap.c	?^syscall(sp, type, code, pc, psl)$?
+syslock	sys4.c	?^syslock()$?
+sysphys	OLDmachdep.c	?^sysphys()$?
+sysphys	machdep.c	?^sysphys()$?
+sywrite	sys.c	?^sywrite(dev)$?
+tablefull	prf.c	?^tablefull(tab)$?
+tbiscl	OLDmachdep.c	?^tbiscl(v)$?
+tbiscl	machdep.c	?^tbiscl(v)$?
+timeout	OLDclock.c	?^timeout(fun, arg, tim)$?
+timeout	clock.c	?^timeout(fun, arg, tim)$?
+times	sys4.c	?^times()$?
+tloop	iget.c	?^tloop(dev, bn, f1, f2)$?
+tocons	OLDmachdep.c	?^tocons(c)$?
+tocons	machdep.c	?^tocons(c)$?
+trace1	vmmon.c	?^trace1(args)$?
+trap	trap.c	?^trap(sp, type, code, pc, psl)$?
+tsleep	slp.c	?^tsleep(chan, pri, seconds)$?
+uaccess	vmsubr.c	?^uaccess(p, map, uarea)$?
+uchar	nami.c	?^uchar()$?
+ufalloc	fio.c	?^ufalloc()$?
+umask	sys4.c	?^umask()$?
+unlink	sys4.c	?^unlink()$?
+unsleep	slp.c	?^unsleep(p)$?
+update	alloc.c	?^update()$?
+uprintf	prf.c	?^uprintf(fmt, x1)$?
+useracc	Locore.c	?^useracc(udaddr, bcnt, rw) caddr_t udaddr; unsigned?
+utime	sys4.c	?^utime()$?
+vadvise	vmsys.c	?^vadvise()$?
+vbmap	vmsubr.c	?^vbmap(ip, bn)$?
+vdoualarm	vmsys.c	?^vdoualarm(arg)$?
+vfork	vmsys.c	?^vfork()$?
+vgetpt	vmpt.c	?^vgetpt(p, pmemall)$?
+vgetswu	vmpt.c	?^vgetswu(p, utl)$?
+vgetu	vmpt.c	?^vgetu(p, palloc, map, newu, oldu)$?
+vgetvm	vmproc.c	?^vgetvm(ts, ds, ss)$?
+vhangup	vmsys.c	?^vhangup()$?
+vinifod	vmsubr.c	?^vinifod(pte, fileno, ip, bstart, count)$?
+vinitpt	vmpt.c	?^vinitpt(p)$?
+vlimit	vmsys.c	?^vlimit()$?
+vmaccess	vmsubr.c	?^vmaccess(ppte, vaddr, size)$?
+vmdup	vmproc.c	?^vmdup(p, pte, v, count, type)$?
+vmemall	vmmem.c	?^vmemall(pte, size, p, type)$?
+vmemfree	vmmem.c	?^vmemfree(pte, count)$?
+vmfltmon	vmmon.c	?^vmfltmon(hist, atime, amin, res, nmax)$?
+vmmeter	vmsched.c	?^vmmeter()$?
+vmpago	vmsched.c	?^vmpago()$?
+vmsadd	vmsys.c	?^vmsadd(vp, wp)$?
+vmsizmon	vmmon.c	?^vmsizmon()$?
+vmtime	OLDmachdep.c	?^vmtime(otime, olbolt, oicr)$?
+vmtime	machdep.c	?^vmtime(otime, olbolt, oicr)$?
+vmtotal	vmsched.c	?^vmtotal()$?
+vpasspt	vmpt.c	?^vpasspt(p, q, up, uq, umap)$?
+vpassvm	vmproc.c	?^vpassvm(p, q, up, uq, umap)$?
+vrelpt	vmpt.c	?^vrelpt(p)$?
+vrelswu	vmpt.c	?^vrelswu(p, utl)$?
+vrelu	vmpt.c	?^vrelu(p, swapu)$?
+vrelvm	vmproc.c	?^vrelvm()$?
+vschunk	vmdrum.c	?^vschunk(p, base, size, type, dmp)$?
+vsexpand	vmdrum.c	?^vsexpand(vssize, dmp, canshrink)$?
+vslock	vmmem.c	?^vslock(base, count)$?
+vsswap	vmdrum.c	?^vsswap(p, pte, type, vsbase, vscount, dmp)$?
+vstodb	vmdrum.c	?^vstodb(vsbase, vssize, dmp, dbp, rev)$?
+vsunlock	vmmem.c	?^vsunlock(base, count, rw)$?
+vsxalloc	vmdrum.c	?^vsxalloc(xp)$?
+vsxfree	vmdrum.c	?^vsxfree(xp, ts)$?
+vtimes	vmsys.c	?^vtimes()$?
+vtod	vmdrum.c	?^vtod(p, v, dmap, smap)$?
+vtopte	vmsubr.c	?^vtopte(p, v)$?
+vtrace	vmsys.c	?^vtrace()$?
+vusize	vmpt.c	?^vusize(p, utl)$?
+wait	sys1.c	?^wait()$?
+wait1	sys1.c	?^wait1(options, vp)$?
+wakeup	slp.c	?^wakeup(chan)$?
+wmemall	vmmem.c	?^wmemall(pmemall, n)$?
+wmemfree	vmmem.c	?^wmemfree(va, n)$?
+write	sys2.c	?^write()$?
+writei	rdwri.c	?^writei(ip)$?
+writep	pipe.c	?^writep(fp)$?
+xalloc	text.c	?^xalloc(ip, pagi)$?
+xccdec	text.c	?^xccdec(xp, p)$?
+xfree	text.c	?^xfree()$?
+xlink	text.c	?^xlink(p)$?
+xlock	text.c	?^xlock(xp)$?
+xmount	sys3.c	?^xmount()$?
+xrele	text.c	?^xrele(ip)$?
+xrepl	text.c	?^xrepl(p, q)$?
+xumount	text.c	?^xumount(dev)$?
+xunlink	text.c	?^xunlink(p)$?
+xunlock	text.c	?^xunlock(xp)$?
+xunmount	sys3.c	?^xunmount()$?
+xuntext	text.c	?^xuntext(xp)$?
+xwait	text.c	?^xwait(xp)$?

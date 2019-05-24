@@ -1,0 +1,9 @@
+PATH=/bin:/usr/bin
+for i
+do
+	if test -r $HOME/lib/tel
+	then
+		grep -i  "$i" $HOME/lib/tel
+	fi
+	grep -i  "$i" /usr/lib/tel
+done

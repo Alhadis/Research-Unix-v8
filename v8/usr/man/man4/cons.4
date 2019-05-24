@@ -1,0 +1,24 @@
+.TH CONS 4 VAX
+.SH NAME
+cons \- console interface
+.SH DESCRIPTION
+The console is available to the processor through the console registers.
+It acts like a normal terminal, except that when the local functions are
+not disabled, control-P puts the console in local console mode (where
+the prompt is `>>>').
+On an 11/780,
+you can return to the conversational mode by
+`SE T P' if the processor is still running or `CONTINUE' if it is halted.
+On an 11/750,
+control-P always halts the processor;
+`C' will recover.
+.PP
+If you hit the break key on an 11/780 console,
+the console may go into ODT
+(console debugger mode).  Hit a `P' to get out of this mode.
+.PP
+With the above provisos the console works like any other terminal.
+.SH FILES
+/dev/console
+.SH "SEE ALSO"
+ttyld(4), reboot(8)

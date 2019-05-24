@@ -1,0 +1,114 @@
+.TH CBT 1 
+.SH NAME
+cbt \- btree utilities
+.SH SYNOPSIS
+.B cbt creat
+name ...
+.br
+.B cbt report
+name ...
+.br
+.B cbt cat
+[
+.B \-R
+] name ...
+.br
+.B cbt squash
+name
+.br
+.B cbt build
+[
+.B \-R
+] name
+.br
+.B cbt add
+[
+.B \-R
+] name
+.br
+.B cbt delete
+[
+.B \-R
+]
+name
+.SH DESCRIPTION
+A B-tree
+.I name
+corresponds to a pair of
+files named
+.I name.T
+and
+.I name.F.
+.I Name.T
+contains an access tree,
+and
+.I name.F
+contains the data.
+.PP
+The
+.I creat
+version of the command creates empty B-trees.
+.PP
+The
+.I report
+version of the command scans each B-tree and reports how many records it
+contains.
+.PP
+The
+.I cat
+version of the command scans the
+B-tree in key-sort order, writing on its standard output.
+With no option,
+.I cat 
+writes each key followed by a tab,
+followed by the record, followed by a new-line.
+If option
+.B \-R
+(raw) is present,
+each key-record pair has the format
+.IP
+.nf
+struct {
+	short keylen;
+	char key[keylen];
+	short reclen;
+	char rec[reclen];
+};
+.fi
+.LP 
+Keys and records are not null-terminated and
+consecutive key-record pairs are not separated by new-lines.
+Keys may be no longer than 127 bytes.
+.PP
+The
+.I squash
+version of the command compresses the access tree to minimal size.
+.PP
+The
+.I build
+version of the command reads a sorted list of keys
+and records from the standard input and fills the file
+with them.
+Input is in the form produced by the corresponding
+.I cat 
+option.
+.PP
+The
+.I add
+.RI ( delete )
+version of the command
+inserts (removes) records.
+Input is in the form produced by the corresponding
+.I cat 
+option.
+The records may be unsorted.
+In newline-separated input only the keys must be present.
+.SH EXAMPLE
+.TP
+sort "\-t<tab>" \-1 inputfile | cbt build btreefile
+<tab> denotes a tab character
+.SH FILES
+
+/usr/lib/btree/*
+.SH SEE ALSO
+cbt(3)

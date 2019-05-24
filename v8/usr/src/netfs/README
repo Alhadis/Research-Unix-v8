@@ -1,0 +1,58 @@
+This junk goes into /usr/net.  That name is built into several programs.
+You should have the following files:
+friends fshare magic people setup teardown unmount
+
+The files friends, setup, teardown, and unmount have to do with
+you being able to look at files on other machines.
+The files fshare, magic, and people have to do with your file system
+being visible to others.
+
+Friends is a table read by setup and teardown.  It contains information
+on the machines you want to talk to.  The fields are:  machine name
+(spelled peculiarly, see below), mount point (where you want the
+other machine's file system to appear in yours), device number
+(start at 48 or 64 and go up by one), and a debugging flag.
+For each line in friends, setup tries to mount that file system
+at the mount point.  It then sends keep alive messages to each machine.
+When it can't talk to a machine it tries to unmount the file system.
+Sending it a 1 signal (kill -1 ...) causes it to reread /usr/net/friends,
+and connect to all the machines it is not connected to.
+It also tries every 20 minutes, and within a minute after
+/usr/net/friends is touched.  This need not
+succeed for there are several inconvenient failure states.
+Teardown is a shell script which tries to dismount all the network
+file systems.
+
+Fshare provides service to others.  There's a parent one, and one
+for each machine connected to you.  /usr/net/people is your idea
+of the permissions you want to grant to others using your file system.
+The entries are sorted by machine.  The entries are pairs of pairs, each pair
+being a user id and a group id.  The first pair in a pair is the
+other machine's idea and the second represents yours.  For instance,
+mh/astro/seki
+(( 27 1) (814 2)) # pjw
+means that user 27 on seki should be treated as having uid 814 and group 2
+on your machine.  The stuff after # is a comment.  Default versions
+of this file can be constructed using the shell script magic.
+magic machine-name produces a file of pairs for the people who have
+the same login name on your machine and machine-name.  Run
+magic seki
+and put its output after the last line of people, which should
+be
+mh/astro/seki
+Similarly to include permissions for a machine named junko,
+magic junko
+then edit /usr/net/people to have
+mh/cage/junko (or whatever) as its last line,
+and then add junko-done (the output of magic junko).
+
+The friends file contains names of directories where other machine's
+file systems will be mounted.
+
+Corresponding to the name /n/foo in /usr/net/friends, there must
+be a directory /n/foo.
+
+The code here assumes it is talking to Datakit in several places.
+If you want to use another network, you'll have to fix things.
+The only true requirement is that there be a stream driver for the
+network.

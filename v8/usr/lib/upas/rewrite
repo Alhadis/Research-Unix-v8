@@ -1,0 +1,25 @@
+# recognition/delivery rules for mail
+#
+#	Each line contains the following fields, 
+#		- regular expression matching an address
+#		- a command to use to deliver the mail (default is local delivery)
+#		- next hop in the address (optional)
+#		- address after next hop (optional)
+#		- conversion to be performed on output (optional)
+#		- system name to use for return address (default in /etc/whoami)
+
+# a local address
+^[^!.@%]+$
+
+# a uucp address
+^(csnet|acsnet|bitnet|arpa)!(.+)$	"uux - -a \s GATEWAY!rmail '(&)'"
+^([^!]+)!(.+)$	"uucproute \s \1 '\2'"	\1	\2
+
+# for testing
+^(.+)\.atest	"echo :\1: > /tmp/mailaddr"
+^(.+)\.rfctest	"cat > /tmp/rfc822"	""	""	rfc822 testsys
+^(.+)\.loctest	"cat > /tmp/local"	""	""	local
+^(.+)\.remtest	"cat > /tmp/remote"	""	""	remote testsys
+
+# anything else
+^.*$ "uux - -a \s GATEWAY!rmail '(&)'"

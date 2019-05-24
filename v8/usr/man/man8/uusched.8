@@ -1,0 +1,62 @@
+.TH UUSCHED 8
+.SH NAME
+uusched  \- uucp file transport scheduler
+.SH SYNOPSIS
+.B /usr/lib/uucp/uusched
+[
+.B \-x
+debug_level
+] [
+.B \-u
+debug_level
+]
+.SH DESCRIPTION
+.I Uusched
+examines the
+.I uucp
+spool directories,
+and invokes
+.I uucico (8)
+for each system
+with work pending.
+It is called by
+.IR uucp 
+and
+.IR uux (1)
+after work is queued,
+and should be invoked regularly
+(usually hourly)
+by
+.IR cron (8).
+.PP
+A limited number of
+copies
+of
+.I uusched
+are permitted at any time.
+The number is kept in
+the file
+.IR /usr/lib/uucp/Maxuuscheds .
+.P
+The two options are for debugging purposes only.
+.B \-x
+requests debugging output;
+.I debug_level
+is a single digit,
+larger numbers producing more detailed output.
+.B \-u debug_level
+causes
+.B \-x debug_level
+to be passed to
+.IR uucico .
+.SH FILES
+.nf
+/usr/lib/uucp/Systems
+/usr/lib/uucp/Permissions
+/usr/lib/uucp/Devices
+/usr/spool/uucp/*
+/usr/spool/uucp/LCK*
+/usr/spool/uucppublic/*
+.fi
+.SH "SEE ALSO"
+uucp(1), uux(1), uucico(8)

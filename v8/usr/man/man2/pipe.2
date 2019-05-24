@@ -1,0 +1,55 @@
+.TH PIPE 2 
+.SH NAME
+pipe \- create an interprocess channel
+.SH SYNOPSIS
+.nf
+.B pipe(fildes)
+.B int fildes[2];
+.fi
+.SH DESCRIPTION
+The returned file descriptors are the
+ends of pair of cross-connected streams
+(See
+.IR stream (4)).
+Data written via
+.IR fildes [1]
+is available for reading via
+.IR fildes [0]
+and vice versa. 
+.PP
+It is assumed that after the
+pipe has been set up,
+two (or more)
+cooperating processes
+(created by subsequent
+.I fork
+calls)
+will pass data through the
+pipe with
+.I read
+and
+.I write
+calls.
+The record structure induced by
+.I write
+calls is maintained by a pipe and is visible to a reader,
+provided no line disciplines modules have been pushed into
+the pipe stream; see
+.IR write (2).
+.PP
+The Shell has a syntax
+to set up a linear array of processes
+connected by pipes.
+.PP
+Write calls on a one-ended pipe raise signal SIGPIPE.
+Read calls on a one-ended pipe with no data in it
+return an end-of-file for the first several attempts, then raise SIGPIPE.
+.SH "SEE ALSO"
+sh(1), read(2), write(2), fork(2)
+.SH DIAGNOSTICS
+The function value zero is returned if the
+pipe was created; \-1 if
+too many files are already open.
+.SH BUGS
+Should too much buffering be necessary in any
+pipeline among a loop of processes, deadlock will occur.

@@ -1,0 +1,81 @@
+.TH UPAS 8 
+.SH NAME
+upas \- address driven mailer
+.SH SYNOPSIS
+.B mail
+person ...
+.br
+.B rmail \-N network
+person ...
+.br
+.B cmail \-N network
+person ...
+.SH DESCRIPTION
+.I Upas
+is a mail delivery system that disposes
+of messages in a way determined by the destination address and a set of
+rewriting rules.
+It can be used to recognize many address formats and
+route remote mail to different network mail interfaces.
+.TP
+.I mail
+is used by a user to send or read mail.
+See 
+.IR mail (1).
+.TP
+.I rmail
+is used to inject mail coming from other machines into the mail system.
+No message conversion is performed.
+.TP
+.I cmail
+is used to inject mail formatted
+according to ARPA RFC 822 into the mail system.
+The mail is converted into a form understandable to
+.I upas.
+.PP
+.I Upas's
+rewriting rules  
+(\fImail\fP(7))
+contain
+.IR ed (1)
+style substitutions
+that allow addresses to be transformed into the commands used to
+inject mail to the networks.
+.PP
+The \-N option causes the `network' indicates the name of the
+network from which the message is coming.
+This network name is prepended to the return address.
+.PP
+Each message submitted using
+.I rmail
+or
+.I cmail
+is checked against a forwarding list.
+Unless the name of all machines in the source path or
+all machines in the destination path are in the
+forwarding list, the message is refused.
+.SH FILES
+.ta \w'/usr/lib/upas/forwardlist 'u
+/usr/lib/upas/rewrite	the rewriting rules
+.br
+/usr/lib/upas/forwardlist	the forwarding list
+.br
+/usr/lib/upas/forwardlist.lo	local forwarding list
+.br
+/bin/mail	the mailer program
+.br
+/bin/rmail	linked to /bin/mail
+.br
+/bin/cmail	linked to /bin/mail
+.br
+/usr/spool/mail/*	mailboxes
+.br
+/etc/passwd	authentication
+.br
+/tmp/ma*	temp file
+.br
+/tmp/ml*	lock file
+.br
+$HOME/dead.letter	unmailable text
+.SH "SEE ALSO"
+xsend(1), write(1), uucp(1), mail(1), mail(7)

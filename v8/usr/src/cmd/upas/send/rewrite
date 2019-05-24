@@ -1,0 +1,9 @@
+# a local address
+^((uucp|btl)!)*[^!.@%]+$
+
+# a uucp address
+^(csnet|acsnet|bitnet|arpa)!(.+)$	"uux - -a \s research!rmail '(&)'"
+^((uucp|btl)!)*([^!]+)!(.+)$	"uucproute \s \3 '\4'"	\3	\4
+
+# anything else
+^.*$ "uux - -a \s research!rmail '(&)'"

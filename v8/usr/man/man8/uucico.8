@@ -1,0 +1,101 @@
+.TH UUCICO 8
+.SH NAME
+uucico  \- file transport program for the uucp system
+.SH SYNOPSIS
+.B /usr/lib/uucp/uucico
+[
+.B \-r1
+.B \-s
+system_name
+] [
+.B \-x
+debug_level
+] [
+.B \-d
+spool_directory
+]
+.br
+.B /usr/lib/uucp/kick
+system
+.br
+.B /usr/lib/uucp/debug
+system
+.SH DESCRIPTION
+.I Uucico
+transfers files between systems
+for
+.IR uucp (1).
+It is normally invoked by
+.I login
+for
+an incoming connection
+(a slave),
+or by
+.IR uusched (8)
+to call out to another system
+(a master).
+.PP
+The
+.B \-r1
+option
+causes it to act as a master.
+In this case,
+.B \-s
+must be given
+to name the
+.I system
+to be called.
+If
+.B \-r1
+is not present,
+.I uucico
+goes into slave mode,
+and assumes that a master will talk to it
+on standard input and output.
+.PP
+.B \-x
+turns on debugging output;
+.I debug_level
+is a single digit.
+Larger numbers
+request greater loquaciousness.
+.PP
+.ig
+For example,
+the shell
+.I Uutry
+starts
+.I uucico
+with debugging turned on.
+..
+.PP
+.I Kick
+invokes
+.I uucico
+in the background
+to call out to the specified
+.IR system .
+.I Debug
+causes a call with
+a moderate amount
+of debugging output
+(\c
+.BR \-x4 ).
+Both attempt to remove
+existing system status information
+for
+.IR system ,
+so that a call will be attempted
+regardless of recent failures.
+.SH FILES
+.nf
+/usr/lib/uucp/Systems
+/usr/lib/uucp/Permissions
+/usr/lib/uucp/Devices
+/usr/lib/uucp/Maxuuxqts
+/usr/lib/uucp/Maxuuscheds
+/usr/spool/uucp/\(**
+/usr/spool/uucppublic/\(**
+.fi
+.SH "SEE ALSO"
+uucp(1), uustat(1), uusched(8)

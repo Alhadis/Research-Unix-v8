@@ -1,0 +1,91 @@
+.TH ALLOC 9.3
+.SH NAME
+alloc, free, balloc, bfree, gcalloc, gcfree \- allocate memory
+.SH SYNOPSIS
+.B #include <jerq.h>
+.PP
+.B char *alloc(nbytes)
+.B unsigned nbytes;
+.PP
+.B void free(s)
+.B char *s;
+.PP
+.B Bitmap *balloc(r)
+.B Rectangle r;
+.PP
+.B void bfree(b)
+.B Bitmap *b;
+.PP
+.B char *gcalloc(nbytes, where)
+.B unsigned long nbytes;
+.B char **where;
+.PP
+.B void gcfree(s)
+.B char *s;
+.SH DESCRIPTION
+.I Alloc
+corresponds to the standard C function
+.IR malloc .
+It returns a pointer to a block of
+.I nbytes
+contiguous bytes of storage, or 0
+if unavailable.
+The storage is aligned on 4-byte boundaries.
+Unlike
+.IR malloc ,
+.I alloc
+clears the storage to zeros.
+.I Free
+frees storage allocated by
+.IR alloc .
+.PP
+.I Balloc
+returns a pointer to a Bitmap large enough to contain
+the Rectangle
+.IR r ,
+or 0
+for failure.
+The coordinate system inside the Bitmap is set by
+.IR r :
+the
+.I origin
+and
+.I corner
+of the Bitmap are those of
+.IR r .
+.I Bfree
+frees the storage associated with a Bitmap allocated by
+.IR balloc .
+.PP
+.I Gcalloc
+provides a simple garbage-compacting allocator.
+It returns a pointer to a block of
+.I nbytes
+contiguous bytes of storage, or
+0
+if unavailable.
+The storage is initialized to zeros.
+.I Where
+is a pointer to the user's data where the location of the
+block is to be saved.
+The return value of
+.I gcalloc
+is stored in
+.RI * where
+and will be updated after each compaction.
+Therefore, a program using
+.I gcalloc
+should never store the location of \f2gcalloc\fPated memory
+anywhere other than the location handed to the allocator.
+Typically, this location is contained in a structure, such as a
+Bitmap
+.RI ( balloc
+uses
+.IR gcalloc ).
+.I Gcfree
+frees the storage block at
+.IR p .
+.I Gcalloc
+is not for novices.
+.SH SEE ALSO
+types(9.5)

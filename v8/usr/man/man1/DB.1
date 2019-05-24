@@ -1,0 +1,96 @@
+.TH DB 1
+.SH NAME
+DB \- database command interface
+.SH SYNOPSIS
+DB [
+.B \-D
+] [
+.B \-c
+]
+.BI \-f filename
+[
+.B \-L
+] [
+.B \-t
+|
+.B \-l
+] [
+.BI \-k key
+[
+.BI \-d data
+] ] [
+.B \-g
+|
+.B \-p
+|
+.B \-r
+|
+.B \-a
+|
+.B \-i
+] [
+.B \-U
+] ...
+.SH DESCRIPTION
+.I DB
+provides a command-level interface to the
+.IR DB (3)
+routines (q.v.).
+.PP
+The options and their meanings are:
+.TP \w'-f \fIfilename\fP 'u
+.B \-D
+Increment debugging level.
+Currently there are 4 levels of debugging, ranging from conditions that
+cause a core dump to a call trace of the user-accessible routines in
+the DB library.
+.TP
+.B \-L
+Set an advisory lock on the database.
+.TP
+.B \-U
+Clear an advisory lock on the database.
+.TP
+.B \-c
+Create (or truncate) the named database.
+.TP
+.BI \-f filename
+Names the database.
+.TP
+.B \-t
+Produce a table of contents of the database.
+.TP
+.B \-l
+Produce a listing of the keys and records of the database.
+.TP
+.BI \-k key
+Set the value of the current key.
+.TP
+.BI \-d data
+Set the value of the current data.
+.TP
+.B \-p
+Put the current data at the current key.
+.TP
+.B \-g
+Get (and print) the data at the current key.
+.TP
+.B \-r
+Remove (delete) the data at the current key.
+.TP
+.B \-a
+Append the current data to the data stored at the current key.
+.TP
+.B \-i
+Insert the current data in front of the data stored at the current key.
+.SH SEE ALSO
+.IR DB (3),
+.IR DBcp (1),
+.IR DBcvt (1).
+.SH DIAGNOSTICS
+The diagnostics are intended to be self-explanatory.
+Mostly, they're complaints about missing arguments.
+.SH BUGS
+Nonascii characters cannot be passed to
+.I DB
+because the shell strips the 8th (most significant) bit.

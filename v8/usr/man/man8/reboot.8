@@ -1,0 +1,199 @@
+.TH REBOOT 8
+.SH NAME
+reboot \- bootstrapping procedures
+.SH SYNOPSIS
+.B /etc/reboot
+[
+.B \-s
+] [
+.B \-n
+] [
+.B \-a
+] [
+.B \-d
+]
+.PP
+.B /etc/halt
+[
+.B \-n
+]
+.SH DESCRIPTION
+.PP
+UNIX is started by placing it in memory
+at location zero and transferring to zero.
+Since the system is not reenterable,
+it is necessary to read it in from disk
+each time it is to be bootstrapped.
+.SS
+.B Rebooting a running system
+.PP
+The preferred way to reboot is to log in on the console,
+invoke
+.B kill 1
+to take the system to single user,
+unmount filesystems with
+.B /etc/umount \-a
+and halt and restart the system
+as described below under
+.BR "Console boots" .
+.PP
+If access to the console is difficult,
+.I /etc/reboot
+may be used to
+restart a running system.
+It normally syncs the disks
+(see
+.IR sync (8)),
+then causes a system
+boot and an automatic disk check.  If all this succeeds,
+the system is brought up multi-user.
+.PP
+The options to
+.I reboot
+are:
+.TP
+.B \-s
+Come up single-user after the reboot, without checking the disks.
+.TP
+.B \-n
+Don't sync the disks before performing the reboot.
+.TP
+.B \-a
+Ask on the console for the name of the file to be booted.
+.TP
+.B \-d
+Write a crash dump to the swap area
+before rebooting.
+.PP
+.I /etc/halt
+syncs the disks and stops the CPU.
+If the
+.B \-n
+option is enabled, the disk sync is not performed.
+.SS
+.B Power fail and crash recovery
+.PP
+The system will normally reboot itself at power-up or after crashes if
+the auto-restart is enabled on the machine front panel.
+An automatic consistency check of the file systems is performed.
+Unless this fails the system will resume multi-user operations.
+.SS
+.B Console boots: VAX-11/750
+.PP
+Sync the disks if necessary and possible.
+To recover control of the console (normally it is running as an ordinary Unix
+terminal), type a control-P.  This will halt the
+CPU and yield a `>>>' prompt from the VAX
+console subsystem (sic).
+(Under undocumented conditions, this may fail.
+If so, hit the white button on the front panel.)
+The command
+.IP
+>>> B
+.PP
+will cause a normal automatic reboot. Use
+.IP
+>>> B/3
+.PP
+to come up single-user.
+This also will prompt (with `:') for the name of the file to boot.
+The format of the file name is
+.IP
+disk(m, n)file
+.PP
+where
+.I disk
+is `ra' for UDA50 disks
+with 4KB filesystems,
+`sa' for UDA50 disks with 1KB filesystems,
+`up' for UNIBUS SMD disks,
+`hp' for Massbus SMD disks;
+.I m
+is the drive number (usually 0);
+.I n
+is the file system number on the drive (usually 0); and
+.I file
+is the Unix name of the file on the disk.
+.PP
+If the root disk is curdled, the bootstrap program
+.I /boot
+can be read from another
+disk, say RA drive 1, by
+.IP
+>>> B/3 DUA1
+.PP
+To the console subsystem, the RA's are called DU;
+the Emulex disks are EM.
+Note that regardless how a system is bootstrapped, it will use drive 0 for the
+root disk.
+.SS
+.B Console boots: VAX-11/780
+.PP
+To halt a 780,
+type control-P,
+then issue the command
+.IP
+>>> H
+.PP
+to halt the CPU.
+.PP
+Rebooting a 780 is like a 750 except for the format of the B command.
+.IP
+>>> B
+.PP
+initiates automatic reboot.
+.IP
+>>> B ANY
+.PP
+comes up single user.
+Replace `ANY' by `HPS' for hp disk single user reboot, `RPS' for rp reboot,
+and `UPS' for ra reboot.
+.SS
+.B Generating system core images
+.PP
+If the system crashes, it attempts to save a copy of its physical memory
+to the swap area, to be copied to the file system after reboot
+(see
+.IR savecore (8)).
+To save a core image for a hung system, type on the console (after control-P
+if necessary):
+.nf
+.IP
+>>> I
+>>> S C00
+.fi
+.PP
+This resets the bus and jumps to the start of the dumping code.
+The system will reboot automatically.
+.SS
+.B Examining system core images
+.PP
+.I Savecore
+saves in the dump directory two files: the copy of physical memory, called
+.IR vmcore.n ,
+and a copy of the kernel binary
+.IR unix.n ,
+where
+.I n
+is a sequence counter.
+To recover a stack traceback at the time of the crash, type
+.nf
+.IP
+$ adb unix.\f2n\fP vmcore.\f2n\fP
+$<crash
+$c
+.fi
+.PP
+.IR Pi (9.1)
+can examine kernel core dumps.
+.SH FILES
+.ta \w'/usr/mdec/mboot   'u
+/unix	default Unix kernel binary
+.br
+/boot	system bootstrap
+.SH "SEE ALSO"
+fsck(8), init(8), rc(8)
+.SH BUGS
+Our homemade boot ROM for Emulex disks
+always boots from drive 0,
+no matter what you tell it.

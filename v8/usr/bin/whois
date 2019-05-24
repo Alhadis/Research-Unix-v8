@@ -1,0 +1,21 @@
+for i do
+case $i in
+
+-v)
+	vis=1
+	;;
+[0-9]|[0-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9])
+	grep ":$i:" /etc/passwd
+	;;
+*)
+	grep "^$i" /usr/adm/usrlist ||
+	grep "^$i" /etc/passwd ||
+	grep -i "$i" /usr/adm/usrlist  ||
+	echo who indeed is $i
+	case $vis in
+	1) vwhois $i
+		;;
+	esac
+	;;
+esac
+done

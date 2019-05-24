@@ -1,0 +1,29 @@
+.TH CHOWN 2 
+.SH NAME
+chown, fchown \- change owner and group of a file
+.SH SYNOPSIS
+.nf
+.B chown(name, owner, group)
+.B char *name;
+.PP
+.B fchown(fd, owner, group)
+.fi
+.SH DESCRIPTION
+.I Chown
+changes the
+.I owner
+and 
+.I group
+of the file specified by the null-terminated string
+.IR name .
+.I Fchown
+changes the owner and group of an open file
+specified by file descriptor.
+Only the super-user may
+execute these calls.
+.SH "SEE ALSO"
+chown(1), chmod(2), passwd(5)
+.SH DIAGNOSTICS
+Zero is returned if the owner is changed;
+\-1 is returned
+on illegal owner changes.

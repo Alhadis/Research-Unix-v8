@@ -1,0 +1,17 @@
+SYSTEM			CODE	NEW-CODE	MISC
+*			(NULL)	login		-
+*			dcon	*		-
+mh/astro/*		exec	*		-
+mh/wonder/*		exec	*		-
+mh/phone/*		exec	*		-
+mh/toy/forbes		exec	*		-
+mh/bistro/*		exec	*		-
+mh/vlsi/*		exec	*		-
+mh/bcr/*		exec	*		-
+*			ttyexec	*		-
+*			mesgexec	*		-
+*			mesgdcon	*		-
+*			tdcon	cmdexec		/usr/dk/Tdcon
+*			ndcon	cmdexec		/usr/rtm/Ndcon
+*			whoami	cmd	daemon	echo -e $DKSOURCE\\r
+*			uucp	cmd	uucp	/usr/lib/uucp/uucico

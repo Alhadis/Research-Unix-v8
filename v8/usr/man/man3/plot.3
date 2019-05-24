@@ -1,0 +1,108 @@
+.TH PLOT 3 
+.SH NAME
+vec, move, etc.  \-  graphics interface
+.SH SYNOPSIS
+.mk
+.B #include <pplot.h>
+.br
+.B #include <plot.h>
+.br
+.B "#include <iplot.h>"
+.PP
+.nf
+.B "openpl(s) char *s;"
+.B "closepl()"
+.B "erase()"
+.B "move(x, y) double x, y;"
+.B "rmove(dx, dy) double dx, dy;"
+.B "point(x, y) double dx, dy;"
+.B "vec(x, y) double x, y;"
+.B "rvec(dx, dy) double dx, dy;"
+.B "line(x1, y1, x2, y2) double x1, y1, x2, y2;"
+.B "arc(x1, y1, x2, y2, x, y, r) double x1, y1, x2, y2, x, y, r;"
+.B "circle(xc, yc, r) double xc, yc, r;"
+.B "box(x1, y1, x2, y2) double x1, y1, x2, y2;"
+.B "sbox(x1, y1, x2, y2) double x1, y1, x2, y2;"
+.B "parabola(x1, y1, x2, y2, x3, y3) double x1, y1, x2, y2, x3, y3;"
+.B "fill(n, arr) int n[]; double *arr[];"
+.B "poly(n, arr) int n[]; double *arr[];"
+.B "spline(n, arr) int n[]; double *arr[];"
+.B "cspline(n, arr) int n[]; double *arr[];"
+.B "fspline(n, arr) int n[]; double *arr[];"
+.B "lspline(n, arr) int n[]; double *arr[];"
+.B "dspline(n, arr) int n[]; double *arr[];"
+.B "text(s) char *s;"
+.B "color(s) char *s;"
+.B "cfill(s) char *s;"
+.B "pen(s) char *s;"
+.B "range(x1, y1, x2, y2) double x1, y1, x2, y2;"
+.B "frame(x1, y1, x2, y2) double x1, y1, x2, y2;"
+.B "grade(x) double x;"
+.B save()
+.B restore()
+.B ppause()
+.PP
+.SH DESCRIPTION
+These functions generate either a device-independent
+graphic stream (see 
+.IR plot (5))
+or device-dependent graphics commands.
+For device-independent graphic stream, include file <plot.h> for
+floating point arguments; and file <iplot.h> for integer arguments.
+The libraries for different devices are loaded with the following
+.IR ld (1)
+flags:
+.TP 8n
+.B \-lplot
+general stream output
+.br
+.ns
+.TP
+.B \-l2621
+HP2621 terminal
+.br
+.ns
+.TP
+.B \-l4014
+Tektronix 4014 terminal
+.br
+.ns
+.TP
+.B \-lram
+Ramtek 9300 display
+.br
+.ns
+.TP
+.B \-ltr
+Troff input, tuned for the Mergenthaler Linotron 202 phototypesetter
+.br
+.ns
+.TP
+.B \-lpen
+HP7580 pen plotter
+.br
+.ns
+.TP
+.B \-lblit
+blit terminal running mux
+.br
+.ns
+.TP
+.B \-l5620
+5620 terminal running mux
+.PP
+String arguments are null terminated and may not contain
+embedded newlines.
+For details on string arguments, see
+.IR plot (5).
+.I Poly, fill,
+and the various spline functions
+take an integer array and an array of pointers
+to double floating point arrays.
+The integers specify the number of vertices
+.RI ( x-y
+pairs)
+in the floating point array.
+The last integer entry should be 0.
+.SH "SEE ALSO"
+plot(1), plot(5)

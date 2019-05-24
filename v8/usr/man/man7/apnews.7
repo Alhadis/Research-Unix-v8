@@ -1,0 +1,148 @@
+.TH APNEWS 7 alice 
+.SH NAME
+apnews, ap.keys \- present AP wire stories
+.SH SYNOPSIS
+.B apnews
+[
+.B \-f
+dir
+] [
+.B \-r
+]
+.SH DESCRIPTION
+.I Apnews
+presents news from the AP wire on a video screen.
+The top half of the screen contains 20
+story slugs (two-word labels).
+.I Apnews
+responds to these commands:
+.TP "\w'c file  'u"
+.I n
+print story for slug
+.IR n ;
+page through it by typing newlines
+.TP
+m	present more slugs
+.TP
+.B \&.
+return to current slug list
+.TP
+t
+return to first list
+.TP
+.RI s " keywords"
+present slugs for stories containing these keywords
+.TP
+y
+present slugs for stories containing words from the last story read
+.TP
+.RI c " file"
+(copy) add story being read to named file or directory
+.TP
+?
+print some help
+.PP
+To suggest interest,
+slugs may be followed by a bracketed number that shows
+the average number of pages (up to 5) that readers
+have perused.
+Option
+.B \-r
+turns this feature off.
+.PP
+Option
+.B \-f
+directs the attention of
+.I apnews
+to a specified directory of AP stories, as may be collected by
+.I ap.keys.
+.PP
+To monitor news automatically, put a file
+.I ap.keys
+in your home directory.
+This file contains instruction lines marked by stars (*),
+each followed by one or more search lines.
+Instructions specify how much to capture:
+.PP
+S	whole story
+.br
+P	first paragraph
+.br
+H	heading
+.LP
+then what to do with it:
+.TP
+| command
+specifying a command (often mail) to be executed with the
+story as standard input
+.TP
+> file
+specifying a file or directory to add the story to;
+pathnames are relative to your home directory
+.PP
+If no instruction is present, the default is
+.IP
+*S | mail yourself
+.PP
+Search lines may contain:
+.IP \-
+a sequence of blank-separated words; these words
+must occur in this order
+.IP \-
+a sequence of words separated
+by commas; these words must appear in the same sentence
+.IP \-
+a sequence of words separated by periods; these words may
+occur anywhere in the story, but all must appear
+.PP
+Combinations
+are allowed, e.g.\&
+.I " x . y, z"
+specifies
+.I y
+and
+.I z
+in the same sentence and
+.I x
+somewhere in the same story.
+The character `!' means not, so that
+.I !chocolate chip
+means
+.I chip
+not preceded by
+.I chocolate.
+Some suffixes are removed; and
+capitals are ignored except when entire words are
+capitalized.
+Thus
+.I ERA
+and
+.I era
+are distinguished, but
+.I Waters
+and
+.I waters
+are not.
+Special `words' specify story types:
+.PP
+#f	flash
+.br
+#b	bulletin
+.br
+#u	urgent news
+.br
+#r	regular news
+.br
+#d	deferred news
+.SH EXAMPLE
+.PP
+.nf
+\(**S > stuff
+bell laboratories
+FCC . telephone, regulation
+\(**P | mail joe
+#b
+AM-NewsDigest
+.fi
+.SH FILES
+/usr/spool/ap/*

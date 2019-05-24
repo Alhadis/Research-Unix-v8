@@ -1,0 +1,16 @@
+#!/bin/sh
+HACK=/usr/games/lib/hack/HACK
+HACKDIR=/usr/games/lib/hack/tmp
+MAXNROFPLAYERS=16
+MORE=/usr/bin/p
+
+cd $HACKDIR
+case $1 in
+	-s*)
+		exec $HACK $@
+		;;
+	*)
+#		/bin/cat news
+		exec $HACK "-d$HACKDIR" "$@" "$MAXNROFPLAYERS" "$MORE"
+		;;
+esac

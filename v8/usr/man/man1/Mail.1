@@ -1,0 +1,169 @@
+.TH Mail 1
+.SH NAME
+Mail \- send and receive mail
+.SH SYNOPSIS
+.B Mail
+[ option ] ...
+[ person ] ...
+.SH DESCRIPTION
+.I Mail 
+with 
+.I persons
+named reads a letter from the standard input and sends it to them.
+.PP
+.I Mail
+otherwise presents your mail.
+It responds to commands, each typed on a line by itself,
+possibly with arguments.
+A command need not be typed in its
+entirety \- the first command that matches the typed prefix is used.
+A missing message list is interpreted as a singleton:
+whichever of the current message,
+the nearest message ahead, or the nearest message back
+satisfies the command's requirements.
+.PP
+The following table describes the commands:
+.ta \w'alternates 'u 
+.PP
+.ta \w'\fBalternates \fR'u +\w'\fBArguments \fR'u
+.B
+Command	Description
+.nf
+\fB!\fR	Single command escape to shell
+\fB\-\fR	Back up to previous message
+\fBReply\fR	Reply to author of message only
+\fBalias\fR	Define an alias as a set of user names
+\fBalternates\fR	List other names you are known by
+\fBchdir\fR	Change working directory, home by default
+\fBcopy\fR	Copy a message to a file or folder
+\fBdelete\fR	Delete a list of messages
+\fBdt\fR	Delete current message, type next message
+\fBendif\fR	End of conditional statement; see \fBif\fP
+\fBedit\fR	Edit a list of messages
+\fBelse\fR	Start of else part of conditional; see \fBif\fP
+\fBexit\fR	Leave mail without changing anything
+\fBfile\fR	Interrogate/change current mail file
+\fBfolder\fR	Same as \fBfile\fP
+\fBfolders\fR	List the folders in your folder directory
+\fBfrom\fR	List headers of a list of messages
+\fBheaders\fR	List current window of messages
+\fBhelp\fR	Print brief summary of \fIMail\fP commands
+\fBhold\fR	Same as \fBpreserve\fP
+\fBif\fR	Conditional execution of \fIMail\fP commands
+\fBignore\fR	Do not print listed headers
+\fBmail\fR	Send mail to specified names
+\fBmbox\fR	Arrange to save a list of messages in \fImbox\fP
+\fBnext\fR	Go to next message and type it
+\fBpreserve\fR	Arrange to leave list of messages in \fImbox\fR
+\fBquit\fR	Leave \fIMail\fP; update \fImbox\fP as appropriate
+\fBreply\fR	Compose a reply to a message
+\fBsave\fR	Append messages, headers included, on a file
+\fBset\fR	Set binary or valued options
+\fBshell\fR	Invoke an interactive shell
+\fBtop\fR	Print first so many (5 by default) lines of list of messages
+\fBtype\fR	Print messages
+\fBundelete\fR	Undelete list of messages
+\fBunset\fR	Undo the operation of a \fBset\fP
+\fBvisual\fR	Invoke visual editor on a list of messages
+\fBwrite\fR	Append messages to a file, don't include headers
+\fBz\fR	Scroll to next/previous screenful of headers
+.fi
+.PP
+The following table describes the options for \fBset\fR.
+Each option is
+shown as being either a binary or valued option.
+.PP
+.B
+Option	Type	Description
+.nf
+EDITOR	valued	Pathname of editor for ~e and \fBedit\fP
+SHELL	valued	Pathname of shell for \fBshell\fP, ~! and \fB!\fP
+VISUAL	valued	Pathname of screen editor for ~v, \fBvisual\fP
+append	binary	Always append messages to end of \fImbox\fP
+ask	binary	Prompt user for Subject: field when sending
+askcc	binary	Prompt user for additional Cc's at end of message
+autoprint	binary	Print next message after \fBdelete\fP
+crt	valued	Minimum number of lines before using \fImore\fP
+dot	binary	Accept . alone on line to terminate message input
+escape	valued	Escape character to be used instead of ~
+folder	valued	Directory to store folders in
+hold	binary	Hold messages in \fImbox\fP by default
+ignore	binary	Ignore \s-2RUBOUT\s0 while sending mail
+ignoreeof	binary	Don't terminate letters/command input with ^D
+keep	binary	Don't unlink \fImbox\fP when empty
+keepsave	binary	Don't delete \fBsave\fPd messages by default
+metoo	binary	Include sending user in aliases
+nosave	binary	Don't save partial letter in \fIdead.letter\fP
+quiet	binary	Suppress printing of \fIMail\fP version
+record	valued	File to save all outgoing mail in
+screen	valued	Size of window of message headers for \fBz\fP, etc.
+sendmail	valued	Choose alternate mail delivery system
+toplines	valued	Number of lines to print in \fBtop\fP
+.fi
+.PP
+The following table summarizes tilde escapes available
+while entering a letter.
+.PP
+.B
+Escape	Arguments	Description
+.nf
+~!	command	Execute shell command
+~c	name ...	Add names to Cc: field
+~d		Read \fIdead.letter\fP into message
+~e		Invoke text editor on partial message
+~f	messages	Read named messages
+~h		Edit the header fields
+~m	messages	Read named messages, right shift by tab
+~p		Print message entered so far
+~q		Abort entry of letter; like \s-2RUBOUT\s0
+~r	filename	Read file into message
+~s	string	Set Subject: field to \fIstring\fP
+~t	name ...	Add names to To: field
+~v		Invoke screen editor on message
+~w	filename	Write message on file
+~\^|	command	Pipe message through \fIcommand\fP
+~~	string	Quote a ~ in front of \fIstring\fP
+.fi
+.PP
+The following table shows the command line flags.
+.PP
+.ta \w'\-h number 'u
+.B
+Flag	Description
+.PP
+.nf
+\-N	Suppress the initial printing of headers
+\-T \fIfile\fP	Article-id's of read/deleted messages to \fIfile\fP
+\-d	Turn on debugging
+\-f \fIfile\fP	Show messages in \fIfile\fP or \fI$HOME/mbox\fP
+\-h \fInumber\fP	Pass on hop count for mail forwarding
+\-i	Ignore tty interrupt signals
+\-n	Inhibit reading of /usr/lib/Mail.rc
+\-r \fIname\fP	Pass on \fIname\fP for mail forwarding
+\-s \fIstring\fP	Use \fIstring\fP as subject in outgoing mail
+\-u \fIname\fP	Read \fIname's\fP mail instead of your own
+.fi
+.PP
+Notes:
+.B \-T ,
+.B \-d ,
+.B \-h ,
+and
+.B \-r
+are not fit for human consumption.
+.SH FILES
+.ta \w'/usr/lib/Mail.help* 'u
+.nf
+/usr/spool/mail/*	post office
+$HOME/mbox	your old mail
+$HOME/.mailrc	file giving initial mail commands
+/tmp/R#	temporary for editor escape
+/usr/lib/Mail.help*	help files
+/usr/lib/Mail.rc	system initialization file
+/bin/mail	to do actual mailing
+.fi
+.SH "SEE ALSO"
+mail(1)
+.br
+`The Mail Reference Manual,'
+.I Berkeley BSD 4.1 UNIX User's Manual

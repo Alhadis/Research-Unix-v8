@@ -1,0 +1,76 @@
+.TH MAP 5
+.SH NAME
+map \- digitized map formats
+.SH DESCRIPTION
+Files used by
+.IR  map (7)
+are a sequence of structures of the form:
+.IP
+.nf
+struct {
+	char patchlatitude;
+	char patchlongitude;
+	short n;
+	union {
+		struct {
+			short latitude;
+			short longitude;
+		} point[n];
+		struct {
+			short latitutde;
+			short longitude;
+			struct {
+				char latdiff;
+				char londiff;
+			} point[\-n];
+		} highres;
+	} segment;
+};
+.fi
+.PP
+.I Patchlatitude
+and
+.I patchlongitude
+tell to what
+10-degree by 10-degree
+patch of the earth's surface a segment belongs.
+Their values range from \-9 to 8 and from \-18 to 17,
+respectively, and indicate the coordinates of the
+southeast corner of the patch in units of 10 degrees.
+.PP
+Each segment of
+.I abs(n)
+points is connected; consecutive segments
+are not necessarily related.
+.I Latitude
+and
+.I longitude
+are measured in units of 0.0001 radian.
+If 
+.I n
+is negative, then 
+differences to the first and succeeeding points
+are measured in units of 0.00001 radian.
+.I Latitude
+is counted positive to the north and
+.I longitude
+positive to the west.
+.PP
+The patches are ordered lexicographically by 
+.I patchlatitude
+then
+.IR patchlongitude .
+A printable
+index to the first segment of each patch
+in a file named
+.I map
+is kept in an associated file named
+.IB map .x\fR.\fP
+Each line of an index file contains 
+.I patchlatitude,
+.I patchlongitude
+and the byte position 
+of the patch
+in the map file.
+.SH "SEE ALSO"
+map(7), map(3)

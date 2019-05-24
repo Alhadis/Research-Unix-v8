@@ -1,0 +1,291 @@
+.hc %
+.TH MS 7 
+.SH NAME
+ms \- macros for formatting manuscripts
+.SH SYNOPSIS
+.B "nroff \-ms"
+[ options ]
+file ... 
+.br
+.B "troff \-ms"
+[ options ]
+file ... 
+.SH DESCRIPTION
+This package of 
+.I nroff
+and
+.I troff
+macro definitions provides a canned formatting
+\&facility for tech%nical papers in various formats.
+When producing 2-column output on a terminal, filter
+the output through
+.IR  col (1).
+.PP
+The macro requests are defined below.
+Many
+.I nroff
+and
+.I troff
+requests are unsafe in conjunction with
+this package, but these requests may be used with
+impunity after the first .PP:
+.IP
+.ta \w'.sp n 'u
+\&.bp	begin new page
+.nf
+\&.br	break output line here
+\&.sp n	insert n spacing lines
+\&\&.ls n	(line spacing) n=1 single, n=2 double space
+\&\&.na	no alignment of right margin
+.fi
+.PP
+Output of the
+.I eqn,
+.I neqn,
+.I tbl,
+and
+.IR  refer (1)
+preprocessors
+for equations, tables and references is acceptable as input.
+.PP
+Diacritical marks may be applied to letters,
+as in these examples:
+.ta .5i 1i 1.5i 2i 2.5i 3i 3.5i 4i 4.5i 5i 5.5i
+.ds ' \h'\w'e'u*4/10'\z\(aa\h'-\w'e'u*4/10'
+.ds ` \h'\w'e'u*4/10'\z\(ga\h'-\w'e'u*4/10'
+.ds : \v'-0.6m'\h'(1u-(\\n(.fu%2u))*0.13m+0.06m'\z.\h'0.2m'\z.\h'-((1u-(\\n(.fu%2u))*0.13m+0.26m)'\v'0.6m'
+.ds ^ \\k:\h'-\\n(.fu+1u/2u*2u+\\n(.fu-1u*0.13m+0.06m'\z^\h'|\\n:u'
+.ds ~ \\k:\h'-\\n(.fu+1u/2u*2u+\\n(.fu-1u*0.13m+0.06m'\z~\h'|\\n:u'
+.ds v \\k:\\h'+\\w'e'u/4u'\\v'-0.6m'\\s6v\\s0\\v'0.6m'\\h'|\\n:u'
+.ds , \\k:\\h'\\w'c'u*0.4u'\\z,\\h'|\\n:u'
+.IP
+\e*\`e	\e*\`a	\e*\'e	\e*^e	\e*^o	\e*:u	\e*~n	\e*,c	\e*vc
+.br
+\*`e 	\*`a 	\*'e 	\*^e 	\*^o 	\*:u 	\*~n 	\*,c 	\*vc
+.SH FILES
+/usr/lib/tmac/tmac.s
+.SH "SEE ALSO"
+eqn(1), troff(1), refer(1), tbl(1)
+.SH REQUESTS 
+.ta \w'..ND \fIdate\fR 'u +\w'Initial 'u +\w'Cause 'u
+.br
+.di x
+			\ka
+.br
+.di
+.in \nau
+.ti0
+Request	Initial	Cause	Explanation
+.ti0
+	Value	Break
+.br
+.in \nau
+.ti0
+\&.1C	yes	yes	One column format on a new page.
+.ti0
+\&.2C	no	yes	Two column format.
+.ti0
+\&.AB	no	yes	Begin abstract.
+.ti0
+\&.AE	-	yes	End abstract.
+.ti0
+\&.AI	no	yes	Author's institution follows.
+Suppressed in TM.
+.ti0
+\&.AT	no	yes	Print `Attached' and turn off line filling.
+.ti0
+\&.AU \fIx y\fR	no	yes	Author's name follows.
+.IR x " is location and " "y\fR is"
+extension, ignored except in TM.
+.ti0
+\&.B \fIx y\fR	no	no	Print
+.I x
+in boldface and append 
+.IR y ;
+if no argument switch to boldface.
+.ti 0
+\&.B1	no	yes	Begin text to be enclosed in a box.
+.ti0
+\&.B2	no	yes	End boxed text.
+.ti0
+\&.BT	date	no	Bottom title, automatically invoked at
+foot of page.
+May be redefined.
+.ti0
+\&.BX \fIx\fR	no	no	Print
+.I x
+in a box.
+.ti0
+\&.CS \fIx...\fR	-	yes	Cover sheet info if
+TM format, suppressed otherwise.
+Arguments are number of text pages,
+other pages, total pages, figures, tables, references.
+.ti0
+\&.CT	no	yes	Print `Copies to' and turn off line filling.
+.ti0
+\&.DA \fIx\fR	nroff	no	`Date line' at bottom of page
+is
+.IR x .
+Default is today.
+.ti0
+\&.DE	-	yes	End displayed text.
+Implies .KE.
+.ti0
+\&.DS \fIx\fR	no	yes	Start of displayed text,
+to appear verbatim line-by-line.
+.IR x "=I for indented display (default),"
+.IR x "=L for left-justified on the page,"
+.IR x "=C for centered,"
+.IR x =B
+(block) for centered with straight left margin.
+Implies .KS.
+.ti0
+\&.EG	no	-	Print document in BTL format for `Engineer's Notes.'  Must be first.
+.ti0
+\&.EN	-	yes	Space after equation
+produced by
+.I eqn
+or
+.IR neqn .
+.ti0
+\&.EQ \fIx y\fR	-	yes	Display equation.
+Equation number is
+.IR y .
+Optional argument
+.IR x =I,
+L, C as in .DS.
+.ti0
+\&.FE	-	yes	End footnote.
+.ti0
+\&.FP	-	no	Set font positions for a family, e.g., ".FP palatino"
+.ti0
+\&.FS	no	no	Start footnote.
+The note will be moved to the bottom of the page.
+.ti0
+\&.HO	-	no	`Bell Laboratories, Holmdel,
+New Jersey 07733'.
+.ti0
+\&.I \fIx y\fR	no	no	Italicize
+.I x
+and append
+.IR y ;
+if no argument switch to Italic.
+.ti0
+\&.IH	no	no	`Bell Laboratories, Naperville, Illinois 60540'
+.ti0
+\&.IM	no	no	Print document in BTL format for an internal memorandum.  Must be first.
+.ti0
+\&.IP \fIx y\fR	no	yes	Start indented paragraph,
+with hanging tag
+.IR x .
+Indentation is
+.IR y ""
+ens (default 5).
+.ti0
+\&.KE	-	yes	End keep.
+Put kept text on next page if not enough room.
+.ti0
+\&.KF	no	yes	Start floating keep.
+If the kept text must be moved to the next page,
+float later text back to this page.
+.ti0
+\&.KS	no	yes	Start keeping following text.
+.ti0
+\&.LG	no	no	Make letters larger.
+.ti0
+\&.LP	yes	yes	Start left-blocked paragraph.
+.ti0
+\&.LT	no	yes	Start a letter with today's date;
+address follows.
+.ti0
+\&.MF	-	-	Print document in BTL format for `Memorandum for File.'  Must be first.
+.ti0
+\&.MH	-	no	`Bell Laboratories, Murray Hill,
+New Jersey 07974'.
+.ti0
+\&.MR	-	-	Print document in BTL format for `Memorandum for Record.'  Must be first.
+.ti0
+\&.ND \fIdate\fR	troff	no	Use date supplied (if any) only in
+special BTL format positions; omit from page footer.
+.ti0
+\&.NH \fIn\fR	-	yes	Same as .SH, with section
+number supplied automatically.
+Numbers are multilevel, like 1.2.3,
+where
+.IR n ""
+tells what level is wanted (default is 1).
+.ti0
+\&.NL	yes	no	Make letters normal size.
+.ti0
+\&.OK	-	yes	`Other keywords' for TM cover
+sheet follow.
+.ti0
+\&.PP	no	yes	Begin paragraph.
+First line indented.
+.ti0
+\&.PT	pg #	-	Page title, automatically invoked at
+top of page.
+May be redefined.
+.ti0
+\&.PY	-	no	`Bell Laboratories, Piscataway, New Jersey 08854'
+.ti0
+\&.QE	-	yes	End quoted material.
+.ti0
+\&.QP	-	yes	Begin single quoted paragraph (indent both margins).
+.ti0
+\&.QS	-	yes	Begin quoted material (indent both margins).
+.ti0
+\&.R	yes	no	Roman text follows.
+.ti0
+\&.RE	-	yes	End relative indent level.
+.ti0
+\&.RP	no	-	Cover sheet and first page for released
+paper.
+Must precede other requests.
+.ti0
+\&.RS	-	yes	Start level of relative indentation
+from which subsequent indentation is measured.
+.ti0
+\&.SG \fIx\fR	no	yes	Insert signature(s) of author(s),
+ignored except in TM.
+.IR x " is the reference line (initials of author and typist)."
+.ti0
+\&.SH	-	yes	Section head follows,
+font automatically bold.
+.ti0
+\&.SM	no	no	Make letters smaller.
+.ti0
+\&.TA \fIx\fR...	5...	no	Set tabs in ens.
+Default is 5 10 15 ...
+.ti0
+\&.TE	-	yes	End table.
+.ti0
+\&.TH	-	yes	End heading section of table.
+.ti0
+\&.TL	no	yes	Title follows.
+.ti0
+\&.TM \fIx\fR...	no	-	Print document in BTL technical memorandum format.
+Arguments are TM number, (quoted list of) case number(s), and file number.
+Must precede other requests.
+.ti0
+\&.TR \fIx\fR	-	-	Print in BTL technical report format; report number is \fIx\fR.  Must be first.
+.ti0
+\&.TS \fIx\fR	-	yes	Begin table; if
+.I x
+is
+.I H
+table heading is repeated on new pages.
+.ti0
+\&.UL \fIx\fR	-	no	Underline argument (even in troff).
+.ti0
+\&.UX	-	no	`UNIX'; first time used, add footnote `UNIX is a trademark of
+Bell Laboratories.'
+.ti0
+\&.WH	-	no	`Bell Laboratories, Whippany,
+New Jersey 07981'.
+.ti0
+\&.[	-	no	Begin reference; see
+.IR refer (1)
+.ti0
+\&.]	-	no	End reference
+.hc

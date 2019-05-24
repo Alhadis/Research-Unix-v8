@@ -1,0 +1,44 @@
+.TH CHOWN 8 
+.SH NAME
+chown, chgrp \- change owner or group
+.SH SYNOPSIS
+.B /etc/chown
+owner file ...
+.PP
+.B /etc/chown
+owner,group file ...
+.PP
+.B /etc/chgrp
+group file ...
+.SH DESCRIPTION
+.I Chown
+changes the owner of the
+.I files
+to
+.I owner
+and optionally changes the group-ID of the
+.I files
+to
+.IR group .
+.PP
+.I Chgrp
+changes the group-ID of the
+.I files
+to
+.IR group .
+.PP
+The owner may be either a decimal UID or
+a login name found in
+.IR /etc/passwd .
+The group may be either a decimal GID or
+a group name found in
+.IR /etc/group .
+.PP
+Only the super-user can change owner or group.
+.SH FILES
+/etc/passwd
+.br
+/etc/group
+.SH "SEE ALSO"
+chown(2),
+passwd(5), group(5)

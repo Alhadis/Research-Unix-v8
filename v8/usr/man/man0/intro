@@ -1,0 +1,672 @@
+.TL
+INTRODUCTION TO VOLUME 1
+.LP
+This volume gives descriptions of the publicly available
+features of the Eighth Edition system in use at the
+Computing Science Research Center of AT&T Bell Laboratories.
+It does not attempt to provide perspective or tutorial
+information upon the
+.UX
+operating system,
+its facilities, or its implementation.
+Various documents on those topics are contained in
+Volume 2.
+In particular,
+for an overview see `The
+.UX
+Time-Sharing System'
+by Ritchie and Thompson; for a tutorial see
+`\s8UNIX\s0 for Beginners' by Kernighan.
+.LP
+Within the area it surveys, this volume attempts
+to be timely, complete and concise.
+Where the latter two objectives conflict,
+the obvious is often left unsaid in favor of brevity.
+It is intended that each program be described
+as it is, not as it should be.
+Inevitably, this means that
+various sections will soon be out of date.
+.LP
+The volume is divided into
+nine sections:
+.DS
+1.	Commands
+2.	System calls
+3.	Subroutines
+4.	Special files
+5.	File formats and conventions
+6.	Games
+7.	Data bases and language conventions
+8.	Maintenance commands and procedures.
+9.	Teletype 5620-related software.
+.DE
+Commands are programs intended to be invoked directly by
+the user, in contradistinction to subroutines, which are
+intended to be called by the user's programs.
+Essential commands generally reside in directory
+.I /bin
+(for
+.I bin \|ary
+programs).
+Public programs also reside in
+.I
+/\|usr/\|bin.
+.R
+These directories are searched automatically by command interpreters.
+.LP
+System calls are entries into the
+.UX
+supervisor.
+The system call interface is identical to a C language
+procedure call; the equivalent C procedures are described in Section 2.
+.LP
+An assortment
+of subroutines is available;
+they are described in section 3.
+The primary libraries in which they are kept are described in
+.I intro (3).
+Most of these routines are C functions.
+Fortran users should consult the
+.I port (3)
+mathematical library.
+.LP
+The special files section 4 discusses the characteristics of
+each system `file' that actually refers to an I/O device.
+.LP
+The file formats and conventions section 5 documents the structure of particular
+kinds of files; for example, the form of the output of the loader and
+assembler is given.  Excluded are files used by only one command,
+for example the assembler's intermediate files.
+.LP
+Games have been relegated to section 6 to keep them from contaminating
+the more staid information of section 1.
+.LP
+Section 7 is a miscellaneous collection of information sources
+and conventions for
+various specialized languages:
+character codes, 
+macro packages for typesetting,
+news, weather,
+etc.
+.LP
+The maintenance 
+section 8 discusses commands and procedures not intended
+for use by the ordinary user.
+The commands and files described here are almost all kept in the directory
+.I /etc.
+.LP
+Section 9 contains software intended for use with the Teletype
+5620 terminal.
+In this category fall utilities that exploit the terminal and
+tools for writing code to run with or on it.  
+.LP
+Each section consists of a number of independent
+entries of a page or so each.
+The name of the entry is in the upper corners of its pages,
+together with the section number.
+Sections 3 and 9 have further substructure as described in
+their respective introductions.
+Entries within each section are
+alphabetized.
+The page numbers of each entry start at 1;
+it is infeasible to number consecutively the pages of 
+a document like this that is republished in many variant forms.
+.LP
+All entries are based on a common format,
+not all parts of which necessarily appear.
+.RS
+.LP
+The
+.I name
+subsection lists the exact names of the commands and subroutines
+covered under the entry and gives
+a very short description of their purpose.
+.LP
+The
+.I synopsis ""
+summarizes the use of the
+program being described.
+A few conventions are used, particularly in the
+Commands subsection:
+.LP
+.RS
+.B Boldface
+words are considered literals, and
+are typed just as they appear.
+.LP
+Square brackets [ ] around an argument
+indicate that the argument is optional.
+When an argument is given as `name', it always
+refers to a file name.
+.LP
+Ellipses `.\|.\|.' are used to show that the previous argument-prototype
+may be repeated.
+.LP
+A final convention is used by the commands themselves.
+An argument beginning with a minus sign `\-'
+is often taken to mean some sort of option-specifying argument
+even if it appears in a position where a file name
+could appear.
+Therefore, it is unwise to have files
+whose names begin with `\-'.
+.LP
+.RE
+The
+.I description ""
+subsection discusses in detail the subject at hand.
+.LP
+The
+.I examples
+subsection illustrates interesting usage.
+.LP
+The
+.I files ""
+subsection gives the names of files which are
+built into the program.
+.LP
+The
+.I
+see also
+.R
+subsection gives pointers to related information.
+.LP
+The
+.I  diagnostics
+subsection discusses
+the diagnostic indications which may be produced.
+Messages which are intended to be self-explanatory
+are not listed.
+.LP
+The
+.I bugs ""
+subsection gives
+known bugs and sometimes deficiencies.
+Occasionally also the suggested fix is
+described.
+.LP
+.RE
+Following this introduction are
+a permuted index and glossary.
+.SH
+HOW TO GET STARTED
+.LP
+This section sketches the basic information
+you need to get started on
+.UX :
+how to log in and log out,
+how to communicate through your terminal,
+and how to run a program.
+See `\c
+.UX
+for Beginners'
+in Volume 2 for a more complete introduction
+to the system.
+.LP
+.I
+Logging in.\ \ 
+.R
+You must call
+.UX
+from an appropriate terminal.
+Most any \s8ASCII\s0 terminal capable of full duplex operation and generating
+the entire character set can be used.
+You must also have a valid user name,
+which may be obtained, together with necessary telephone numbers,
+from the system administration.
+After a data connection is established,
+the login procedure depends on what kind of terminal
+you are using.
+.LP
+.I
+.I
+Dial-up terminals:\ \ 
+.R
+If there is a half/full duplex switch, set it at full-duplex.
+When you have established a data connection,
+the system types out a few characters, intended to be `login:'.
+If they appear as gibberish, the computer is sending at the wrong 
+baud rate;
+depress the `break' (or `interrupt')
+key; this is a speed-independent signal
+to
+.UX
+that a different speed terminal
+is in use.
+The system then will type `login:,' this time at another
+speed.
+Continue depressing the break key
+until `login:' appears in clear, then
+respond with your user name.
+From the TTY 37 terminal, and any other which has the `newline'
+function (combined carriage return and linefeed), terminate each line you type with the
+`new line' key,
+otherwise use the `return' key.
+.LP
+.I
+Hard-wired terminals.\ \ 
+.R
+Hard-wired terminals usually begin at the right
+speed, up to 9600 baud; otherwise the preceding instructions
+apply.
+.LP
+For all terminals, it is important
+that you type your name in lower-case if possible; if you type
+upper-case letters,
+.UX
+will assume that your terminal cannot generate lower-case
+letters and will translate all subsequent upper-case
+letters to lower case.
+.LP
+The evidence that you have successfully
+logged in is that a shell program
+will type a prompt (normally `$') to you.
+(The shell is described below under
+`How to run a program.')
+.LP
+For more information, consult
+.I tabs (1),
+.I stty (1),
+or
+.I tset (1),
+which tell how to adjust terminal behavior,
+.I getty (8),
+which discusses the login sequence in more
+detail, and
+.I tty (4),
+which discusses terminal I/O.
+To arrange for these and other settings to be set automatically
+when the shell starts, provide a `.profile' file as
+described in
+.I sh (1).
+.LP
+.I
+Logging out.\ \ 
+.R
+There are two ways to log out:
+.IP
+Type an end-of-file indication
+(EOT character, control-d) to the shell.
+The shell will terminate and the `login:' message
+will appear again.
+.IP
+Simply hang up the phone.
+.LP
+.I
+How to communicate through your terminal.\ \ 
+.R
+When you type characters, a gnome deep in the system
+gathers your characters and saves them in a secret
+place.
+The
+characters will not be given to a program
+until you type a return (or newline), as described above
+in
+.I
+Logging in.
+.R
+.LP
+.UX
+terminal I/O is full-duplex.
+It has full read-ahead, which means that you can
+type at any time,
+even while a program is
+typing at you.
+Of course, if you type during output, the printed output will
+have the input characters interspersed.
+However, whatever you type will be saved
+up and interpreted in correct sequence.
+There is a limit to the amount of read-ahead,
+but it is generous and not likely to be exceeded unless
+the system is in trouble.
+When the read-ahead limit is exceeded, the system
+throws away all the saved characters.
+.LP
+The character `@' in typed input
+kills all the preceding characters in the line, so
+typing mistakes
+can be repaired on a single line.
+Also, the character `#' erases the last character typed.
+(Most users prefer to use a backspace rather than `#',
+and some prefer control-U instead of `@';
+.I stty (1)
+can be used to arrange this.)
+Successive uses of `#' erase characters back to, but
+not beyond, the beginning of the line.
+`@' and `#' can be transmitted to a program
+by preceding them with `\\'.
+(So, to erase `\\', you need two `#'s).
+.LP
+The `break' or `interrupt' key causes an
+.I
+interrupt signal,
+.R
+as does the
+\s8ASCII\s0 `delete' (or `rubout') character,
+which is not passed to programs.
+This signal
+generally causes whatever program
+you are running to terminate.
+It is typically used to stop a long printout that
+you don't want.
+However, programs can arrange either to ignore
+this signal altogether,
+or to be notified when it happens (instead
+of being terminated).
+The editor,
+.I ed (1),
+for example, catches interrupts and
+stops what it is doing,
+instead of terminating, so that an interrupt can
+be used to halt an editor printout without
+losing the file being edited.
+.LP
+It is also possible to suspend output temporarily using ^S (control-s)
+and later resume output with ^Q.
+.LP
+The
+.I quit ""
+signal is generated
+by typing the \s8ASCII\s0 FS character.
+(FS appears many places on different terminals, most commonly
+as control-\e or control-\^|\^.)
+It not only causes a running program to terminate
+but also generates a file with the core image
+of the terminated process.
+Quit is useful
+for debugging.
+.LP
+Besides adapting to the speed of the terminal,
+.UX
+tries to be intelligent about whether
+you have a terminal with the newline function
+or whether it must be simulated with carriage-return
+and line-feed.
+In the latter case, all input carriage returns
+are turned to newline characters (the standard
+line delimiter)
+and both a carriage return and a line feed
+are echoed to the terminal.
+.LP
+Tab characters are used freely in
+.UX
+source programs.
+If your terminal does not have the tab function,
+you can arrange to have them turned into spaces
+during output, and echoed as spaces
+during input.
+The system assumes
+that tabs are set every eight columns.
+Again, the
+.I stty (1)
+command will set or reset this mode.
+.I Tabs (1)
+can be used to set the tab stops automatically when necessary.
+.LP
+.I
+How to run a program; the shell.\ \ 
+.R
+When you have successfully logged in, a program
+called the shell is listening to your terminal.
+The shell reads typed-in lines, splits them up
+into a command name and arguments, and executes the command.
+A command is simply an executable program.
+The shell looks in several system directories to find the command.
+You can also
+place commands in your own directory and have the shell find them there.
+There is nothing special about system-provided
+commands except that they are kept in a directory
+where the shell can find them.
+.LP
+The command name is always the first word on an input line;
+it and its arguments are separated from one another by
+spaces.
+.LP
+When a program terminates, the shell will ordinarily regain control and type 
+a prompt at you to indicate that it is ready for another command.
+.LP
+The shell has many other capabilities, which are described in detail in
+.I sh (1).
+.LP
+.I
+Bitmap terminals.\ \ 
+.R
+If you have a Teletype 5620 terminal, you will probably wish to use
+.I mux (9),
+with mouse control, graphics, and multiple layers, each of which acts like
+a separate, simultaneously running
+.UX
+terminal, complete with its own shell.
+.LP
+.I
+The current directory.\ \ 
+.R
+.UX
+has a file system arranged in a hierarchy of directories.
+When the system administrator gave you a user name,
+he also created a directory for you (ordinarily
+with the same name as your user name).
+When you log in, any file
+name you type is by default
+in this directory.
+Since you are the owner of this directory, you have
+full permission to read, write, alter, or destroy
+its contents.
+Permissions to have your will with other directories
+and files will have been granted or denied to you
+by their owners.
+As a matter of observed fact, few
+.UX
+users
+protect their files from perusal by other users.
+.LP
+To change the
+current directory (but not the set of permissions you
+were endowed with at login) use
+.I cd (1).
+.LP
+.I
+Path names.\ \ 
+.R
+To refer to files not in the current directory, you must
+use a path name.
+Full path names begin with `/', the name of the root directory of the
+whole file system.
+After the slash comes the name of each directory containing the next
+sub-directory (followed by a `/') until finally the
+file name is reached.
+For example,
+.I
+/\^usr/\^lem/\^filex
+.R
+refers to the file
+.I
+filex
+.R
+in the directory
+.I lem ;
+.I lem
+.R
+is itself a subdirectory of
+.I usr ;
+.I usr
+.R
+springs directly from the root directory.
+.LP
+If your current directory has subdirectories,
+the path names of files therein begin with
+the name of the subdirectory with no prefixed `/'.
+.LP
+A path name may be used anywhere a file name is
+required.
+.LP
+Important commands which modify the contents of files
+are
+.I cp (1),
+.I mv (1),
+and
+.I rm (1),
+which respectively copy, move (i.e. rename) and remove files.
+To find out the status of files or directories, use 
+.I ls (1).
+See
+.I mkdir (1)
+for making directories.
+.LP
+For a fuller discussion of the file system, see
+`The
+.UX
+Time-Sharing System,'
+by Ken Thompson and Dennis Ritchie.
+It may also be useful to glance through
+section 2 of this manual, which discusses
+system calls, even if you don't intend
+to deal with the system at that level.
+.LP
+.I
+Writing a program.\ \ 
+.R
+To enter the text of a source program into a
+.UX
+file, use one of the editors,
+.I ed (1),
+.I vi (1),
+or 
+.I jim (9).
+The principal language processors in
+.UX
+.I cc (1)
+for C,
+.I f77 (1)
+for Fortran, and
+.I awk (1).
+Also available are
+.I pascal (1),
+.I snobol (1),
+and more.
+After the program text has been entered through 
+the editor
+and written on a file, you can give the file
+to the appropriate language processor as an argument.
+The output of compilers
+will be left on a file in the current directory named `a.out'.
+(If the output is precious, use
+.I mv
+to move it to a less
+exposed name soon.)\ 
+.LP
+When you have finally gone through this entire process
+without provoking any diagnostics, the resulting program
+can be run by giving its name to the shell
+in response to the shell prompt.
+.LP
+Your programs can receive arguments from the command line
+just as system programs do,
+see
+.I exec (2).
+.LP
+.I
+Text processing.\ \ 
+.R
+Almost all text is entered through the editors.
+The commands most often used to write text on a terminal are:
+.I
+cat, pr, 
+.R
+and
+.I nroff,
+all in section 1.
+.LP
+The
+.I cat
+command simply dumps \s8ASCII\s0 text
+on the terminal, with no processing at all.
+The
+.I pr ""
+command paginates the text, supplies headings,
+and has a facility for multi-column output.
+.I
+Nroff
+.R
+is an elaborate text formatting program.
+Used naked, it requires careful forethought, but for
+ordinary documents it has been tamed;
+see
+.I ms (7).
+.I
+.LP
+.I Troff
+prepares documents for a
+phototypesetter;
+it is very similar to 
+.I nroff,
+and often works from exactly the same
+source text.
+It was used to produce this manual.
+Its output can drive various devices:
+phototypesetters, laser printers, and graphic terminals; see
+.I d202 (1)
+and
+.I proof (9).
+.LP
+.I
+Status inquiries.\ \ 
+.R
+Various commands exist to provide you with useful
+information.
+.I Who (1)
+prints a list of users presently logged in.
+.I Date (1)
+prints the current time and date.
+.I Ls (1)
+will list the files in your directory or give
+summary information about particular files.
+.LP
+.I
+Surprises.\ \ 
+.R
+Certain commands provide inter-user communication.
+Even if you do not plan to use them, it would be
+well to learn something about them, because someone else may
+aim them at you.
+.LP
+To communicate with another user currently logged in,
+.I write (1)
+is used;
+.I mail (1)
+will leave a message whose presence will be announced
+to another user when he next logs in, if not sooner.
+.I Mail (1),
+.I sysmon (9),
+and
+.I sh (1)
+provide ways to arrange for continuous monitoring of incoming mail.
+The write-ups in the manual also suggest how to respond to
+messages.
+.LP
+When you log in, a message-of-the-day may greet you
+before the first prompt.
+.LP
+.I
+Multiple machines.\ \ 
+.R
+An Eighth Edition system may have tentacles to many other 
+machines.
+If you are using 
+.I mux (9),
+you may download programs for direct execution in your terminal.
+The file systems of certain remote
+.UX
+systems may be accessible through
+directory `/n'.
+Thus you may change working directory to one of these machines, although
+computing on your behalf is still being done on the machine you
+logged into.
+You may transmit data among such machines just as within one machine by using
+.I cp (1)
+or I/O redirection in the shell.
+You may also log into a remote machine to do processing there with
+input and output passing through the
+local machine; see
+.I dcon (1).
+Mail extends all over the world; see
+.I mail (7).

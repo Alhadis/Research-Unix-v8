@@ -1,0 +1,19 @@
+.TH BUFLD 4
+.SH NAME
+buf_ld \- buffering line discipline
+.SH DESCRIPTION
+This stream module treasures up data for a while, then emits it in
+a burst.
+It is otherwise transparent.
+It intends to reduce overhead of programs such as
+.IR cu (1)
+and
+.IR uucp (1)
+that read input from moderate-speed lines in raw or cbreak mode.
+.PP
+It saves characters until 16 are accumulated or 1/20 sec has passed
+without seeing a character.
+.SH "SEE ALSO
+stream(4)
+.SH BUGS
+One supposes that the parameters should be settable.

@@ -1,0 +1,77 @@
+.TH MCS 7
+.ds Z \h'\w'*'u'
+.SH NAME
+mcs \- macros for formatting cover sheets
+.SH SYNOPSIS
+.B "troff \-mcs"
+file ...
+.SH DESCRIPTION
+The \-mcs macro package defines macros for use with troff to generate a
+document cover sheet.
+These macros need
+the \-ms macros.
+.PP
+Following is a summary of the \-mcs macros and argument list with a brief
+description of each macro;
+explanations are provided as needed.
+Macros marked with * are mandatory;
+all other macros are optional.
+Optional arguments are enclosed in square brackets.
+The macros must be used in the
+order presented:
+.sp
+.nr W \w'* .AH name loc dept ext rm 'u
+.ta \nWu
+.in +\nWu
+.ti -\nWu
+Request	Explanation
+.sp
+.ti -\nWu
+*\ .TI	Title text follows
+.ti -\nWu
+*\ .AH name loc dept ext rm	Author
+.ti -\nWu
+*\ .SA	Begin Abstract
+.ti -\nWu
+*\ .SE	End Abstract
+.ti -\nWu
+\*Z\ .KW [k1] ... [k9]	Keywords
+.ti -\nWu
+*\ .MT\ type\ software	Memo Type (TM, IM, TC), software related (`y')
+(Technical Memorandum, Internal Memorandum, Technical Correspondence)
+.ti -\nWu
+*\ .NU org-date-seq filing_case work_project
+.br
+Document Number, default work_project is that of 1127
+.ti -\nWu
+\*Z\ .MY [y] [y] [y] [y] [y] [y] [y]
+.br
+Mercury Code, positional arguments, max=3
+1 = Chemistry & Materials, 2 = Communications, 3 = Computing,
+4 = Electronics, 5 = Life Sciences, 6 = Math & Statistics,
+7 = Physics
+.ti -\nWu
+\*Z\ .PR [BR]	Proprietary Marking \- default ATT-BL Proprietary, BR=restricted
+.ti -\nWu
+\*Z\ .GS	Government Security
+.ti -\nWu
+*\ .CI\ code	CI-II Review
+`y' = CONTAINS CI-II info; MAY NOT be distributed to AT&T-IS
+`n' = DOES NOT CONTAIN CI-II info; MAY be distributed to AT&T-IS
+.ti -\nWu
+\*Z\ .CO [y]	Complete Copy Distribution List follows, `y' = 1127 default
+.ti -\nWu
+\*Z\ .CE	End distribution lists
+.ti -\nWu
+\*Z\ .CV [y]	Cover Sheet Only Distribution List follows, `y' = 1127 default
+.ti -\nWu
+*\ .SC pgs oth fig tab ref	Cover Sheet
+.in -\nWu
+.SH FILES
+/usr/lib/tmac/tmac.cs
+.br
+/usr/lib/tmac/tmac.rscover
+.SH "SEE ALSO"
+docgen(1), ms(7), sendcover(1)
+.SH BUGS
+Footnotes in abstracts do not work.

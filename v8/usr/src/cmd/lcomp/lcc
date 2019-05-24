@@ -1,0 +1,14 @@
+DIR=/usr/pjw/prof
+for i in $*
+do
+	case $i in
+	*.c)	u=`basename $i | sed 's/c$//'`
+		cc -g -S $clist $i
+		$DIR/bb $u"s"
+		cc X$u"s" -c
+		mv X$u"o" $u"o"
+		;;
+	*)	clist="$clist $i"
+		;;
+	esac
+done

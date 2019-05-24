@@ -1,0 +1,251 @@
+.TH MAP 7 bowell
+.SH NAME
+map \- draw maps on various projections
+.SH SYNOPSIS
+.B map
+projection [ param ... ] [ option ... ]
+.PP
+.SH DESCRIPTION
+.I Map
+prepares on the standard output a 
+map suitable for display by any
+plotting filter described in
+.IR  plot (1).
+A menu of projections is produced in response to an unknown
+.IR projection .
+For the meanings of 
+.I params
+pertinent to particular projections
+see
+.IR  map (3).
+.PP
+The default data for 
+.I map
+are world shorelines.
+Option
+.B \-f
+accesses more detailed data
+classified by feature.
+.TP
+.BR \-f " [ \fIfeature\fR ] ..."
+Known 
+features are ranked 1 to 4 from major to minor,
+with a higher-numbered rank including all lower-numbered ones.
+A missing rank is taken to be 1.
+Features are
+.nf
+.ta \w'country[123]  'u
+shore[1-4]	seacoasts, lakes, and islands; option \fB\-f\fR always shows shore1
+ilake[1-2]	intermittent lakes
+river[1-4]	rivers
+iriver[1-3]	intermittent rivers
+canal[1-3]	(canal3 = irrigation canals)
+glacier
+iceshelf[12]
+reef
+saltpan[12]
+country[123]	(country[23] = disputed and indefinite boundaries)
+state	states and provinces (US and Canada only)
+.fi
+.PP
+In the following list of other options
+all coordinates are in degrees, with north latitude
+and west longitude counted as positive.
+.TP
+.BI \-l " S N E W"
+the southern and northern latitude
+and the eastern and western longitude limits of the desired map.
+Missing arguments are filled out from the list
+\-90, 90, \-180, 180,
+or lesser limits suitable to the
+projection in question.
+.TP
+.BI \-o " lat lon rot"
+Orient the map in a nonstandard position.
+Imagine a transparent gridded sphere around the globe.
+First turn the overlay about the North Pole
+so that the Prime Meridian (longitude 0)
+of the overlay coincides with meridian
+.I lon
+on the globe.
+Then tilt the North Pole of the
+overlay along its Prime Meridian to latitude
+.I lat
+on the globe.
+Finally again turn the
+overlay about its `North Pole' so
+that its Prime Meridian coincides with the previous position
+of meridian
+.IR rot .
+Project the desired map in
+the standard form appropriate to the overlay, but presenting
+information from the underlying globe.
+Missing arguments are filled out from the list
+90, 0, 0.
+Default orientation is 90, 0, 
+.I m,
+where 
+.I m
+is the middle of the longitude range.
+.TP
+.BI \-w " S N E W"
+Window the map by the specified latitudes
+and longitudes in the tilted, rotated coordinate system.
+(It is wise to give an encompassing
+.B \-l
+option with
+.BR \-w .
+Otherwise for small windows computing time
+varies inversely with area!)
+.TP
+.BI \-d " n"
+Alter the density of points
+by plotting only every
+.IR n th
+one.
+.TP
+.B  \-r
+Reverse left and right side of map,
+for star charts and inside-out views.
+.ns
+.TP
+.B  \-s
+Save the screen, don't erase before drawing.
+.TP
+.BI \-g " dlat dlon res"
+Grid spacings are
+.I dlat,
+.I dlon
+(10 degrees by default).
+Zero spacing means no grid.
+Missing 
+.I dlat 
+is taken to be zero.
+Missing 
+.I dlon
+is taken the same as 
+.IR dlat .
+Grid lines are drawn to a resolution of
+.I res
+(2 degrees by default).
+.TP
+.BI \-p " lat lon extent"
+Position the point
+.I lat, lon
+at the center of the plotting area, and
+scale so that the height (and width) of the
+nominal plotting area is
+.I extent
+times the size of one degree of latitude
+at the center.
+For example, a standard schoolroom-wall
+Mercator map comes out as if positioned
+and scaled
+with
+\-p 0 0 360.
+.TP
+.BI \-c " x y"
+After all other positioning and scaling operations
+have been performed, move the center of the map
+to position
+.I x, y,
+where the nominal plotting area is
+.RI \-1 \(<= x \(<= 1,
+.RI \-1 \(<= y \(<= 1.
+.TP
+.BR \-m " [ file ] ..."
+Use
+map data from named files instead of the defaults.
+If no files are named, plot grid only.
+Names not the pathname of real files are looked up in
+a standard directory, which contains, in addition to the
+data for
+.BR \-f ,
+.RS
+.PP
+.nf
+.ta \w'counties 'u
+world	World Data Bank I from CIA (the default map)
+states	US map from Census Bureau
+counties	US map from Census Bureau
+.fi
+.RE
+.TP
+.B  \-b
+Suppress border around map.
+.TP
+.BR \-t " [ file ] ..."
+The following arguments name ASCII files that
+contain lists of points,
+given as latitude-longitude pairs in degrees.
+If the first file is named `\-', the standard input is taken instead.
+The points of each list are plotted as connected `tracks', i.e.
+dot-dashed lines
+superimposed on the map.
+A nonnumeric field
+optionally preceded by `"'
+ends a track.
+The field together with everything up to the next newline
+is placed as a label at the
+last point of the track,
+positioned so that a leading character such as `+' or `X'
+will fall on the point.
+.TP
+.BR \-u " [ file ] ..."
+Same as
+.BR \-t ,
+except the tracks are
+unbroken lines.
+.PP
+The environment variables MAP and MAPDIR change the default
+map and default directory.
+.SH EXAMPLES
+A `polar' map centered on
+New York (actually a low-orbit view):
+map perspective 1.025 \-o 40.75 74.
+The job can be done faster by limiting the map so as not to `plot'
+the invisible part of the world:
+map perspective 1.025 \-o 40.75 74 \-l 20 60 30 100.
+.br
+An `equatorial' map of the earth
+centered on New York:
+map mercator \-o 49.25 \-106 180.
+The pole of the map is placed 90 degrees away on the
+other side of the earth.
+A 180-degree twist around the pole of the map arranges that the
+`Prime Meridian' of the map runs from the pole of the
+map over the North Pole to New York
+instead of down the back side of the earth.
+The same effect can be had from: map mercator \-o 130.75 74.
+.br
+A customary curved-latitude map of the United States:
+map albers 28 45 \-l 20 50 60 130.
+.SH FILES
+.ta \w'/n/bowell/usr1/maps 'u
+/n/bowell/usr1/maps	default directory, contains following files
+.br
+101,102,...,403	World Data Bank II
+.br
+world	World Data Bank I
+.br
+states
+.br 
+counties
+.SH "SEE ALSO"
+map(5), map(3), plot(1)
+.SH DIAGNOSTICS
+`map seems to be empty'\(emthe intersection of the
+limits and the window seems to be null;
+for very local maps, 
+the grid resolution
+.I res
+may have to be refined.
+.SH BUGS
+Border lines appear only along boundaries that
+arise from
+.B \-l
+and
+.B \-w 
+options.
+.br
+Segments that cross a map border are dropped.

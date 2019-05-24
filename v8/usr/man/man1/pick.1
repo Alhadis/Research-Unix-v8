@@ -1,0 +1,29 @@
+.TH PICK 1 
+.SH NAME
+pick \- pick arguments
+.SH SYNOPSIS
+.B pick
+[
+.B \-
+| arg ... ]
+.SH DESCRIPTION
+.I Pick
+writes each argument to the standard error and reads a reply.
+If the reply is
+.IR y ,
+the argument is echoed to the standard output;
+if the reply is
+.IR q ,
+.I pick
+exits without reading any more arguments;
+there is no output for any other response.
+If the first argument to
+.I pick
+is a
+.I \-
+the selection is for each line of the standard input, rather than arguments.
+.PP
+.I Pick
+is useful for interactive selection of argument lists, as in
+.br
+	wc \`pick *.[ch]\`

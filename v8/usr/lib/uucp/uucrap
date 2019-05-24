@@ -1,0 +1,12 @@
+#!/bin/sh
+cd /usr/spool/uucp
+for i in [a-zS]*; do
+	if [ ! -f LCK..$i ] && echo $$ | awk '{printf "%10d\n", $1}' >LCK..$i; then
+		rmdir $i
+		rm -f LCK..$i
+	fi
+done
+cd .Status
+for i in `grep -l SUCCESSFUL *`; do
+	test -f ../LCK..$i || rm $i
+done

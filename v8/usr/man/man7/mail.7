@@ -1,0 +1,153 @@
+.TH MAIL 7
+.SH NAME
+mail \- address conventions and rewrite rules
+.SH DESCRIPTION
+.IR Mail (1)
+accepts and converts among the addressing conventions of
+several computer networks, according to rules given in
+the file
+/usr/lib/upas/rewrite.
+Each line of the file is a rule.
+Blank lines and lines beginning with \'#\' 
+are ignored.
+.PP
+Each rewriting rule consists of (up to) 6 strings:
+.TP
+.I pattern
+An
+.IR ed (1)-like
+regular expression, with simple parentheses () playing the role
+of \e(\e) and with the + and ? operators of
+.IR egrep (1).
+The
+.I pattern
+is applied to mail addresses.
+.TP
+.I command
+An
+.IR ed (1)
+style replacement string to generate a
+command to deliver messages to the destination matched by the
+.I pattern.
+The substring
+.I `\|\es',
+is replaced by the login id of the
+sender.
+The default is no command.
+.TP
+.I "next hop"
+An
+.IR ed (1)
+style replacement string that represents the name of
+next routing hop.
+The default is the empty string.
+See the section below on forwarding.
+.TP
+.I "next address"
+An
+.IR ed (1)
+style replacement string that represents the address
+as it will be seen at the next hop.
+The default is the empty string.
+See the section below on forwarding.
+.TP
+.I conversion
+The name of the conversion that must be performed
+before the message is piped to the 
+.I command.
+If this field is empty, no conversion
+is performed.
+The only conversion now known is
+.I rfc822,
+which makes the message conform to the
+ARPA RFC 822 mailer standard.
+.TP
+.I system
+The name to use for the current system.
+The default name is found in
+.I /etc/whoami.
+.PP
+Each field, except for
+.I pattern,
+is optional if it and all fields following it
+are to assume the default values.
+Any empty field (e.g. ``'') assumes the default value.
+.PP
+When delivering a message,
+.I mail
+starts with the first rule and continues down the list until a pattern
+matches the destination address.
+If the rule contains no command, the mail is appended to the user's
+mailbox in the standard way (see
+.IR mail (1)).
+If the rule does contain a command, 
+.IR upas (8)
+starts the command and pipes the message to it,
+performing any requested conversion.
+.PP
+Forwarding is controlled using the
+.I "next hop"
+and
+.I "next address"
+fields and the forwarding files.
+Using these fields, the rewriting rules are recursively applied to 
+the source and destination addresses.
+If all hops in either source or destination are in the forwarding files,
+forwarding is allowed.
+If the forwarding files do not exist, blanket forwarding is assumed.
+.SH EXAMPLES
+.ta 2m 4m
+Rewriting rules for major networks are:
+.PP
+network: UUCP (machine!machine!...!person)
+.IP
+^([^!]+)!([^!]+)$  \\1 \\
+.br
+	"uux 2>>/tmp/uuxl \- \-a \\s \\1!rmail \\\\(\\2\\\\)"
+.br
+^([^!]+)!((.+!)?([^!]+)![^!]+)$ \\4 "uux \- \-a \\s \\1!rmail \\\\(\\2\\\\)"
+.PP
+network: ARPANET (arpa!person@machine)
+.IP
+^arpa!(.+)$ csnet "cs-inject \\1.csnet-relay" rfc822
+.PP
+network: CSNET (csnet!person@machine)
+.IP
+^csnet!(.+)$ csnet "cs-inject \\1.csnet-relay" rfc822
+.PP
+network: CSNET or ARPANET (person@machine)
+.IP
+^.+[@%.][^@%.]+$ csnet "cs-inject &.csnet-relay" rfc822
+.PP
+network: ACSNET (acsnet!person@machine.acsnet)
+.IP
+^acsnet!(.+)$ ACSnet "acs-inject \\1" rfc822
+.PP
+network: BITNET (bitnet!person@machine)
+.IP
+^bitnet!(.+)[.@](.+)$ csnet
+.br
+	"cs-inject \\1%\\2.bitnet@wiscvm.arpa.csnet-relay" rfc822
+.PP
+The address on incoming mail depends largely on 
+the originating mail program.
+However, the following can usually be relied upon
+to reach CS researchers at Bell Labs.
+.PP
+UUCP:  research!person
+.PP
+CSNET:  person@btl or person.machine@btl
+.PP
+ARPANET:  person@btl.csnet or person.btl@csnet-relay
+.PP
+ACSNET:  person@research or research!person
+.PP
+BITNET: person%btl.csnet@wiscvm
+.PP
+If in any of the above addresses, `person' is not on research, use
+`machine!...!person' in place of `person'.
+.SH FILES
+.ta \w'/usr/lib/upas/rewrite 'u
+/usr/lib/upas/rewrite	the rewriting rules
+.SH "SEE ALSO"
+uucp(1), mail(1), upas(8)

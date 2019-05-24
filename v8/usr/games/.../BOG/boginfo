@@ -1,0 +1,54 @@
+	B O G
+
+Bog is a word game loosely based on the game "Boggle" (r), marketed
+by Parker Brothers.
+
+The object of the game is to get more points than the computer gets,
+(typically a game involves being the first to get 50 or 100 points).
+Points are won by finding paths through a grid of letters that form
+words.  The paths can go vertically, horizontally and diagonally but
+may not use the same grid letter twice.  For example:
+
+				  Starting in the lower left corner
+	G    A    G    O          at  "Y"  and going up to "O" then
+				  right to "R" and then down to "E"
+	N    O    Y    X          gives the word  "yore".   All the
+				  following words can also be found
+	O    R    L    A
+				  along  gore   long   relax  role
+	Y    E    N    R          axle   lane   loon   relay  royal
+				  gang   loan   lore   rely   yarn
+
+The minimum word length is usually taken to be the board size; i.e. on a
+4 by 4 board words must be at least 4 letters long.  For each four letter
+word one point is scored, 2 points are scored for five letter words, three
+for six letter words, etc.  If the board size were 5 by 5 then five letter
+words would score 1 point, etc.
+
+There is a time limit for finding words, usually 3 minutes.
+
+After the computer displays the board there is a pause followed by the cursor
+moving to the upper left corner of the screen for you to enter the words you
+find.  When the time limit is up or when you enter a blank line to indicate
+that you can't find any more words the computer will show the words that it
+found and wait for another carriage return before showing the scoring.
+
+After the scoring has been done the computer waits with the cursor in the
+lower right hand cormer of the screen for another carriage return to signal
+that you are ready for another round.
+
+Many parameters can be varied either at the time you run the program
+initially or between rounds.  The command syntax is:
+    % bog [-dFILE] [-w#] [-s#] [-t#]
+-dFILE	means use the file "FILE" as the dictionary.
+-w#	means require words to have a minimum of # letters.
+-s3	means use a # by # board.
+-t#	means set the time limit to # seconds.
+
+For example:    % bog s5 l4
+This means: use a 5 by 5 board but only require words to be four letters long.
+
+When the computer is waiting for a carriage return to start the next round
+you can change parameters by entering things like "l3", "s5", etc., or you
+can end the game by typing control D.  You can also end the game at any
+time by typing your interrupt character (usually <DEL> or ^C).

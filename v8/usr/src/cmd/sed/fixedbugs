@@ -1,0 +1,51 @@
+Since V7:
+
+1) garbage could be compiled into pseudo-sense.
+Fix: in sed0.c, function compile, case '\0':
+remove continue statement, so the '\0' and '\n'
+are treated identically.
+
+2) cc warning messages quieted by adding r[12] specifiers
+to all references to union reptr.
+
+3) 2/28/80: H command used a null pointer sometimes.
+Fix: initialize hspend = holdsp in main().
+
+4) 10/23/80: Null RE could not be first address of range.
+Fixed by moving test for null RE into else after test for
+no address (near 160 in sed0.c).
+
+5) 2/8/82: got rid of two warning messages from the compiler.
+(Changed rep->negfl to rep->r1.negfl in sed0.c;
+ipc->r1.lb1 to ipc->r2.lb1 in sed1.c.)
+
+6) 12/6/82: removed (commented out) debugging code in
+sed0.c for unrecognized command. (It had been there since
+at latest Jan 30, 1981.)
+
+7) 6/22/83: changed the substitute() function in sed1.c
+to fix bugs concerning matches of the empty string.
+(The previous version would loop.  Note that /bin/ed
+as of today has a different bug relating to s/a*b/x/g;
+/usr/rob/bin/qed has a third bug.)
+s/a*/x/g should now work properly.
+
+8) 4/12/84: added sed: prefix to all error messages.
+
+9) 6/25/84: Removed an artificial limit on the size of a regular expression
+by undefinig ESIZE, and making the test of how big a regular expression
+can be always be against reend (= &respace[RESIZE].
+This limits the total space for storing re's, instead of limiting them
+individually.
+
+10) 4/26/85: Increased the size of PTRSPACE (256->512) and RESPACE
+(5000->10000).
+
+11) 5/17/85: fixed a bug found by boulder!geoff;
+resets sflag (saying whether a substitution was done on the
+current line) in routine gline().
+Fixes "t" to work as advertized.
+
+12) 7/24/85: changed the 's' case in fcomp to notice if an empty
+RE is the first re found.
+

@@ -1,0 +1,42 @@
+.TH APSEND 1 
+.SH NAME
+apsend \- send troff output to aps-5
+.SH SYNOPSIS
+.B apsend 
+[
+options
+]
+[ file ] ...
+.SH DESCRIPTION
+.I Apsend
+sends
+.IR troff (1)
+output in the named file or in the standard input
+for typesetting on the Murray Hill Computer Center APS-5 machine.
+.PP
+The options, which need only be spelled far enough to be unique, are
+.TP "w'comment=xx  'u"
+.BI account= xx
+GCOS account number (default from password file).
+.TP 
+.BI bin= xx
+Computer center bin number (default from password file).
+.TP 
+.BI mailto= xx
+Mailing instructions, up to 28 characters, instead of comp center bin.
+.TP 
+.BI comment= xx
+Up to 30 characters, for
+.I APSLOG
+file entry.
+Default value is the filename or
+.IR pipe.end .
+.TP 
+.BI device=imagen
+Print on comp center laser printer instead of phototypesetter.
+.SH FILES
+/usr/lib/apsend/*
+.br
+APSLOG	record of apsend activity
+.SH SEE ALSO
+troff(1), d202(1)

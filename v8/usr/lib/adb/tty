@@ -1,0 +1,10 @@
+./"rawq.cc"16t"rawq.cf"16t"rawq.cl"nDXXn
++/"canq.cc"16t"canq.cf"16t"canq.cl"nDXXn
++/"outq.cc"16t"outq.cf"16t"outq.cl"nDXXn
++/"oproc"16t"iproc"16t"chan"16t"linep"n4Xn
++/"addr"16t"maj"8t"min"8t"flags"8t"state"8t"pgrp"nXbbxxdn
++/"delct"8t"line"8t"col"8t"erase"8t"kill"8t"char"8t"ispeed"8t"ospeed"n3bC8tC8t3bn
++/"rocount"8t"rocol"8t"suspc"8t"dsuspc"8t"rprntc"8t"flushc"8t"werasc"8t"lnextc"n2bC8tC8tC8tC8tC8tCn
++/"local"8t"lstate"8t"int"8t"quit"8t"start"8t"stop"8t"eof"8t"brk"n2xC8tC8tC8tC8tC8tC6-n
++/"ctlq.cc"16t"ctlq.cf"16t"ctlq.cl"nDXXn
++,<9-1$<tty

@@ -1,0 +1,34 @@
+.TH SEQ 1 
+.SH NAME
+seq  \-  print sequences of numbers
+.SH SYNOPSIS
+.B seq
+.RB [ \-w ]
+.RB [ \-p picture]
+[ first [ incr ] ] last
+.SH DESCRIPTION
+.I Seq
+prints the sequence of numbers, one per line, from
+.I first
+(default 1) to
+.IR last ,
+inclusive, in increments of
+.I incr
+(default 1).
+The numbers are interpreted as floating point.
+.PP
+The default output format is to round each number to the nearest integer.
+This may be overridden by specifying a
+.IR picture
+that is an example of the desired format.
+For example, the option
+.BR \-p 10.00
+results in numbers printed to two decimal places.
+Leading zeroes in the picture are preserved in the output.
+.PP
+The option
+.B \-w
+causes the output lines to have constant width, by padding short numbers
+with leading zeroes, after the minus sign for negative numbers.
+.SH BUGS
+Pictures involving exponents don't work.

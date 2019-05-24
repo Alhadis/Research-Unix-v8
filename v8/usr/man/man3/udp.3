@@ -1,0 +1,77 @@
+.TH UDP 3 
+.SH NAME
+udp_connect, udp_listen, udp_datagram \- udp operations
+.SH SYNOPSIS
+.nf
+.B #include <sys/inet/udp_user.h>
+.PP
+.B udp_connect(sport, dhost, dport)
+.B in_addr dhost;
+.B udp_port sport, dport;
+.PP
+.B udp_listen(sport, reply)
+.B udp_port sport;
+.B struct udpreply *reply;
+.PP
+.B udp_datagram(sport)
+.B udp_port sport;
+.PP
+.SH DESCRIPTION
+These routines are loaded by the 
+.B \-lin
+option of
+.IR ld (1).
+.PP
+UDP is one of the many protocols which are layered
+upon IP (internet protocol).
+It provides datagram service between end points called sockets.
+A socket address is composed of the internet address
+of its host and the port number to which
+the socket is bound.
+.PP
+.I Udp_connect
+returns the fd of a UDP socket bound to port
+.I sport.
+All 
+.IR writes (2)
+performed on this fd will be sent to the UDP socket at host
+.I dhost,
+port
+.I dport
+and
+.IR reads (2)
+from this fd will only accept datagrams from that socket.
+.I Udp_connect
+returns -1 on failure.
+.PP
+.I Udp_listen
+returns the fd of a UDP socket bound to port
+.I sport
+and waits for a datagram to be sent to that port.
+Once a message has been received from another socket,
+all
+.IR writes (2)
+will go to that socket and
+.IR reads (2)
+will only accept data from that socket.
+.PP
+.I Udp_datagram
+returns the fd of a UDP socket bound to port
+.I sport.
+All messages written to the socket must start with a
+.B struct udpaddr
+which contains the destination of the message.
+.nf
+.I	struct udpaddr {	/* from udp_user.h */
+.I		in_addr	host;
+.I		int port;
+.I	};
+.fi
+All messages read from the socket also start with a
+.B struct udpaddr
+and contain the address of the source socket.
+.SH FILES
+.nf
+/dev/udp*	the socket devices
+.SH SEE ALSO
+internet(3), tcp(3)

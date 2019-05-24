@@ -1,0 +1,226 @@
+.TH CU 1 
+.SH NAME
+cu \- call Unix
+.SH SYNOPSIS
+.B cu
+[
+.B \-tn
+]
+telno
+[
+service-class
+]
+.SH DESCRIPTION
+.I Cu
+places a data call to a given telephone number
+and expects a computer to answer.
+It manages an interactive conversation with possible
+transfers of text files.
+.I Telno
+is the telephone number, consisting of digits with minus signs at appropriate
+places to indicate delay for second or subsequent dial tones.
+A telephone number may also be expressed symbolically.
+The files
+.RI $HOME /lib/cunumber
+and
+.I /usr/lib/cunumber
+are searched for lines with up to four fields separated by
+white space:
+.IP
+symbolic telephone number
+.br
+actual telephone number
+.br
+service class (see below)
+.br
+comment
+.LP
+If a
+.I comment
+is present, it is printed out when the connection is made.
+.PP
+The flag argument
+.B \-n
+causes
+.I cu
+merely to print out the the number that would be called, then exit.
+.PP
+The flag argument
+.B \-t
+causes
+.I cu
+to use the DC1/DC3 (^S/^Q) protocol to stop transmission from
+the remote system when the local terminal buffers are almost full.
+This argument should only be used if the remote system
+understands that protocol.
+.PP
+An optional second command argument specifies a class of service.
+Locally,
+one may choose between the 103-type (slow speed)
+or 112-type (high-speed)
+datasets,
+and perhaps between
+the Centrex or the data Dimension networks.
+.B D
+or
+.B D1200
+(or just
+.BR 1200 )
+is 1200 baud on the Dimension system
+(the default);
+.B D300
+is 300 baud Dimension.
+Systems with their own diallers
+may allow
+.B C1200
+and
+.B C300
+as well,
+for 1200 and 300 baud Centrex calls.
+.PP
+An explicit service class on the command line overrides
+any specified in a
+.I cunumber
+file.
+.PP
+After making the connection,
+.I cu
+runs as two processes:
+the
+.I send
+process reads the standard input and
+passes most of it to the remote system;
+the
+.I receive
+process reads from the remote system and passes
+most data to the standard output.
+Lines beginning with `~' have special meanings.
+.PP
+The
+.I send
+process interprets the following:
+.TP 18
+~\|\fB.\|
+terminate the conversation.
+.br
+.ns
+.TP 18
+~EOT
+terminate the conversation
+.TP 18
+~<file
+send the contents of
+.I file
+to the remote system,
+as though typed at the terminal.
+.TP 18
+~!
+invoke an interactive shell on the local system.
+.TP 18
+~!cmd ...
+run the command on the local system
+(via
+.BR "sh \-c" ")."
+.TP 18
+~$cmd ...
+run the command locally and send its output
+to the remote system.
+.TP 18
+~b
+.PD 0
+.TP 18
+~%break
+.PD
+are identical, and cause a break (300 ms. space) to be sent.
+.TP 18
+~%take from [to]
+copy file `from' (on the remote system)
+to file `to' on the local system.
+If `to' is omitted,
+the `from' name is used both places.
+.TP 18
+~%put from [to]
+copy file `from' (on local system)
+to file `to' on remote system.
+If `to' is omitted, the `from' name is used both places.
+.TP 18
+~~\fB\|.\|.\|.\fR
+send
+the line `~\|.\|.\|.'.
+.PP
+The
+.I receive
+process handles output diversions of the following form:
+.PP
+\&~>[>][:]file
+.br
+zero or more lines to be written to file
+.br
+\&~>
+.PP
+Output is diverted (or appended, if `>>' used) to the file.
+If `:' is used,
+the diversion is
+.I silent,
+i.e., it is written only to the file.
+If `:' is omitted,
+output is written both to the file and to the standard output.
+The trailing `~>' terminates the diversion.
+.PP
+The
+.I receive
+process also recognizes lines of the form
+.PP
+\&~!command
+.br
+or
+.br
+\&~:!command
+.PP
+which
+cause
+.I command
+to be executed locally.
+If the `:' is present the line is not printed before execution.
+.PP
+The use of
+.B  ~%put
+requires
+.I stty
+and
+.I cat
+on the remote side.
+It also requires that the
+current erase and kill characters on the remote
+system be identical to the current ones on the local system.
+Backslashes are inserted at appropriate places.
+.PP
+The use of
+.B  ~%take
+requires the existence of
+.I echo
+and
+.I tee
+on the remote system.
+Also,
+.B "stty tabs"
+mode is required on the remote system if
+tabs are to be copied without expansion.
+.SH FILES
+/usr/lib/cunumber,
+$HOME/lib/cunumber
+.SH "SEE ALSO"
+dn(4), ttyld(4), dialout(3)
+.SH DIAGNOSTICS
+Exit code is
+zero for normal exit,
+nonzero (various values) otherwise.
+.SH BUGS
+The syntax is unique.
+The speed option (\-s) should be put
+back
+(it is at least partially independent
+of the class of service).
+.PP
+.B ~!
+is a friend to the malicious.

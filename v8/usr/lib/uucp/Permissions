@@ -1,0 +1,4 @@
+LOGNAME=nuucp
+LOGNAME=uucp
+MACHINE=OTHER \
+	COMMANDS=/bin/rmail:/usr/bin/rnews:/etc/asd/asdrcv

@@ -1,0 +1,62 @@
+#!/bin/sh
+set -p
+MAN=/usr/man
+CACHE=/usr/spool/man
+fil= opt= i= all= quick= cacheonly= undln=
+cmd=q sec=\?
+
+if test -d $MAN 
+then	cd $MAN
+else	cd $CACHE
+	cacheonly=y
+fi
+
+for i
+do	case $i in
+	[1-9])	sec=$i ;;
+	-q)	cmd=q ;;
+	-n)	cmd=n ;;
+	-t)	cmd=t ;;
+	-w)	cmd=w ;;
+	-*)	opt="$opt $i" ;;
+	*)	fil=`echo man$sec/$i.*`
+		case $fil in
+		*\*)	echo $i not found 1>&2 ;;
+		*)	case $cacheonly in
+			y)	quick="$quick $fil" ;;
+			*)	case $cmd in
+				q)	qf=$CACHE/$fil
+					if newer $qf $fil
+					then	quick="$quick $qf"
+					else	all="$all $fil"
+					fi ;;
+				*)	all="$all $fil"
+				esac
+			esac
+		esac
+	esac
+done
+
+case "$all$quick" in
+"")	exit
+esac
+
+case $cacheonly$cmd in
+*q)	: ;;
+y*)	echo man: unformatted pages not found 1>&2; exit 1
+esac
+
+case $cmd in
+q)	if test -t
+	then	undln="| ul"
+	fi
+	eval '(	case $quick in
+		?*)	cat $quick
+		esac
+		case $all in
+		?*)	nroff -man $all
+		esac)' $undln  ;;
+n)      nroff $opt -man $all ;;
+t)	troff $opt -man $all ;;
+w)	echo $all ;;
+esac

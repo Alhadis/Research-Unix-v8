@@ -1,0 +1,213 @@
+.TH STREAM 4
+.SH NAME
+stream \- stream I/O control calls
+.SH SYNOPSIS
+.nf
+.ft B
+#include <sys/ioctl.h>
+ioctl(fd, code, param)
+union universe *param;
+.ft
+.fi
+.nr Tp .6i	\" big enough for `cdkp_ld'
+.SH DESCRIPTION
+A stream is a connection between two processes, or between a process
+and a device.
+It is referred to by a file descriptor, and ordinary read and write
+calls apply.
+When a
+.IR write (2)
+call is given on a stream whose other end has disappeared,
+for example because the process at other end of a pipe has terminated,
+or a device has hung up, a
+SIGPIPE signal is generated; if the signal is ignored,
+the write call returns error EPIPE.
+The first several (currently 64)
+.IR read (2)
+calls on such a disconnected streams
+return 0;
+subsequent calls generate SIGPIPE signals.
+.PP
+Processing modules may be inserted into streams.
+These
+.I ioctl
+calls insert, delete, inspect, and perform operations for stream
+IO modules.
+They apply to the file descriptor of any open stream object:
+terminal, network connection, pipe.
+The
+.I param
+argument is a general pointer which, for these calls, is usually
+null or a pointer to
+.BR int .
+The codes are
+.TP \n(Tpu
+FIOPUSHLD
+inserts, at the near end of the stream, the line discipline named by
+the integer to which
+.I param
+points.
+A census of line discipline modules is given below.
+.TP
+FIOINSLD
+inserts a named line discipline at a given level in a stack
+of such modules on the stream.
+.I Param
+points to a structure containing two short integers
+respectively naming the line discipline and the level.
+A level of 0 could be accomplished by
+FIOPUSHLD.
+This call is under construction and may not be available yet.
+.TP
+FIOPOPLD
+pops (removes) the nearest line discipline module, if
+.I param
+is null.
+If it points to an integer, the line discipline at that level is removed.
+The integer 0 corresponds to a null
+.IR param ,
+and (as with FIOINSLD) the non-null case may not be handled yet.
+.TP
+FIOLOOKLD
+returns the number of the topmost line discipline in the stack.
+If
+.I param
+is not null but instead points to an integer, the line discipline at that
+level is returned in the same integer.
+As with push and pop, the non-null case may not be handled yet.
+.TP
+FIOSNDFD
+sends the integer file descriptor pointed to by
+.IR param
+to the process on the other end of the pipe whose file descriptor is
+.IR fd .
+.TP
+FIORCVFD
+delivers a structure pointed to by
+.IR param :
+.IP
+.nf
+.ta 7n +7n +7n +7n
+struct passfd {
+	union {
+		int	fd;
+	} f;
+	short	uid;
+	short	gid;
+	short	nice;
+	short	fill;
+};
+.fi
+.DT
+.IP
+The call blocks until there is something in the stream.
+If data is present, it returns EIO.
+If the
+FIOSNDFD
+call has sent a file descriptor to the other end of the pipe,
+this call fills in the user and group ID of the sending process,
+its niceness (priority), and a file descriptor for the file
+being sent; this file is now open in the calling process.
+.TP
+FIONREAD
+stores, in the integer pointed to by
+.IR param ,
+the number of characters that may be read from this stream
+without possible blocking.
+.TP
+TIOCSPGRP
+with null
+.IR param 
+makes this process the head of a process group and makes this stream
+its control stream.
+When signals, such as hangup, interrupt, and quit, arrive at
+a control stream, they are sent to its process group.
+Child processes inherit the process group of their parent.
+Process groups are created only by explicit use of this call,
+and not implicitly by opening certain devices.
+If
+.I param
+is not null, it points to an integer nominating a process group
+to receive signals from this stream.
+.TP
+TIOCGPGRP
+stores through
+.I param
+an integer naming the process group associated with the stream.
+.TP
+TIOCEXCL
+marks this stream as inaccessible except by the super-user
+or by processes in the group associated with this stream.
+.TP
+TIOCNXCL
+removes the inaccessibility of the stream.
+.TP
+TIOCSBRK
+generates a message requesting
+a line break.
+The message is understood by devices capable of generating it
+(such as asynchronous character devices) and ignored otherwise.
+.TP
+TIOCFLUSH
+generates a message causing downstream modules to throw away any
+queued characters, if possible.
+It applies to both input and output queues.
+.LP
+Here is a list of available line discipline modules.
+The magic numbers are collected in the standard library, and are accessible
+under the following names:
+.TP \n(Tpu
+.B tty_ld
+Terminal processing according to standard Seventh Edition rules; see
+.IR ttyld (4).
+.TP
+.B ntty_ld
+Terminal processing according to (modified) Berkeley `new tty' rules;
+see Berkeley Users Manual.
+.TP
+.B cdkp_ld
+Character-mode Datakit URP protocol.
+.TP
+.B dkp_ld
+Block-mode Datakit URP protocol.
+.TP
+.B rdk_ld
+Special Datakit protocol used in connection setup.
+.TP
+.B pk_ld
+Packet-driver protocol (obsolete).
+.TP
+.B buf_ld
+Buffering mechanism;
+see
+.IR bufld (4).
+.TP
+.BR "mesg_ld, rmesg_ld
+.I Mesg_ld
+turns stream control blocks arriving in the read direction into
+data messages, and written messages into controls.
+.I rmesg_ld
+does the opposite.
+See mesg (4).
+.TP
+.B trc_ld
+Helps debug stream line discipline modules.
+.TP
+.B conn_ld
+For making unique connections to servers.
+See
+.IR connld (4).
+.TP
+.B "ip_ld, tcp_ld, udp_ld, arp_ld"
+Internet protocols;
+see
+.IR inet (3).
+.SH SEE ALSO
+ioctl(2)
+.br
+D. M. Ritchie,
+`A Stream I/O System'
+.I BLTJ,
+October, 1984
+.SH DIAGNOSTICS
+\-1 is returned for errors.

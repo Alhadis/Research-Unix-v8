@@ -1,0 +1,97 @@
+.TH FTW 3
+.SH NAME
+ftw \- file tree walk
+.SH SYNOPSIS
+.B #include <ftw.h>
+.PP
+.B int ftw(path, fn, depth)
+.br
+.B char *path;
+.br
+.B int (*fn) ( );
+.br
+.B int depth;
+.PP
+.B #include <sys/types.h>
+.br
+.B #include <sys/stat.h>
+.br
+.RB fn ( name,
+.B statb, code)
+.B char *name;
+.B struct stat statb;
+.SH DESCRIPTION
+.I Ftw
+recursively descends the directory hierarchy
+rooted in
+.IR path .
+For each object in the hierarchy,
+.I ftw
+calls
+.IR fn ,
+passing it a pointer to a null-terminated
+character string containing the name of the object,
+a pointer to a
+.B stat
+structure (see
+.IR stat (2))
+containing information about the object, and an integer.
+Possible values of the integer, defined in <ftw.h>,
+are FTW_F for a file, FTW_D for a directory, FTW_DNR for
+a directory that cannot be read, and FTW_NS for an object
+on which
+.I stat
+failed.
+If the integer is FTW_DNR,
+descendents of that directory will not be processed.
+If the integer is FTW_NS, the
+.B stat
+structure will contain garbage.
+
+.PP
+.I Ftw
+visits a directory before visiting any of its descendents.
+.PP
+The tree traversal continues until the tree is exhausted,
+an invocation of
+.I fn
+returns a nonzero value,
+or some error is detected within
+.I ftw
+(such as an I/O error).
+If the tree is exhausted,
+.I ftw
+returns zero.
+If
+.I fn
+returns a nonzero value,
+.I ftw
+stops its tree traversal and returns whatever
+value was returned by
+.IR fn .
+If
+.I ftw
+detects an error, it returns
+\-1, and indicates the error type in
+.IR errno .
+.PP
+.I Ftw
+uses one file descriptor for each level in the tree.
+The
+.I depth
+argument limits the number of file descriptors so used.
+If
+.I depth
+is zero or negative, the effect is the same as if it were 1.
+.I Depth
+must not be greater than the number of file descriptors currently
+available for use.
+.I Ftw
+will run more quickly if
+.I depth
+is at least as large as the number of levels in the tree.
+.SH BUGS
+.I Ftw
+doesn't recognize symbolic links,
+which can cause infinite recursion.
+

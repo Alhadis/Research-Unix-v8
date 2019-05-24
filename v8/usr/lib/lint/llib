@@ -1,0 +1,17 @@
+B= C= I= O=-L
+for A
+do
+	case $A in
+	*.ln)	B="$A" ;;
+	-I*)	I="$I $A" ;;
+	-*)	O="$O$A" ;;
+	*)	C="$C $A" ;;
+	esac
+done
+>$B
+for A in $C
+do
+	echo "$A:"
+	/lib/cpp -C -Dlint $I $A | /usr/lib/lint/lint1 -L$O >>$B
+	done
+echo "lint library description created: $B"

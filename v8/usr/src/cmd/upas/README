@@ -1,0 +1,7 @@
+To make upas, perform 'make install' in the directories send, print and
+rfc822.  The meaning of the directories is:
+send: the program that becomes /bin/mail and /bin/rmail.
+print:  the program used to print a user's mail (exec'd by /bin/mail)
+rfc822:  programs to convert between UNIX format mail and RFC822
+common:  routines common to any two of the above
+

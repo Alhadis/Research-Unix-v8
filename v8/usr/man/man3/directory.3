@@ -1,0 +1,114 @@
+.TH DIRECTORY 3  3/1/82
+.SH NAME
+opendir, readdir, telldir, seekdir, closedir \- directory operations
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.br
+.B #include <ndir.h>
+.PP
+.SM
+.B DIR
+.B *opendir(filename)
+.br
+.B char *filename;
+.PP
+.B struct direct
+.B *readdir(dirp)
+.br
+.SM
+.B DIR
+.B *dirp;
+.PP
+.B long
+.B telldir(dirp)
+.br
+.SM
+.B DIR
+.B *dirp;
+.PP
+.B seekdir(dirp, loc)
+.br
+.SM
+.B DIR
+.B *dirp;
+.br
+.B long loc;
+.PP
+.B closedir(dirp)
+.br
+.SM
+.B DIR
+.B *dirp;
+.SH DESCRIPTION
+.I Opendir
+opens the directory named by
+.I filename
+and associates a `directory stream'
+with it.
+.I Opendir
+returns a pointer to be used to identify the
+directory stream
+in subsequent operations.
+The pointer value 0
+is returned if
+.I filename
+cananot be accessed or is not a directory.
+.PP
+.I Readdir
+returns a pointer to the next directory entry.
+It returns 0
+upon reaching the end of the directory or detecting
+an invalid
+.I seekdir
+operation.
+.PP
+.I Telldir
+returns the current location associated with the named
+directory stream.
+.PP
+.I Seekdir
+sets the position of the next
+.I readdir
+operation on the
+directory stream.
+The new position reverts to the one associated with the
+directory stream
+when the
+.I telldir
+operation was performed.
+Values returned by
+.I telldir
+are good only for the lifetime of the DIR pointer from 
+which they are derived.
+.PP
+.I Closedir
+causes the named
+directory stream
+to be closed,
+and the structure associated with the DIR pointer to be freed.
+.PP
+The preferred way to search the current directory is:
+.br
+	len = strlen(name);
+.br
+	dirp = opendir(".");
+.br
+	for (dp = readdir(dirp); dp != NULL; dp = readdir(dir))
+.br
+		if (dp\->d_namlen == len && !strcmp(dp\->d_name, name)) {
+.br
+			closedir(dirp);
+.br
+			return FOUND;
+.br
+		}
+.br
+	closedir(dirp);
+.br
+	return NOT_FOUND;
+.SH "SEE ALSO"
+dir(5),
+open(2),
+close(2),
+read(2),
+lseek(2)

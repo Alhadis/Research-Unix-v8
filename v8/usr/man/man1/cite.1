@@ -1,0 +1,82 @@
+.TH CITE 1
+.UC 4
+.SH NAME
+cite \- process citations in a document
+.SH SYNOPSIS
+.B cite
+[
+-s
+]
+[
+-u
+]
+[
+document
+...
+]
+.SH DESCRIPTION
+.I Cite
+is a troff preprocessor used to process forward and backward references in
+a document.
+Lines processed by
+.I cite
+can be either of the form
+.br
+.sp
+\& .CD "key" "definition"
+.br
+.sp
+or
+.br
+.sp
+\& .CU "key"text
+.br
+.sp
+where key is an arbitrary name for the citation, and definition is what to print
+when the .CU macro is later called.
+The text following the key in the .CU macro can be any text desired, and it
+will immediately follow the definition.
+.PP
+In the case of forward references, the program will have no internal definition.
+Therefore, the program will output the line without the internal definition,
+assuming that later the definition will be provided.
+In these cases, because it is impossible to output the definition, ZZ will be
+placed on the output followed by the additional text.
+When this definition is entered, the program outputs a line to standard error
+that gives the information on the label;
+if these definitions are included in the text file and troff is run again on
+the file, the forward references will have the necessary data.
+.PP
+If -s is an argument to the program, it will do more extensive error checking and
+sort and print the definitions at the end of the program.
+If -u is an argument to the program, it will place on stderr a list of all
+citations that are either undefined or unused.
+.SH EXAMPLE
+.PP
+Input:
+.br
+.in 1i
+Chapter
+.br
+\& .CU "TYPES, OPERATORS AND EXPRESSIONS"
+.br
+deals with the basic data types, operators and expressions.
+.br
+.br
+\& .CD "TYPES, OPERATORS AND EXPRESSIONS" "2"
+.PP
+Output:
+.br
+.in +.5i
+First pass:
+.in +.5i
+Chapter ZZ deals with the basic data types, operators and expressions.
+.sp
+.in -.5i
+Second pass:
+.in +.5i
+Chapter 2 deals with the basic data types, operators and expressions.
+.br
+.in -1i
+.SH SEE ALSO
+troff(1)

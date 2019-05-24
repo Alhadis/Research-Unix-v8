@@ -1,0 +1,234 @@
+.XE
+.TH DB 3X
+.SH NAME
+DBopen, DBclose, DBget, DBput, DBdel, DBkey0, DBkeyn, DBlock, DBunlock, DBsync, DBapp, DBins, DBcopy \- database subroutines
+.SH SYNOPSIS
+.2C
+.nf
+.PP
+.B #include <DB.h>
+.PP
+.B typedef struct {
+.B "	char * dptr;"
+.B "	int dsize;"
+.B } datum;
+.PP
+.B int DBdebug;
+.PP
+.B DBFILE * DBopen(file, flags)
+.B char * file;
+.B int flags;
+.PP
+.B datum DBget(dp, key)
+.B DBFILE * dp;
+.B datum key;
+.PP
+.B int DBput(dp, key, content)
+.B DBFILE * dp;
+.B datum key, content;
+.PP
+.B int DBdel(dp, key)
+.B DBFILE * dp;
+.B datum key;
+.PP
+.B datum DBkey0(dp)
+.B DBFILE * dp;
+.PP
+.B datum DBkeyn(dp, key)
+.B DBFILE * dp;
+.B datum key;
+.PP
+.B void DBclose(dp)
+.B DBFILE * dp;
+.PP
+.B int DBlock(dp)
+.B DBFILE * dp;
+.PP
+.B int DBunlock(dp)
+.B DBFILE * dp;
+.PP
+.B void DBsync(dp)
+.B DBFILE * dp;
+.PP
+.B int DBapp(dp, key, content)
+.B DBFILE * dp;
+.B datum key, content;
+.PP
+.B int DBins(dp, key, content)
+.B DBFILE * dp;
+.B datum key, content;
+.PP
+.B int DBcopy(sdp, ddp)
+.B DBFILE * sdp, ddp;
+.1C
+.fi
+.SH DESCRIPTION
+These functions maintain key/content pairs in a data base.
+The functions will handle databases as large as the filesystem can
+handle and will access a keyed item in one or two file system
+accesses.
+The functions are obtained with the loader option
+.BR \-lDB .
+.PP
+.IR Key s
+and
+.IR content s
+are described by the
+.I datum
+typedef.
+A
+.I datum
+specifies a string of
+.I dsize
+bytes pointed to by
+.I dptr.
+Arbitrary binary data, as well as normal ASCII strings, are allowed as
+either keys or records.
+The data base is stored in two files.
+One file is a directory containing a bit map and has `.dir' as its
+suffix.
+The second file contains all data and has `.pag' as its suffix.
+.PP
+Before a database can be accessed, it must be opened by
+.IR DBopen .
+At the time of this call, the files
+.IB file .dir
+and
+.IB file .pag
+must exist unless the
+.I DB_CREATE
+flag is set in the flags argument.
+If this flag is specified and the files exist, they are truncated.
+The only other meaningful flag that may be specified is
+.IR DB_RONLY ,
+which indicates that the DB library may not write on the files.
+If the files are both not writable, this flag need not be specified and the
+.I d_flags
+member of the returned DBFILE pointer will have this bit set.
+Note that these flags are mutually exclusive, and if one must be
+ignored, it will be
+.IR DB_RONLY .\ 
+.PP
+Once open, the data stored under a key is accessed by
+.I DBget
+and data is placed under a key or overwritten by
+.IR DBput .
+The data denoted by a key may be appended to, or inserted before, by
+.I DBapp
+and
+.IR DBins ,
+respectively.
+A key (and its associated contents) is deleted by
+.IR DBdel .
+A linear pass through all keys in a database may be made, in an
+(apparently) random order, by use of
+.I DBkey0
+and
+.IR DBkeyn .
+.I DBkey0
+will return the first key in the database.
+With any key argument,
+.I DBkeyn
+will return the next key in the database.
+This code will traverse the data base:
+.IP
+for (key = DBkey0(dp); key.dptr != NULL; key = DBkeyn(dp, key))
+.PP
+.I DBcopy
+copies the data indicated by keys in the database referred to by its
+first argument to the database indicated by its second argument using
+the same traversal.
+.PP
+.I DBlock
+and
+.I DBunlock
+set and clear advisory locks (see
+.IR ioctl (4))
+on the database files.
+.I DBlock
+returns when the lock is set by the invoking process.
+.PP
+.I DBsync
+flushes any modified buffers, and is called by
+.I DBunlock
+and
+.IR DBclose .
+.SH DIAGNOSTICS
+All functions that return an
+.I int
+indicate errors with negative values.
+A zero return indicates success.
+Routines that return a
+.I datum
+indicate errors with a null (0)
+.I dptr.
+.PP
+.I DBput
+will return an error in the event that a disk block fills with
+inseparable data.
+.PP
+Debugging information will be printed out on
+.I stderr
+if
+.I DBdebug
+is set to one of
+.IR DBDBCORE ,
+.IR DBDBERR ,
+.IR DBDBWARN ,
+or
+.IR DBDBINFO .
+These values provide increasing amounts of information, ranging from
+conditions that will cause abnormal termination of the program
+.IR "" ( DBDBCORE )
+to call traces of the user-accessible routines
+.IR "" ( DBDBINFO ).
+.SH BUGS
+The `.pag' file will contain holes so that its apparent size is about
+four times its actual content.
+Older UNIX systems may create real file blocks for these holes when
+touched.
+These files cannot be copied by normal means
+.IR "" ( cp (1),
+.IR cat (1),
+.IR tp (1),
+.IR tar (1),
+.IR ar (1))
+without filling in the holes.
+A command to permit copying of these files (with holes intact) is
+provided
+.IR "" ( DBcp (1)).\ 
+.PP
+.I Dptr
+pointers returned by these subroutines point into static storage that
+is changed by subsequent calls.
+.PP
+The sum of the sizes of a key/content pair must not exceed the internal
+block size (currently 65536 (64K) bytes).
+Moreover, all key/content pairs that hash together must fit on a single
+block.
+.PP
+.I DBdel
+does not physically reclaim file space, although it does make it
+available for reuse.
+Use
+.IR DBcp (1)
+or
+.I DBcopy
+if file space must be reclaimed.
+.PP
+The order of keys presented by
+.I DBkey0
+and
+.I DBkeyn
+depends on a hashing function, not on anything interesting.
+.PP
+Since these routines use binary data for internal housekeeping,
+databases created on a VAX cannot be directly manipulated on a 3B, and
+vice versa.
+.IR DBcvt (1)
+converts a database generated on either of these machines to a form
+palatable on the other.
+.SH "SEE ALSO"
+.IR DB (1),
+.IR DBcp (1),
+.IR DBcvt (1).

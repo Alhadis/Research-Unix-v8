@@ -1,0 +1,19 @@
+.TH UPDATE 8 
+.SH NAME
+update \- periodically update the super block
+.SH SYNOPSIS
+.B /etc/update
+.SH DESCRIPTION
+.I Update
+is a program that executes
+the
+.IR sync (2)
+primitive every 30 seconds.
+This insures that the file system
+is fairly up to date in case of a crash.
+This command should not be executed directly,
+but rather out of the
+initialization shell command file
+.IR rc (8).
+.SH "SEE ALSO"
+sync(2), sync(8), init(8)

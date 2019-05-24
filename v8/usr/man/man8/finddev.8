@@ -1,0 +1,40 @@
+.TH FINDDEV 8 
+.SH NAME
+finddev \- find processes using a device
+.SH SYNOPSIS
+.B /etc/finddev
+[ pid ] ...
+[ file ] ...
+.SH DESCRIPTION
+When invoked without arguments,
+.I finddev
+prints the number of every process
+and a description of each file referred to
+by that process.
+Giving one or more process numbers
+restricts
+.IR finddev 's
+attention to those processes.
+.PP
+If file arguments appear,
+.I finddev
+prints only the process numbers of those
+processes that refer to files in the
+argument list.
+If an argument file is an ordinary file,
+character special file,
+or directory, the process must refer to that
+file to be counted.
+If an argument is a block special file
+containing a mounted file system,
+a process will be counted if it refers to any
+file on that file system.
+.PP
+To see details of all processes referring to, say, the console, try:
+.IP
+finddev \(gafinddev /dev/console\(ga
+.PP
+.I Finddev
+has no special privileges.
+To use it, the user must have permission to read
+.IR /dev/mem .

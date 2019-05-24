@@ -1,0 +1,100 @@
+.TH MATLAB 1 piggot
+.SH NAME
+matlab \- interactive matrix desk calculator
+.SH SYNOPSIS
+.B /usr/lbin/matlab
+.SH DESCRIPTION
+.I Matlab
+reads commands from the standard input and manipulates complex matrices.
+Special cases include
+real matrices and scalars.
+Operations include pseudoinversion (which
+is inversion for square nonsingular matrices), eigendecomposition,
+various other factorizations, solution of linear equations, matrix
+products (including inner and outer products), Kronecker products,
+log, exponential and trigonometric functions of matrices, and rank and
+condition estimation.
+Variables are alphanumeric strings of at most
+4 characters.
+Case is ignored.
+Expressions and assignment statements are written
+as in Fortran, and multiple statements can be put on one line,
+separated by either a comma or a semicolon; the result of a statement
+is written on the standard output unless a semicolon follows the statement.
+Extensions to Fortran notation include:
+.PP
+.I Matrix construction
+from elements.
+Elements in a row are separated by commas; columns are
+separated by semicolons; matrices are surrounded by < > brackets.
+.PP
+.I Transpose
+is indicated by postfix prime \(fm .
+.PP
+.I Consecutive integers
+are denoted by colons in the style 1:4 or 1:8:2 (meaning 1,3,5,7).
+.PP
+.I Identity
+matrix is denoted `eye'; its dimensions are dictated by context.
+.PP
+.I Reverse division
+is denoted by \e .
+For example, `x = A \e b' is roughly the same as `x = inv(A) \(** b', except
+that Gaussian elimination, if applicable, is used to compute x.
+.PP
+Some 
+.I matlab
+commands:
+.TP
+.B help
+.PD 0
+.TP
+.BI help " word"
+List commands and functions; `help 
+.IR word '
+lists information on
+.I word.
+It is useful to look over the complete help file
+and the MATLAB User's Guide (see below).
+.TP
+.BI save(\(fm file \(fm)
+.PD 0
+.TP
+.BI save(\(fm file \fR[\fB, var \fR]...\fB\(fm)
+Save all current variables,
+or just the designated variables in
+.I file.
+.PD
+.TP
+.BI load(\(fm file \(fm)
+Restore saved variables.
+.TP
+.BI exec(\(fm file \(fm)
+Execute the commands in
+.I file
+before reading more commands from the standard input.
+.PP
+.I Matlab
+can be called as a subroutine \- for details, see the MATLAB User's Guide or
+type `help user'.
+.SH FILES
+.ds Ml /usr2/matlab
+.ds mL /usr/llib
+\*(Ml/help \- original help file.
+.br
+\*(mL/mathelp.dac and \*(mL/mathelp.idx \- direct-access help file.
+.br
+\*(Ml \- source directory.
+.in +.5i
+.ti -.5i
+\*(Ml/src/helper.f
+edit this to change location
+of the direct-access help file, then do `make' in the (above) matlab
+source directory.
+.in -.5i
+.br
+\*(Ml/demo \- demonstration file: use
+.I exec(\(fm\*(Ml/demo\(fm)
+.SH "SEE ALSO"
+Cleve Moler, `MATLAB User's Guide', Technical Report CS81\-1 (Revised), Dept.
+of Computer Science, University of New Mexico, 1982.

@@ -1,0 +1,54 @@
+cd cyn; make clean
+rm -f c00.o c01.o c02.o c03.o c04.o c05.o c06.o c07.o c08.o c09.o c10.o c11.o c12.o c13.o c14.o c15.o c16.o c17.o c18.o c19.o c20.o c21.o c22.o c23.o c24.o c25.o c26.o c27.o c28.o c29.o c30.o c31.o c32.o c33.o c34.o c35.o c36.o c37.o ccom
+cd cem; make clean
+rm -f diag.o equiv.o fix.o main.o misc.o read.o string.o symbol.o table.o time.o type.o var.o cem cyntax
+cd lib; make clean
+rm -f libc libj out
+cd cyn; make
+cc -O -c c00.c
+cc -O -c c01.c
+cc -O -c c02.c
+cc -O -c c03.c
+cc -O -c c04.c
+cc -O -c c05.c
+cc -O -c c06.c
+cc -O -c c07.c
+cc -O -c c08.c
+cc -O -c c09.c
+cc -O -c c10.c
+cc -O -c c11.c
+cc -O -c c12.c
+cc -O -c c13.c
+cc -O -c c14.c
+cc -O -c c15.c
+cc -O -c c16.c
+cc -O -c c17.c
+cc -O -c c18.c
+cc -O -c c19.c
+cc -O -c c20.c
+cc -O -c c21.c
+cc -O -c c22.c
+cc -O -c c23.c
+cc -O -c c24.c
+cc -O -c c25.c
+cc -O -c c26.c
+cc -O -c c27.c
+cc -O -c c28.c
+cc -O -c c29.c
+cc -O -c c30.c
+cc -O -c c31.c
+cc -O -c c32.c
+cc -O -c c33.c
+cc -O -c c34.c
+cc -O -c c35.c
+cc -O -c c36.c
+cc -O -c c37.c
+cc -o ccom  c00.o c01.o c02.o c03.o c04.o c05.o c06.o c07.o c08.o c09.o c10.o c11.o c12.o c13.o c14.o c15.o c16.o c17.o c18.o c19.o c20.o c21.o c22.o c23.o c24.o c25.o c26.o c27.o c28.o c29.o c30.o c31.o c32.o c33.o c34.o c35.o c36.o c37.o
+Undefined:
+_feller
+*** Error code 1
+
+Stop.
+*** Error code 1
+
+Stop.

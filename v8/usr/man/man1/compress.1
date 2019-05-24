@@ -1,0 +1,77 @@
+.TH COMPRESS 1
+.SH NAME
+compress, uncompress, zcat \- compress and uncompress files
+.SH SYNOPSIS
+.B compress
+[ option ] ...
+[ file ] ...
+.PP
+.B uncompress
+[ option ] ... [ file ] ...
+.PP
+.B zcat
+[ file ] ...
+.SH DESCRIPTION
+.I Compress
+replaces each
+.I file
+with a compressed verison named
+.IB file .Z .
+Modes, dates, and (if possible) owner are preserved.
+If no
+.I file
+is specified, the standard input is compressed
+onto the standard output.
+.PP
+.I Uncompress
+reverses the operation.
+.PP
+.I Zcat
+uncompresses the
+.I files,
+places the result on the
+standard output, and leaves the files untouched.
+.PP
+The options are:
+.TP
+.B \-c
+`uncompress \-c' means `zcat'.
+.TP
+.B \-d
+`compress \-d' means `uncompress'.
+.TP
+.B \-f
+(force) overwrite output file if it exists.
+.TP
+.B \-F
+compress even if output is larger than input.
+.TP
+.BI \-b " n"
+use codes up to
+.I n
+bits long; see below.
+.TP
+.B \-q
+(quiet) do not report compression ratios.
+.PP
+.I Compress
+uses the Lempel-Ziv algorithm given in the reference.
+Common substrings in the file are replaced by 9-bit codes, then 10-bit codes,
+and so on until the
+.B \-b
+limit is reached.
+(The default of 16 can be changed in the source to fit a smaller machine.)
+If the compression ratio does not improve
+thereafter,
+.I compress
+starts afresh with 9-bit codes.
+.SH DIAGNOSTICS
+The exit status is 1 on error, 2 if the last file did not get smaller,
+0 otherwise.
+.SH "SEE ALSO"
+pack(1)
+.br
+T. A. Welch,
+`A Technique for High Performance Data Compression,'
+.I "IEEE Computer",
+17 (1984) 8-19.

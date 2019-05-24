@@ -1,0 +1,41 @@
+.TH CT 1 
+.SH NAME
+ct \- call terminal (and start a session)
+.SH SYNOPSIS
+.B ct
+.RB [ \-c
+count ]
+.RB [ \-w
+interval ]
+.RB [ \-h ]
+phone-number
+[ service-class ]
+.SH DESCRIPTION
+.I Ct
+places a telephone call to a remote terminal
+and allows a user to log in on that terminal
+in the normal fashion.
+The terminal must be equipped with an auto-answer
+modem.
+.PP
+The
+phone number and service class
+are interpreted the same way as by
+.IR cu (1).
+If
+.I ct
+cannot reach the number given, it tries again
+the number of times given by
+.I count
+(default 5), waiting each time for a given
+.I interval
+(default 60 seconds).
+.PP
+If the
+.B \-h
+option is given,
+.I ct
+tries to hang up the phone before placing the
+call.
+This is useful for a
+``call me right back'' type of arrangement.

@@ -1,0 +1,57 @@
+.TH MKDIR 2
+.SH NAME
+mkdir, rmdir \- make or remove a directory
+.SH SYNOPSIS
+.B mkdir(name, mode)
+.br
+.B char *name;
+.sp
+.B rmdir(name)
+.br
+.B char *name;
+.SH DESCRIPTION
+.I Mkdir
+creates a new directory
+whose name is the null-terminated string
+pointed to by
+.IR name .
+The mode of the directory
+is initialized from
+.IR mode ,
+modified by the current mode mask
+.RI ( umask (2)).
+The directory is initialized with two entries:
+.B .
+points to the directory itself,
+.B ..
+to its parent.
+.PP
+.I Rmdir
+removes the directory
+.IR name ,
+which must be empty.
+.SH "SEE ALSO
+mkdir(1),
+rmdir(1),
+mknod(2)
+.SH DIAGNOSTICS
+.I Mkdir
+returns 0 on success,
+\-1
+if the directory already exists
+or if the user has no write permissions in
+the parent directory.
+.PP
+.I Rmdir
+returns 0 on success,
+\-1
+if the directory doesn't exist,
+isn't empty,
+isn't a directory,
+or is the root of a filesystem.
+.SH BUGS
+.I Rmdir
+will happily remove a non-empty directory,
+leaving any files therein orphaned.
+This is easy to fix,
+but nobody has bothered.

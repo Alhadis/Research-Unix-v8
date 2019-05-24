@@ -1,0 +1,88 @@
+.TH ICON 9.1
+.SH NAME
+icon \- icon editor
+.SH SYNOPSIS
+.B icon
+.SH DESCRIPTION
+.I Icon
+is a pixel-level editor for textures and small bitmaps.
+.IR Icon 's
+layer has in the lower right
+a magnified grid, where each square represents
+a pixel, and in the upper left the image in real size.
+Editing is done on the magnified grid.
+Pixels can be turned black by pressing the left mouse button, and can be 
+turned white by pressing the middle button.
+Many of the command icons require a rectangle to
+be swept; this is done either by
+the middle button (which supplies a fixed 16\(mu16 rectangle) or by the right
+button (for rectangles of any size).
+.PP
+.TP 1i
+.B arrow
+Move region (sweep rectangle
+and click at destination).
+.TP
+.B overlapping regions
+Copy region (sweep rectangle
+and click at destination).
+.TP
+.B cross
+Invert region (sweep rectangle).
+.TP
+.B eraser
+Erase region (sweep rectangle).
+.TP
+.B horizontal (vertical) folded arrow
+Reflect region horizontally (vertically) (sweep rectangle).
+.TP
+.B deasil (withershins) arrow
+Rotate region deasil (withershins) (sweep rectangle).
+.TP
+.B horizontal (vertical) sheared lines
+Shear a region horizontally (vertically) (sweep rectangle and point at destination
+of nearest corner of rectangle).
+.TP
+.B scaled square
+Scale a region (sweep rectangle and
+sweep destination rectangle).
+.TP
+.B tweed pattern
+Texture a region (sweep source rectangle and
+a (bigger) destination rectangle to be tiled with copies of the source).
+.TP
+.B glasses
+Read file (type file name and position the icon by clicking).
+The subdirectories of /usr/jerq/icon/ are searched automatically
+after the current directory.
+.TP
+.B grid
+Switch on or off the background grids.
+.TP
+.B extend region
+Change the size of the drawing area.
+.TP
+.B pen
+Write file (sweep rectangle and type file name).
+See
+.IR bitfile (9.5)
+for the format.
+.TP
+.B overlapping rectangles
+Bitblt region (driven by submenus on the right button).
+.TP
+.B mouse
+Pick up a 16\(mu16 rectangle and make it the current cursor
+(click a button to pick up a 16\(mu16 region, and click again to
+revert to normal).
+.TP
+.B help
+Display help information (click a button to revert to normal).
+.TP
+.B band-aid
+Undo last drawing operation.
+.PP
+.SH FILES
+/usr/jerq/mbin/icon.m \(em terminal program
+.SH SEE ALSO
+bitfile(9.5)

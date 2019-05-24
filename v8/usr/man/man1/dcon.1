@@ -1,0 +1,192 @@
+.TH DCON 1
+.SH NAME
+dcon, ndcon, rx, rogin, rsh \- remote login and execution
+.SH SYNOPSIS
+.B dcon
+[ option ] ...
+machine
+.PP
+.B ndcon
+machine
+.PP
+.B rx
+machine
+[ command-list ]
+.PP
+.BR /usr/bin/m/ machine
+[ command-list ]
+.PP
+.B /usr/inet/bin/rogin
+machine
+[
+.B \-l
+username ]
+.PP
+.B /usr/inet/bin/rsh
+machine
+[
+.B \-l
+username ]
+[ command-list ]
+.SH DESCRIPTION
+.I Dcon
+logs in to the computer whose Datakit address is
+.I machine.
+It is much like
+.IR cu (1),
+but the only local escapes are hang up
+.RB `~\^ . '
+and a shell escape `~\^!'.
+.PP
+.I Dcon
+normally tries to log in automatically,
+using the login id of the invoking user.
+To login explicitly, or to connect to machines
+that disallow such access, use option
+.BR \-l .
+Other options are:
+.TP
+.B \-v
+Verbose.
+Give play-by-play while logging in.
+.TP
+.B \-s
+Script.
+The
+.I machine 
+argument names a file that guides login.
+The first line of the file is the machine name.
+Later lines are paired: a
+prompt word expected from
+the remote machine (including nonblank punctuation),
+with an input line to send 
+upon receiving that prompt.
+All other words received
+while looking for prompts are ignored.
+.PP
+.I Ndcon
+logs in to a remote computer similarly to
+.I dcon,
+but with a direct 
+.IR stream (4)-to-stream
+connection.
+In particular 
+.IR mux (9)
+layers may be downloaded across it.
+The only local escape is the quit signal (control-\e).
+Legitimate answers to the subsequent prompt `dcon>>' are
+`i' [sic] to send the quit signal to the remote machine,
+`x' or
+.RB ` . '
+to exit
+.I ndcon,
+and `!command-list' to execute commands locally.
+.PP
+.I Rx
+invokes a shell on the designated
+.I machine
+and
+passes the
+.I command-list
+to that shell.
+The standard input and output of the remote process
+are the standard input and output of
+.I rx.
+The standard error file from the remote process
+is the same as the standard output.
+The current directory, permissions and shell variables of the remote
+shell are what the user would get
+by logging in directly.
+Unquoted shell metacharacters are interpreted
+locally; quoted ones are interpreted on
+the remote machine.
+.PP
+.I Rx
+with no
+.I command-list
+is equivalent to
+`dcon machine'.
+.PP
+Directory
+.I /usr/bin/m
+contains machine names as commands:
+`/usr/bin/m/machine' with no argument gets an
+.I ndcon
+connection; with arguments it does
+.I rx.
+If the directory is in the
+.IR sh (1)
+search path,
+the names become commands for navigating the
+local cluster.
+.PP
+.I Rogin
+and
+.I rsh
+are to
+.SM ARPA
+internet as
+.I dcon
+and 
+.I rx
+are to Datakit.
+A file `.rhosts' in the login directory for
+.I username
+on a receiving
+machine lists machine/user pairs that may log in as
+.I username
+without a password check.
+Pairs appear one per line separated by blanks.
+.SH EXAMPLES
+.TP
+rx overthere cat file1 > file2
+copies remote
+.I file1
+to local
+.IR file2 ;
+for other ways to do the job, see
+.IR push (1)
+and
+.IR nfs (5)
+.TP
+rx overthere cat file1 ">" file2
+copies remote
+.I file1
+to remote
+.IR file2
+.SH FILES
+/usr/inet/lib/*
+.br
+/usr/inet/lib/hosts.equiv list of machines with identical users
+.br
+$HOME/.rhosts
+.SH BUGS
+.I Dcon's
+function properly belongs in
+.IR cu (1).
+.br
+Response `q' to 
+.I ndcon's
+quit-signal prompt causes a local exit, not a remote quit signal.
+.br
+Scripts for the
+.B \-s
+option typically contain passwords in the clear.
+This will compromise the security of the remote machine
+unless the login reaches a restricted environment.
+Scripts are not the same as those for
+.IR uucp (1).
+.br
+The
+.I machine
+arguments of these commands
+are Datakit addresses, while
+the names in
+.I /usr/bin/m
+are shorthand \- usually the last component of an address.
+Thus on the machine `astro/grigg', the machine `bistro/polya' 
+will be called `bistro/polya' in
+.I dcon, ndcon 
+and 
+.IR rx ,
+but will be simply `polya' in the navigation command.

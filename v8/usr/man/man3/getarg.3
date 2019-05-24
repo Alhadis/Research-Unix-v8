@@ -1,0 +1,39 @@
+.TH GETARG 3F
+.SH NAME
+getarg, iargc \- command arguments to Fortran
+.SH SYNOPSIS
+.nf
+.B subroutine getarg(argno, string)
+.B integer argno
+.B character *(*) string
+.PP
+.B iargc()
+.fi
+.SH DESCRIPTION
+These procedures permit Fortran programs to access the command arguments.
+The integer function
+.I iargc
+returns the number of command arguments.
+The subroutine
+.I getarg
+stores the
+.IR argno th
+command argument in its second argument.
+The string is truncated or padded with blanks,
+in accord with the rules of Fortran character assignment.
+.PP
+The command
+       a.out arg1 argument2
+.br
+provides 2 as the value of
+.I iargc.
+If
+.I s
+is declared character*4,
+then
+      call getarg(2, s)
+.br
+will put `arg1' in
+.I s.
+.SH "SEE ALSO"
+exec(2)

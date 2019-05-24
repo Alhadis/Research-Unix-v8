@@ -1,0 +1,49 @@
+DIR=/usr/lib/prof
+for i in $*
+do
+	case $i in
+	-c)	compflag=-c
+		;;
+	*.c)	clist="$clist $i"
+		u=`basename $i | sed 's/c$//'`
+		bblist="$bblist "$u"s"
+		slist="$slist "X$u"s"
+		tablist="$tablist "$u"sL"
+		;;
+	-D*|-I*|-U*)
+		clist="$clist $i"
+		;;
+	*.f)	flist="$flist "$i
+		u=`basename $i | sed 's/f$//'`
+		bblist="$bblist "$u"s"
+		slist="$slist "X$u"s"
+		tablist="$tablist "$u"sL"
+		;;
+	*.s)	bblist="$bblist "$i
+		u=`basename $i | sed 's/s$//'`
+		slist="$slist "X$u"s"
+		;;
+	*)	llist="$llist "$i
+		;;
+	esac
+done
+if test "$flist"
+then	f77 -g -S $flist
+fi
+if test "$clist"
+then
+	cc -g -S $clist
+fi
+rm -f prof.out
+$DIR/bb $bblist
+if test "$flist"
+then
+	f77 -g $compflag $slist $DIR/nexit.o $llist
+else
+	cc -g $compflag $slist $DIR/nexit.o $llist
+fi
+for i in X*.o
+do
+mv $i `echo $i | sed s/X//`
+done
+rm -f X*.s

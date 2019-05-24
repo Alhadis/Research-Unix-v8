@@ -1,0 +1,17 @@
+for i in `grep / /usr/net/people`
+do
+	x=`echo $i | sed 's;.*/;;'`
+	echo $x
+	magic $i
+	cnt=`wc -l magic-done | awk '{print $1}'`
+	if test $cnt = 0
+	then
+		awk < /usr/net/people '$0 == "'$i'" { on = 1; next}
+			on == 1 && NF == 1 { exit}
+			on == 1 {print}' > magic-done
+		echo -n using the old one; wc -l magic-done
+	fi
+	(echo $i; cat magic-done) > $x-new
+done
+(grep '^#' /usr/net/people; cat *-new) > new-people
+wc new-people

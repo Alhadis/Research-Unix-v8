@@ -1,0 +1,260 @@
+.TH PED 9.1
+.SH NAME
+ped, tped \- picture editor
+.SH SYNOPSIS
+.B ped
+[ 
+.B \-f
+]
+[ file ] ...
+.PP
+.B tped
+[ option ] ...
+[ file ] ...
+.SH DESCRIPTION
+.I Ped
+is an interactive drawing program for 
+jerq terminals.
+A
+.I file
+argument is equivalent to
+an `e' command as described below.
+Most features of 
+.I ped
+are menu-controlled and self-explanatory; further details
+are in the reference.
+.PP
+Button 1 is used to select actions
+from a permanent menu and to draw or pick up an object.
+Button 3 is used to terminate drawing actions and to change
+the permanent menu.
+Button 2 causes the permanent menu to revert to `basic'.
+.PP
+The operation of
+.I ped
+is split between host and terminal.
+When a file is first read, it is kept on
+the host; `bring in' gets it to the 5620.
+.PP
+Option
+.B \-f
+causes
+.I ped
+to display all text in one size to save time and space.
+.PP
+Permanent menus selected by button 3 follow.
+Actions marked `(t)' in the menu toggle on and off. 
+The last action is usually remembered and may be
+executed repeatedly
+until another is selected.
+Thus, for example, one can fill many polygons with
+one button click per polygon.
+.TP
+Basic
+is the initial menu.
+`blitblt', like
+.IR blitblt (9.1),
+copies part of the screen to file `BLITBLT', for display
+on a laser printer by
+.I bcan;
+see
+.IR can (9.1).
+`Exit' requires a confirming push of button 3.
+`Markers' makes visible the defining points of objects;
+in circles and text, these
+are the only points sensitive to selection by button 1.
+.IP
+`Type comm' deactivates the mouse and takes input
+from the keyboard.
+The keyboard commands follow.
+The first four behave like similarly named commands in
+.IR ed (1),
+using a remembered name when none is given.
+.RS
+.TP
+.BI e " f"
+edit a new picture from file
+.IR f ;
+remember its name.
+.PD 0
+.TP
+.BI f " f"
+Change the remembered name to 
+.I f
+and report the new remembered name.
+.TP
+.BI r " f"
+Read file 
+.I f
+into 
+.I ped.
+.TP
+.BI w  " f"
+Write the current picture onto file
+.I f.
+.TP
+.BI u " string"
+Use
+.I string
+as a shell command to be applied when the menu selection
+.I user
+.I oper
+is made later.
+The
+.I string
+is remembered.
+.TP
+.BI cd " d"
+Change working directory to
+.IR d ;
+like
+.I cd
+in
+.IR sh (1).
+.TP
+.B pwd
+Print working directory; like
+.IR pwd (1).
+.TP
+<newline>
+.PD 0
+.TP
+.B m
+Reactivate mouse.
+.TP
+.B qq
+Quit; same as `exit' in basic menu.
+.PD
+.PP
+If `e' or `qq' happens when the picture has been changed since
+the last `w', the picture is saved in file `ped.save'.
+.RE
+.TP
+Ch size
+includes changes in object size, rotations, etc.
+`Rotate' displays a vector from a center of an object to the
+designated point.
+Then the object is rotated and scaled to bring that point to
+a second designated position.
+`H-elong' and `V-elong' change aspect ratios; they are inverses.
+.TP
+Move
+includes `move', and `copy' commands for objects.
+Button 3 cancels a move or copy.
+To help untangle overlapping objects, the cancellation
+of a move does not take place until returning to the basic menu.
+`Attach' moves an open polygon (a broken line)
+and hooks it to the end of another.
+`Join' connects the ends of two polygons.
+`Link' causes multiple polygons to move as one and
+to be filled as one (useful for making holes).
+Mutually linked polygons must all be open or all be closed.
+`Match' moves objects to bring designated points together;
+`center' brings the centers of their bounding boxes together.
+.TP
+Draw
+creates objects.
+Button 1 fixes a point;
+button 3 terminates an object.
+`Text' objects may occupy several lines; an empty line
+terminates text.
+`Grid' causes points to snap to locations on
+a grid, which indexes through settings FMC (fine, medium, coarse).
+`Fix sz' sets option
+.BI \- f .
+`Family' designates objects to be moved or deleted together.
+A family is defined by drawing a box around it in the draw
+menu or by pointing to its members in the move menu.
+.TP
+Reshape
+for editing objects.
+`Formal' adjusts nearly vertical
+or horizontal lines in an object to be truly vertical or horizontal.
+`Spline' produces a curve guided by a polygon.
+`Corner' toggles a point of a spline to be multiple \- a corner
+in an otherwise smooth curve.
+.TP
+Refine
+has additional editing commands.
+`Adj t', with settings LRC, causes text items to be left-justified,
+centered, or right-justified on a point.
+`Edit text' displays text at the top, where button 1 selects a character
+position for inserting by typing or deleting by backspacing.
+Button 3 concludes the editing.
+`User oper' applies a user-specified command to the selected object.
+.TP
+Shade
+provides textures for filling polygons, circles, or spline-bounded regions.
+Curves are filled schematically on the 5620, but accurately on
+the host.
+.TP
+Color
+has no effect on the jerq,
+but is carried through for display on other devices.
+.TP
+Remote
+performs all editing on the host using the jerq
+as a display device only.
+.PP
+.I Tped
+is a filter to convert files of graphic information produced by
+.I ped
+into typesetting requests for
+.IR troff (1).
+The options are:
+.TP
+.BI \-T dev
+Prepare output for particular devices known to 
+.IR troff :
+.B \-Taps
+or
+.BR \-T202 .
+.PD 0
+.TP
+.B \-b
+Place a box around each picture.
+.PD
+.PP
+The input may be straight 
+.I ped 
+output or may be arbitrary text files with
+.I ped
+output embedded between
+pairs of delimiting lines:
+.IP
+.nf
+\&.GS [ size ]
+ped file
+\&.GE
+.fi
+.PP
+The optional size specification gives width or height in the form
+.BI w= inches
+or
+.BI h= inches.
+The 
+.I ped
+text may be in another file:
+.IP
+\&.GS [ size ] pedfilename
+.SH SEE ALSO
+T. Pavlidis,
+.I PED Users Manual,
+AT&T Bell Laboratories Computing Science Technical Report No. 110, March 1984
+.br
+blitblt(9.1), can(1),
+pic(1), ideal(1), troff(1), doctype(1)
+.SH DIAGNOSTICS
+.I Ped
+error messages from the host
+are placed in file
+`.pederr'.
+Error messages from the terminal appear on the screen.
+.SH BUGS
+Pictures may spill into the menu or message areas.
+.br
+Some experimentation with
+.I tped
+printout parameters
+is needed to
+obtain satisfactory results.

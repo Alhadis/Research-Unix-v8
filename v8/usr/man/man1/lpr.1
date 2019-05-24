@@ -1,0 +1,41 @@
+.TH LPR 1 alice
+.SH NAME
+lpr\- line printer spooler
+.SH SYNOPSIS
+.B lpr
+[
+.B \-m
+] [ name ... ]
+.PP
+.B lp0
+[ name ... ]
+.br
+.B lp1
+[ name ... ]
+.SH DESCRIPTION
+.I Lpr 
+causes the
+named files
+to be queued for printing.
+If no files are named, the standard input is read.
+The option
+.B \-m
+causes notification via
+.IR mail (1)
+to be sent when the job completes.
+.PP
+.I Lp0
+and
+.I lp1
+direct output to particular printers.
+.SH FILES
+.ta 2i
+/usr/spool/lpd/*	spool area
+.br
+/usr/lib/lpd	printer daemon
+.br
+/usr/lib/lpf	filter to handle banners and underlining
+.SH SEE\ ALSO
+pr(1)
+.SH BUGS
+Queued jobs print in directory (seemingly random) order.

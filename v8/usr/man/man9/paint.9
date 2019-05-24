@@ -1,0 +1,192 @@
+.TH PAINT 9.1
+.SH NAME
+paint \- draw pictures in a layer
+.SH SYNOPSIS
+.B paint
+.SH DESCRIPTION
+.I Paint
+is a more elaborate relation of
+.IR twid (9.6).
+.PP
+Button 3 gets a menu.
+Certain menu items contain arrows, which if touched call submenus.
+Moving off the right of a submenu causes it to disappear.
+Pressing button 1 while holding button 3 gets a short help
+message for the menu item.
+The top-level menu contains:
+.PP
+.nf
+.ta \w'Line style 'u +.5i
+Style	\(->	Different kinds of brushstrokes
+Operation	\(->	Ways of putting paint on canvas
+Texture	\(->	Things to do to the texture pattern
+Brush	\(->	Things to do to the paintbrush
+Canvas	\(->	Things to do to the whole picture
+State	\(->	Change things saved in \fI.paintstate\fP
+Fill		Fill an area of the picture
+Green		Erase the entire picture
+Mask		Display mask instead of image; `*' means mask
+Exit		Leave the paint program
+.fi
+.PP
+The
+.I Style
+submenu adjusts `brushstrokes':
+.PP
+.nf
+Paint		Multiple brushspots while holding button 1 or 2
+Circles		Rubberband circles; press at center and release at circumference
+Lines		Rubberband brush lines
+Curves		Continuous strokes while holding button 1 or 2
+Line style	\(->	Solid, dotted, dashed, etc. lines
+.fi
+.PP
+Entries in the
+.I Line Style
+sub-submenu are strings of `A's, `B's and `.'s that
+describe dotted and dashed lines.
+`A' stands for the brush on the button pushed,
+`B' stands for the brush on the other button; `.' for
+no brush at all.
+The string is cycled through at successive points when drawing
+.I Lines, Curves,
+or
+.I Circles.
+Thus `A' means a solid line, `A...' means a 1 in 4 dotted
+line, and `AAAA....' means 4-point dashes.
+.PP
+The
+.I Operation
+submenu assigns a pair of operations, one for each of buttons 1 and 2,
+to be performed as the brush is laid down.
+A hidden `mask' plane describes the shape that has been painted;
+black pixels in the mask are inside, green outside.
+Likewise, the brush
+consists of a pair of rectangular image and mask planes.
+There are 11 effective operations to combine the part of the brush
+inside its mask
+with the part of the picture it sits on (see
+the Porter/Duff paper for details); selected pairs can be assigned to the
+buttons:
+.PP
+.nf
+.ta \w'Line style 'u+.5i
+Above/Erase	Button 1 paints on top, Button 2 erases
+Below/Erase	Button 1 paints behind, Button 2 erases
+Above/Below	Button 1 paints on top, Button 2 behind
+Inside/Erase	Button 1 paints inside, Button 2 erases
+Brush/Clear	Special effects A, CLEAR
+AoutB/AinB	Special effects
+BinA/BatopA	Special effects
+Xor/Above	Special effects
+.fi
+.PP
+.I Above
+paints on top of the picture.
+This is the operation
+performed by `normal' paint programs.
+.PP
+.I Below
+paints underneath; it will show
+through only in places that were not previously covered.
+.PP
+.I Inside
+paints on top, but only inside the already-painted part.
+.PP
+The other 7 operations are best described as `special effects'.
+Try them out
+to see what they do, or look at the Porter/Duff paper.
+.PP
+.I Texture
+facilities paint with a repeating 16\(mu16 pattern instead of copies of
+a brush.
+The
+.I Texture
+menu contains:
+.PP
+.nf
+.ta \w'Line style 'u +.5i
+Texture		Turn texturing on or off; `*' means on
+Make		Pick a texture from the picture
+Negate		Reverse the texture's green and black
+Save		Name a texture and copy it into a file
+Library	\(->	List and and retrieve textures in library
+Get		Type a name and get a texture from a file
+.fi
+.PP
+.I Make
+gives a 16\(mu16 square cursor with which to pick
+a texture.
+.PP
+The
+.I Brush
+submenu contains Make, Negate, Save, Library, and Get, which
+do for brushes what the same items do for textures.
+.PP
+.I Make
+allows you to sweep out a region to use as a brush.
+.PP
+The
+.I Canvas
+submenu also contains Negate, Save, Library, and Get, in this
+case pertaining to entire pictures.
+.PP
+Library pictures
+are saved in a file containing the image plane then the
+mask plane in
+.IR bitfile (9.5)
+format.
+.PP
+The file
+.I .paintstate
+in the current directory remembers
+across invocations of
+.I paint
+the names of the current brush, texture,
+and libraries.
+The
+.I State
+submenu displays the library names at the bottom
+of the layer, where they can be edited:
+.PP
+.nf
+.ta \w'Line style 'u+.5i
+Brushes	Name the brush directory
+Pictures	Name the picture directory
+Textures	Name the texture directory
+.fi
+.PP
+The
+.I Fill
+menu item gives an arrowhead cursor.
+If you touch down at a point not painted, the rookwise-connected
+region containing it will fill with black.
+On completion, the
+black will be replaced by the current texture.
+While the region is filling, any button click aborts the operation.
+.PP
+The current selections from the
+.IR Brush ,
+.IR Library ,
+.IR Style ,
+.IR Operation ,
+.IR Texture ,
+and
+.I Line Style
+menus are marked with a `*', and are displayed in the information box
+at the bottom of the layer.
+.SH FILES
+.ta \w'/usr/jerq/paint/brush  'u
+/usr/jerq/paint/brush	the default brush library
+.br
+/usr/jerq/paint/tex	the default texture library
+.br
+\&.paintstate	state of terminated program
+.SH SEE ALSO
+can(1), bitfile(9.5), twid(9.6)
+.br
+Thomas Porter and Tom Duff,
+`Compositing Digital Images,'
+Siggraph '84 Proceedings
+.SH BUGS
+The menu entries should be in lower case.

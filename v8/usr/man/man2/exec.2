@@ -1,0 +1,228 @@
+.TH EXEC 2 
+.SH NAME
+execl, execv, execle, execve, execlp, execvp, exec, exece, environ \- execute a file
+.SH SYNOPSIS
+.nf
+.B execl(name, arg0, arg1, ..., argn, 0)
+.B char *name, *arg0, *arg1, ..., *argn;
+.PP
+.B execv(name, argv)
+.B char *name, *argv[];
+.PP
+.B "execle(name, arg0, arg1, ..., argn, 0, envp)"
+.B "char *name, *arg0, *arg1, ..., *argn, *envp[];"
+.PP
+.B execve(name, argv, envp)
+.B char *name, *argv[], *envp[];
+.PP
+.B extern char **environ;
+.fi
+.SH DESCRIPTION
+.I Exec
+in all its forms
+overlays the calling process with the named file, then
+transfers to the
+entry point of the core image of the file.
+There can be no return from a successful exec; the calling
+core image is lost.
+.PP
+Files remain open across
+.I exec
+unless explicit arrangement has been made;
+see
+.IR ioctl (2).
+Ignored/held signals remain ignored/held across
+these calls, but
+signals that are caught (see
+.IR signal (2))
+are reset
+to their default values.
+.PP
+Each user has a
+.I real
+user ID and group ID and an
+.I effective
+user ID and group ID.
+The
+real
+ID
+identifies the person using the system;
+the
+effective
+ID
+determines his access privileges.
+.I Exec
+changes the effective user and group ID to
+the owner of the executed file if the file has the `set-user-ID'
+or `set-group-ID'
+modes.
+The
+real
+user ID is not affected.
+.PP
+The
+.I name
+argument
+is a pointer to the name of the file
+to be executed.
+If the first two bytes of that file are the ASCII
+string `#!', then the first line of the file is taken to be ASCII and
+determines the name of the program to execute.
+The first nonblank string following `#!' in that line is substituted for
+.I name.
+Any second string, separated from the first by blanks or tabs,
+is inserted between
+the first two arguments (arguments 0 and 1) passed to the invoked file.
+.PP
+The argument pointers
+.I arg0, arg1, ...
+or the pointers in
+.I argv
+address null-terminated strings.
+Conventionally argument 0
+is the name of the
+file.
+.PP
+.I Execl
+is useful when a known file with known arguments is
+being called;
+the arguments to
+.I execl
+are the character strings
+constituting the file and the arguments.
+A 0 argument must end the argument list.
+.PP
+.I Execv
+is useful when the number of arguments is unknown
+in advance;
+the arguments to
+.I execv
+are the name of the file to be
+executed and a vector of strings containing
+the arguments.
+The last argument string must be followed
+by a 0 pointer.
+.PP
+When a C program is executed,
+it is called as follows:
+.IP
+.nf
+main(argc, argv, envp)
+int argc;
+char **argv, **envp;
+.fi
+.PP
+where
+.IR argc ""
+is the argument count
+and
+.IR argv ""
+is an array of character pointers
+to the arguments themselves.
+As indicated,
+.IR argc ""
+is conventionally at least one
+and the first member of the array points to a
+string containing the name of the file.
+.PP
+.I Argv
+is directly usable in another
+.I execv
+because
+.IR argv [ argc ]
+is 0.
+.PP
+.I Envp
+is a pointer to an array of strings that constitute
+the
+.I environment
+of the process.
+Each string consists of a name, a `=', and a null-terminated value;
+or a name, a pair of parentheses (), a value bracketed by { and }, and
+by a null.
+The array of pointers is terminated by a null pointer.
+The shell
+.IR sh (1)
+passes an environment entry for each global shell variable
+defined when the program is called.
+See
+.IR environ (5)
+for some conventionally
+used names.
+.PP
+The C run-time start-off routine places a copy of
+.I envp
+in the global cell
+.I environ,
+which is used
+by
+.I execv
+and
+.I execl
+to pass the environment to any subprograms executed by the
+current program.
+The
+.I exec
+routines use lower-level routines as follows
+to pass an environment explicitly:
+.IP
+.nf
+execve(file, argv, environ);
+execle(file, arg0, arg1, . . . , argn, 0, environ);
+.fi
+.PP
+.I Execlp
+and
+.I execvp
+are called with the same arguments as
+.I execl
+and
+.I execv,
+but duplicate the shell's actions in searching for an executable
+file in a list of directories.
+The directory list is obtained from the environment.
+.I Exect
+is the same as
+.I execve,
+except it arranges for a stop to occur on the first instruction
+of the new core image for the benefit of tracers, see
+.IR proc (4).
+.SH FILES
+.ta \w'/bin/sh  'u
+/bin/sh	shell, invoked if command file found
+by
+.I execlp
+or
+.I execvp
+.SH "SEE ALSO"
+fork(2), environ(5)
+.SH DIAGNOSTICS
+If the file cannot be found,
+if it is not executable,
+if it does not start with a valid magic number (see
+.IR a.out (5)),
+if maximum memory is exceeded,
+or if the arguments require too much space,
+a return
+constitutes the diagnostic;
+the return value is \-1.
+Even for the super-user,
+at least one of the execute-permission bits must be set for
+a file to be executed.
+.SH BUGS
+If
+.I execvp
+is called to execute a file that turns out to be a shell
+command file,
+and if it is impossible to execute the shell,
+the values of
+.IR argv [0]
+and
+.IR argv [\-1]
+will be modified before return.
+.br
+The path search of
+.I execlp
+and
+.I execvp
+does not extend to names substituted by `#!'.

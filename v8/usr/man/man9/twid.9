@@ -1,0 +1,69 @@
+.TH TWID 9.6
+.SH NAME
+twid \- dabble in oils
+.SH SYNOPSIS
+.B twid
+.SH DESCRIPTION
+.I Twid
+is an oil paint program for bitmaps.
+Button 3 presents a palette (menus of paints
+are unappetizing), and
+buttons 1 and 2 apply paint.
+.PP
+The palette contains a list of names of subpalettes.
+After making a selection, depress again to display
+the subpalette.
+The palette names are:
+.TP
+.B style
+Choose drawing style:
+.I ink
+(Rembrandt),
+.I point
+(Seurat),
+.I line
+(Mondrian),
+.I curve
+(Matisse)
+and
+.I disk
+(Disney).
+.TP
+.B texture
+selects a texture (paint) to be applied with the brush.
+The default set of textures is sufficient for Lichtenstein.  Use the
+.I <new>
+button to create new ones:
+use button 1 (2) to select the area under the
+cursor (its bitwise complement),
+and type a name for
+.I twid
+to call it.
+.TP
+.B brush
+selects the brush size and shape.
+Predefined brushes are square, for effects ranging
+from Dali to Van Gogh;
+to be more modern use
+.I <new>
+(again, you must name the new brush).
+.TP
+.B buttons
+By default, button 1 puts paint down and button 2
+picks it up again.  This palette lets you change that behavior.
+.TP
+.B copy
+provides commands for moving and rotating sections
+of the picture.
+.TP
+.B unix
+offers commands for reading and writing files, and exiting.
+.PP
+The current style, texture and brush are
+indicated in their palettes by an asterisk `*'.
+.SH SEE ALSO
+paint(9.1)
+.SH BUGS
+Green is not the color of choice for oils.
+.br
+Jackson Pollocks are time consuming.

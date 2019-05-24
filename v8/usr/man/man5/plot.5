@@ -1,0 +1,367 @@
+.TH PLOT 5 
+.SH NAME
+plot \- graphics interface
+.SH DESCRIPTION
+Files of this format are produced by routines
+described in 
+.IR  plot (3),
+and are interpreted for various devices
+by commands described in
+.IR  plot (1).
+A graphics file is an ASCII stream of 
+instruction lines.
+Arguments are delimited by spaces, tabs, or commas.
+Numbers may be floating point.
+Punctuation marks (except `:'),
+spaces, and tabs at the beginning of lines are ignored.
+Comments run from  `:' to newline.
+Instructions may be the whole function name or just enough characters
+to disambiguate it.
+(Thus \fB..line\fR, \fBline\fR, or \fBli\fR are all valid instructions.)
+Arguments are interpreted as follows:
+.TP
+1.
+If an instruction requires no arguments, the rest of the line is ignored.
+.TP
+2.
+If it requires a string argument, then all the line
+after the first field separator is passed as argument.
+Quote marks may be used to preserve leading blanks.
+Strings may include newlines represented as `\\n'.
+.TP
+3.
+Between numeric arguments alphabetic characters and
+punctuation marks are ignored.
+Thus
+.ti +5
+line from 5 6 to 7 8
+.br
+draws a line from (5, 6) to (7, 8).
+.TP
+4.
+Instructions with numeric arguments remain in effect until
+a new instruction is read.
+Such commands may spill over many lines. Thus
+the following sequence will draw a polygon
+with vertices 
+(4.5, 6.77), (5.8, 5.6), (7.8, 4.55), and (10.0, 3.6).
+.IP
+.nf
+move 4.5 6.77
+vec 5.8, 5.6 7.8
+4.55 10.0, 3.6 4.5, 6.77
+.fi
+.PP
+The instructions are executed in order.
+The last designated point in a
+.B "line, move, rmove, vec, rvec, arc"
+or
+.B point
+command becomes the `current point'
+(X, Y)
+for the next command.
+Each of the following descriptions
+corresponds to a routine in
+.IR  plot (3).
+.PP
+.B "Open & Close"
+.TP 10
+\fBo\fR[penpl] \fIstring\fR
+Open plotting device. For troff
+.I string
+specifies the size of the plot
+(default is 6i.)
+.TP 10
+\fBcl\fR[osepl]
+Close plotting device.
+.PP
+.B "Basic Plotting Commands"
+.TP 10
+\fBe\fR[rase]
+Start another frame of output
+or erase the screen on CRT terminals without scroll.
+.TP 10
+\fBm\fR[ove] \fIx y\fR
+Current point becomes
+.I "x y."
+.TP 10
+\fBrm\fR[ove] \fIdx dy\fR
+Current point becomes
+.I "X+dx Y+dy."
+.TP 10
+\fBpoi\fR[nt] \fIx y\fR
+Plot the point
+.I "x y"
+and make it the current point.
+.TP 10
+\fBv\fR[ec] \fIx y\fR
+Draw a line from the current point to
+.I "x y."
+.TP 10
+\fBli\fR[ne] \fIx1 y1 x2 y2\fR
+Draw a line from
+.I "x1 y1"
+to
+.I "x2 y2."
+Make the current point
+.I "x2 y2."
+.TP 10
+\fBt\fR[ext] \fIstring\fR
+Place the following ASCII string so that its
+first character is centered on the current point (default).
+If
+.I string
+begins with `\\C', the string is centered on the current point.
+If
+.I string
+begins with `\\R', the string is right adjusted on the current point.
+A backslash at the beginning of the string may
+be escaped with another backslash (`\\').
+.TP 10
+\fBa\fR[rc] \fIx1 y1 x2 y2 xc yc r\fR
+Draw a circular arc from
+.I "x1 y1"
+to
+.I "x2 y2"
+with center
+.I "xc yc"
+and radius
+.I r.
+If the radius is positive, the arc is drawn counterclockwise;
+if the radius is negetive, the arc is drawn clockwise.
+The starting point is exact but the ending point is approximate.
+.TP 10
+\fBci\fR[rcle] \fIxc yc r\fR
+Draw a circle centered at
+.I "xc yc"
+with radius
+.I r.
+If the range and frame parameters do not specify a square,
+the circle will be elliptical.
+.TP 10
+\fBdi\fR[sc] \fIxc yc r\fR
+Draw a solid circle centered at
+.I "xc yc"
+with radius
+.I r
+using the filling color (see \fBcfill\fR below).
+\fBdisc\fR only works on the 5620; on other devices
+\fBdisc\fR is the same as \fBcircle\fR.
+.TP 10
+\fBbo\fR[x] \fIx1 y1 x2 y2\fR
+Draw a box with lower left hand corner at
+.I "x1 y1"
+and upper right hand corner at
+.I "x2 y2."
+.TP 10
+\fBsb\fR[ox] \fIx1 y1 x2 y2\fR
+Draw a solid box with lower lefthand corner at
+.I "x1 y1"
+and upper righthand corner at
+.I "x2 y2"
+using the filling color (see \fBcfill\fR below).
+.TP 10
+\fBpar\fR[abola] \fIx1 y1 x2 y2 xg yg\fR
+Draw a parabola from
+.I "x1 y1"
+to
+.I "x2 y2"
+`guided' by
+.I "xg yg."
+The parabola passes through the midpoint of the line joining
+.I "xg yg"
+with the midpoint of the line
+joining
+.I "x1 y1"
+and
+.I "x2 y2"
+and is tangent to the lines from
+.I "xg yg"
+to the endpoints.
+.TP 10
+\fBpol\fR[y] \fB{ {\fIx1 y1 ... xn yn\fB}\fR ... \fB{\fRX1 Y1 ... Xm Ym\fB} }\fR
+Draw polygons with vertices
+.I "x1 y1 ... xn yn"
+and
+.I "X1 Y1 ... Xm Ym."
+If only one polygon is specified, the inner brackets are
+not needed.
+If square brackets `[ ]' are used, the first
+vertex is repeated at the end of the list to close the polygon.
+.TP 10
+\fBfi\fR[ill] \fB{ {\fIx1 y1 ... xn yn\fB}\fR ... \fB{\fIX1 Y1 ... Xm Ym\fB} }\fR
+Fill a polygon.
+The arguments are the same as those for \fBpoly\fR above
+except that the first vertex is automatically repeated to
+close each polygon.
+The polygons do not have to be connected.
+Enclosed polygons appear as holes.
+.TP 10
+\fBsp\fR[line] \fB{ {\fIx1 y1 ... xn yn\fB}\fR ... \fB{\fIX1 Y1 ... Xm Ym\fB} }\fR
+Draw a parabolic spline guided by
+.I "x1 y1 ... xn yn"
+with simple endpoints.
+.TP 10
+\fBfsp\fR[line] \fB{ {\fIx1 y1 ... xn yn\fB}\fR ... \fB{\fIX1 Y1 ... Xm Ym\fB} }\fR
+Draw a parabolic spline guided by
+.I "x1 y1 ... xn yn"
+with double first endpoint.
+.TP 10
+\fBlsp\fR[line] \fB{ {\fIx1 y1 ... xn yn\fB}\fR ... \fB{\fIX1 Y1 ... Xm Ym\fB} }\fR
+Draw a parabolic spline guided by
+.I "x1 y1 ... xn yn"
+with double last endpoint.
+.TP 10
+\fBdsp\fR[line] \fB{ {\fIx1 y1 ... xn yn\fB}\fR ... \fB{\fIX1 Y1 ... Xm Ym\fB} }\fR
+Draw a parabolic spline guided by
+.I "x1 y1 ... xn yn"
+with double endpoints.
+.TP 10
+\fBcsp\fR[line] \fB{ {\fIx1 y1 ... xn yn\fB}\fR ... \fB{\fIX1 Y1 ... Xm Ym\fB} }\fR
+Draw a closed parabolic spline guided by
+.I "x1 y1 ... xn yn."
+.TP 10
+\fBin\fR[clude] \fIfilename\fR
+Take commands from file
+.I filename.
+.TP 10
+\fBde\fR[fine]\fI string \fB{ \fIcommands \fB}
+Define
+.I string
+as
+.I commands.
+.TP 10
+\fBca\fR[ll]\fI string scale\fR
+Invoke commands defined as
+.I string
+applying
+.I scale
+to all coordinates.
+.PP
+.B "Commands Controlling the Environment"
+.TP 10
+\fBco\fR[lor] \fIstring\fR
+Draw lines with color
+.I string.
+Available colors depend on the device.
+.I String
+may contain definitions for several devices separated by ``/''.
+Colors possible for the various devices are:
+.nf
+pen	\fBblack, red, green, blue, Tblack, Tred, Tgreen, Tblue\fR
+		(assumes default carousel, T=thick)
+	\fB1\-8\fR (pen number)
+	\fB/S\fInumber\fR character size as a % of plotting area
+ramtek	\fBred, green, blue, magenta, yellow, cyan, white\fR
+troff	\fB/F\fIstring\fR font
+	\fB/P\fInumber\fR point size
+2621	\fB/H\fIcharacter\fR used for plotting
+.fi
+.TP 10
+\fBpe\fR[n] \fIstring\fR
+Use
+.I string
+as the style for drawing lines.
+Not all pen styles are implemented for all devices.
+.I String
+may contain definitions for several devices separated by ``/''.
+The available pen styles are:
+.br
+.nf
+pen	\fBsolid, dott\fR[ed], \fBshort, long, dotd\fR[ashed], \fBcdash, ddash\fR
+	where \fBcdash\fR and \fBddash\fR are combinations of long and short
+4014	\fBsolid, dott\fR[ed], \fBshort, long, dotd\fR[ashed], \fBddash\fR
+troff	\fBsolid, dash\fR where only straight lines will be dashed
+5620	\fB/B\fInumber\fR for line thickness
+2621	\fB/H\fIcharacter\fR character used for plotting
+.fi
+.TP 10
+\fBcf\fR[ill] \fIstring\fR
+Use \fIstring\fR as color for filling.
+.I String
+may contain the definitions for several devices
+separated by `/'.
+The following colors are available on the specified devices:
+.nf
+pen	\fBblack, red, green, blue, Tblack, Tred, Tgreen, Tblue
+	1\-8\fR pen number
+ramtek	\fBred, green, blue, magenta, yellow, cyan, white\fR
+5620	\fB/B\fItexture\fR string with octal numbers for texture; see \fItypes\fR(9.5).
+	The 16 words of texture should be followed by one word for the mode used
+	by \fItexture\fR (see \fIbitblt\fR(9.3)
+2621	\fB/H\fIcharacter\fR character to use for filling
+.LP
+All devices
+	\fB/A\fIdegrees\fR angle of slant of shading lines
+	\fB/G\fInumber\fR gap between shading lines (in user units)
+.fi
+.TP 10
+\fBra\fR[nge] \fIx1 y1 x2 y2\fR
+The data will fall between
+.I "x1 y1"
+and
+.I "x2 y2."
+The plot will be magnified or reduced to fit
+the device as closely as possible.
+.IP
+Range settings that exactly fill the plotting area
+with unity scaling appear below for
+devices supported by the filters of
+.IR  plot (1).
+The upper limit is just outside the plotting area.
+In every case the plotting area is taken to be square;
+points outside may be displayable on
+devices with nonsquare faces.
+.RS
+.TP 10n
+4014
+range(0.,, 0.,, 3120.,, 3120.);
+.br
+.ns
+.TP 10n
+troff
+range(0.,0.,6144., 6144.);
+.br
+.ns
+.TP 10n
+ramtek
+range(0., 0., 511., 511.);
+.br
+.ns
+.TP 10n
+2621
+range(0., 0., 22., 22.);
+.br
+.ns
+.TP 10n
+5620
+range dependent on layer size
+.br
+.ns
+.TP 10n
+pen
+range dependent on paper size
+.RE
+.TP 10
+\fBfr\fR[ame] \fIpx1 py1 px2 py2\fR
+The data will be plotted in the fraction of the display
+specified by
+.I "px1 py1"
+for lower lefthand corner
+and
+.I "px2 py2"
+for upper righthand corner.
+Thus  \fBframe .5 0 1. .5\fR plots in the lower right
+quadrant of the display;
+\fBframe 0. 1. 1. 0.\fR uses the whole display but
+inverts the y coordinates.
+.TP 10
+\fBsa\fR[ve]
+Save the current environment, and move to a new one.
+The new environment inherits the old one.
+There are 7 levels of environment.
+.TP 10
+\fBre\fR[store]
+Restore previous environment.
+.SH "SEE ALSO"
+plot(1), plot(3), graph(1)

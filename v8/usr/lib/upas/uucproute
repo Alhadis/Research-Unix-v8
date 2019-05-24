@@ -1,0 +1,12 @@
+case $2 in
+`cat /etc/whoami`)	mail $3; exit $?
+esac
+cat > /tmp/ur$$
+uux - -a $1 $2!rmail \($3\) < /tmp/ur$$
+case $? in
+0) ;;
+*) uux - -a $1 GATEWAY!rmail \($2!$3\) < /tmp/ur$$;;
+esac
+rv=$?
+rm /tmp/ur$$
+exit $rv

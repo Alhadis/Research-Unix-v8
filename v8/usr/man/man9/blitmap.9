@@ -1,0 +1,166 @@
+.TH BLITMAP 9.1 seki
+.SH NAME
+blitmap \- map plots and path finding on a jerq
+.SH SYNOPSIS
+.B blitmap
+[ options ]
+.SH DESCRIPTION
+.I Blitmap
+displays maps on the jerq terminal.
+It relies on the mouse to select regions, functions, and to give
+formats for typed commands.
+The metropolitan N.Y.-N.J. area is the default map.
+.IR Blitmap's
+screen consists of two
+.IR frames ,
+a large frame for plotting maps and printing messages to the user, and
+a one-line command frame at the bottom.
+.I Blitmap
+recognizes two commands from the keyboard,
+to designate a region and to scale or plot a route
+from one point to another.
+A command may be typed at any time.
+.LP
+.B Button 3
+.TP \w'\fBTo draw map\fP 'u
+.B Regions
+Select which region to plot.
+Available regions are San Francisco, New York City and North Jersey,
+Washington, Los Angeles and Ann Arbor.
+.TP
+.B Zoom-in
+Using button 3 and the box icon, enclose the area desired and
+.I blitmap
+will plot a map of that area
+centered at the center of the drawn rectangle.
+.TP
+.B Zoom-out
+Enclose an area with a rectangle and the map shown will be reduced to the
+rectangle size and the rest of the map filled in.  The center will be at the center
+of the drawn rectangle.
+.TP
+.B Center
+With button 3 point to new center.  The radius will remain the same.
+.TP
+.B Prev. map
+.I Blitmap
+plots the previous frame.
+.TP
+.B To draw map
+Gives the format of the command the user types to plot a map.
+.TP
+.B To find path
+Gives the format of the command the user types to find a path.
+.TP
+.B Quit
+Must be confirmed
+.LP
+.B Button 2
+.br
+Button 2 controls map editing functions.
+No editing is actually done, but
+by using
+the
+.B \-f
+option, a file
+of changes will be written, which may be added to the actual database. 
+.LP
+.B Keyboard
+.ns
+.TP
+[\-options ...] \fBradius\fP address[,town or zip]
+.I Blitmap
+plots an area with the given radius in miles around the
+.I address.
+.TP
+\fBpath\fP [\-options ...] \fBfrom\fP address \fBto\fP address[,town or zip]
+A  route is outlined on a map and printed
+directions are given from point to point.
+.PP
+.I Address
+may be a number and street or an intersection such as, `main and 10th' or `600
+Mountain av,new providence.'
+The options specify the algorithm of the path search and plotting choices. The
+plotting options may be used with both commands.
+.LP
+.B Path finding options
+.TP
+.B \-2
+Two ended search (default).
+.PD 0
+.TP
+.B \-1
+One way search.
+.TP
+.B \-b
+Breadth search.
+.TP
+.B \-C
+Cyclists \- ignore costs for turns.
+.TP
+.B \-F
+Stop at first route connect with breadth search.
+.TP
+.B \-H
+Hierarchical search.(Give priority to database with major roads.)
+.TP
+.B \-G
+In breadth search, ignore ones whose cost + dist >4/3 total airline distance.
+.TP
+.B \-J
+Use precomputed routes. (Available from 600 mountain av,New Providence.)
+.TP
+.B \-V
+Verbose directions (all intersections given).
+.TP
+.B \-W
+Walkers \- no cost for turns and ignore one-way streets.
+.PD
+.LP
+.B Plotting options
+.TP
+.B \-A
+Print every possible label.
+.PD 0
+.TP
+.B \-B
+Print business names.
+.TP
+.B \-MI\fRx\fP
+Forces a detailed street plot for maps whose radius is greater than 10,000 ft.
+.TP
+.B \-b
+Don't print boundaries.
+.TP
+.B \-i\fRx\fP
+Plot only streets with importance >x; x=0 is default.
+.TP
+.B \-j
+Do sketch map only.
+.TP
+.B \-l
+Don't print labels.
+.TP
+.B \-r
+Don't print railroads.
+.TP
+.B \-s
+Don't print streets.
+.TP
+.B \-w
+Don't print waterways.
+.PD
+.SH FILES
+.ta \w'/n/seki/usr/rje/BLIT/term/term    'u
+/n/seki/usr/rje/BLIT/term/term     terminal support program
+.br
+/n/seki/m?/map/*	map files
+.SH BUGS
+Since the data bases have not been checked and many streets are not connected,
+some paths may be circuitous.  There are no connecting roads
+from N.J into N.Y or from Middlesex county into Union. The routing programs
+will churn, trying to find a through street and will not give up. There are
+no one-way street tags on the streets.
+.I Blitmap
+does not know if it has been reshaped.
+

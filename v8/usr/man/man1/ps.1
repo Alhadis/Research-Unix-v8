@@ -1,0 +1,131 @@
+.TH PS 1
+.SH NAME
+ps \- process status
+.SH SYNOPSIS
+.B ps
+[
+.BR aFfhlnrtux number
+] ...
+.SH DESCRIPTION
+.I Ps
+prints information about processes.
+Normally, only the user's
+non-shell processes are eligible for printing; specifying
+.B a
+includes other user's processes; specifying
+.B x
+includes shell processes as well.  (A stopped shell is printed even if the
+.B x
+flag is missing.)
+.PP
+All output formats include, for each process, the process id, its
+control terminal, status, cpu time, and command.
+The status is given
+by a sequence of letters:
+.ta \w'W'u+1m +\w'Idle (> 20 seconds).'u+3m +\w'W'u+1m
+.PP
+R	Running.	T	Stopped.
+.br
+P	Waiting for a page.	S	Sleeping (< 20 seconds).
+.br
+I	Idle (> 20 seconds).
+.br
+W	Swapped out.	N	Process is `nice'; see \f2nice\f1(1).
+.PP
+R, T, P, S, and I are mutually exclusive.
+.PP
+Options are given in blank-separated clusters:
+.nr xx \w'\f2number'u+1m/1n
+.TP \n(xx
+.B a
+give information about all users (ordinarily
+only one's own processes are displayed).
+.PD 0
+.TP
+.BI F file
+display all processes having an open
+.IR file ;
+this option must be the last in a cluster.
+.TP
+.B f
+display file descriptors (with prepended process id).
+.TP
+.B ff
+display file descriptors (omitting process id).
+.TP
+.B h
+print column headers.
+.TP
+.B l
+(long) print the process size,
+resident set size, wait channel, and parent process id.
+.TP
+.B n
+print unsorted
+(output is normally sorted by process id).
+.TP
+.B r
+print processes which match the current real or effective user id
+(normally only processes matching the current effective user id
+are printed).
+.TP
+.BI t x
+print processes whose controlling tty is
+.I x,
+where
+.I x
+is either ``.'' (for user's tty), or one of the forms printed by
+.I ps,
+e.g.
+.I t3
+for /dev/tty3,
+.I tconso
+for console,
+.I tpt12
+for /dev/pt/pt12,
+.I t?
+for processes with no tty, etc. This option must be the last in a cluster.
+.TP
+.B u
+include a name of the
+effective userid and cpu share in percent; sort by usage.
+.TP
+.B x
+include shell and
+.I init
+processes.
+.TP
+.I number
+print the designated process;
+must be the last option in a cluster.
+.PD
+.PP
+Multiple
+.BR F ", " t ", and"
+.I number
+options are allowed; the union of all selections is printed.
+.SH FILES
+.ta \w'/usr/net/friends'u+1m
+/proc	process images
+.br
+/dev/drum	swap device
+.br
+/dev/kmemr	kernel memory
+.br
+/dev	searched to find tty names
+.br
+/dev/pt	searched to find pt names
+.br
+/dev/dk	searched to find dk names
+.br
+/etc/fstab	searched to find local file system names
+.br
+/usr/net/friends	searched to find network file system names
+.SH "SEE ALSO"
+kill(1), nice(2), proc(4), oops(8)
+.SH BUGS
+Things can change while
+.I ps
+is running.
+.br
+A process may alter its apparent command name and arguments.

@@ -1,0 +1,77 @@
+.TH CB 1 
+.SH NAME
+cb, pp \- C program beautifier and pretty printer
+.SH SYNOPSIS
+.B cb
+[ option ] ...
+[ file ] ...
+.PP
+.B pp
+[ option ] ... [ file ] ...
+.SH DESCRIPTION
+.I Cb
+reads C programs either from the named
+.I files
+or from the
+standard input
+and writes them
+on the standard output with spacing and indentation
+that displays the structure of the code.
+The options are:
+.TP
+.B \-s
+place newlines as in
+Kernighan and Ritchie.
+(Original newlines are preserved by default.)
+.TP
+.B \-j
+join split lines.
+.TP
+.BI \-l " leng"
+split lines that are longer than
+.I leng.
+.PP
+.I Pp
+formats the named C source files, or its standard input
+if none are given,
+and writes a `publication format' on the standard output for
+printing on a typesetter with filters like
+.IR d202 (1).
+The options are
+.TP
+.BI \-T dev
+prepare output for devices named as in
+.IR troff (1);
+default is 202
+.TP
+.B \-b
+use bold fonts suffixed `K' rather than `B'
+.TP
+.BI \-f font
+set the main font; the default is MM, Memphis Medium
+.TP
+.BI \-k file
+cause words in the named file, one per line, to be recognized
+as keywords;
+the file will be looked up in /usr/lib/pp if it is
+not in the current directory
+.TP
+.BI \-t title
+generate a title page with the title specified and a
+date stamp
+.SH DIAGNOSTICS
+.I Pp
+complains and exits if it cannot find a required font.
+If this happens, take the name of the missing font to
+a local font guru.
+.SH "SEE ALSO"
+pr(1), troff(1), d202(1), dcan(1), etc.
+.br
+B. W. Kernighan and D. M. Ritchie,
+.I "The C Programming Language,"
+Prentice-Hall, 1978.
+.SH BUGS
+Punctuation hidden in
+preprocessor statements causes
+.I cb
+to make indentation errors.

@@ -1,0 +1,12 @@
+#
+# set up the uucp spool directory
+# it is assumed that the target is the working directory
+#
+DIRS=".Admin .Corrupt .Log .Old .Sequence .Status .Workspace .Xqtdir"
+LDIRS=".Log/uucico .Log/uuxqt .Log/uucp .Log/uux"
+
+PATH=/bin:/usr/bin:/etc:.
+
+mkdir $DIRS $LDIRS
+chown uucp,bin $DIRS $LDIRS .
+chmod 0775 $DIRS $LDIRS .

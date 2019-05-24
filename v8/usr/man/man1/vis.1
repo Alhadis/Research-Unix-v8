@@ -1,0 +1,32 @@
+.TH VIS 1
+.SH NAME
+vis \- show invisible characters
+.SH SYNOPSIS
+.B vis
+[
+.B \-t
+] [
+.B \-s
+]
+file ...
+.SH DESCRIPTION
+.I Vis
+reads each
+.I file
+in sequence and writes it on the standard output.
+Non-printing characters are translated on output as in the `l' (list)
+command of
+.IR ed (1).
+If no
+.I file
+is given
+.I vis 
+reads from the standard input.
+Option
+.B \-t
+suppresses translation of tabs.
+Option
+.B \-s
+strips non-printing characters and makes no other translation.
+.SH SEE ALSO
+cat(1), ed(1)

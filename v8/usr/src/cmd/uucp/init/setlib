@@ -1,0 +1,95 @@
+# set up needed files in the uucp lib directory
+# it is assumed that the target is the working directory
+# and that any useful files from the old system are here
+# nothing is removed, so some junk (old files) will be left.
+
+PERM=Permissions
+DIAL=Dialcodes
+SYSTEM=Systems
+LSYS=L.sys
+LDIAL=L.dialcodes
+LDEVICES=L.devices
+UUCP=uucp
+GUUCP=bin
+CMDS=L.cmds
+PROCCTL=/etc/procctl
+
+PATH=/bin:/usr/bin:/etc:.
+#
+# L.sys -> Systems
+# just rename them
+#
+rm -f L.sysequiv		# for sanity
+for lsys in $LSYS*; do
+	base=`expr $lsys : 'L.sys\(\..*\)'`
+	if [ "$base" = ".general" ]; then
+		base=.gen	# keep it short
+	fi
+	mv $lsys $SYSTEM$base
+	chown $UUCP $SYSTEM$base
+	chgrp $GUUCP $SYSTEM$base
+	chmod 0660 $SYSTEM$base
+done
+
+#
+# L.dialcodes -> Dialcodes
+# just rename
+#
+if [ ! -f $DIAL ]; then
+	if [ -f $LDIAL ]; then
+		mv $LDIAL $DIAL
+	else
+		>$DIAL
+	fi
+	chown $UUCP $DIAL
+	chgrp $GUUCP $DIAL
+	chmod 664 $DIAL
+fi
+
+#
+# L.devices -> Devices
+# ignore existing one, use the shipped copy
+# (which defines Datakit and dialout(3))
+#
+
+#
+# Permissions
+# start from scratch:
+# allow all uucp logins in the password file
+# (anyone who has uuci or uucico for shell)
+# and any user-ids used by datakit for uucp service
+# steal commands list from L.cmds
+#
+if [ -f $PERM ]; then
+	exit
+fi
+> $PERM
+set - `sed -n "/uuci/s/:.*//p" /etc/passwd`
+for i
+do
+	echo "LOGNAME=$i"
+done > $PERM
+exec <$PROCCTL
+while read x what x user prog junk; do
+	if [ "$what" = uucp ]; then
+		echo "LOGNAME=$user" >>$PERM
+	fi
+done
+if [ -r $CMDS ]; then
+	set - `sed -e 's/.*[ 	]//' $CMDS`
+	for i
+	do
+		if [ -z "$clist" ]; then
+			clist="$i"
+		else
+			clist="$clist:$i"
+		fi
+	done
+	echo "MACHINE=OTHER \\
+	COMMANDS=$clist" >>$PERM
+	rm $CMDS
+fi
+
+chown $UUCP $PERM
+chgrp $GUUCP $PERM
+chmod 664 $PERM

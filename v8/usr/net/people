@@ -1,0 +1,16 @@
+# entry: client-name perm-list ;
+# perm-list:
+#	| perm | perm-list perm ;
+# perm: '(' client-id host-id ')' ;
+# client-id: id ;
+# host-id: id ;
+# id: uid | '(' uid gid ')' ;
+#
+mh/astro/research
+((3 1) (3 4)) # bin
+((1 1) (1 1)) # daemon
+((7 1) (7 4)) # dmr
+((6 1) (6 1)) # ken
+((499 1) (1093 1)) # norman
+((304 1) (304 1)) # rob
+((2 1) (2 1)) # sys

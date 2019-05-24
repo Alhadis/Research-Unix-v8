@@ -1,0 +1,56 @@
+.TH 32LD 9.1
+.SH NAME
+32ld \- bootstrap loader for 5620
+.SH SYNOPSIS
+.B 32ld
+[ option ... ] file [ arguments ]
+.SH DESCRIPTION
+.I 32ld
+loads the named
+.I file
+for execution in the 5620 connected to its standard output.
+If running under
+.IR mux (9.1),
+the arguments are passed, as in
+Unix, to the program.
+.I File
+must be a MAC-32 object file.
+.I 32ld
+does all necessary bootstrap and protocol procedures.
+There are several options.
+.TP
+.B \-d
+prints on the diagnostic output (which must be
+separated from the standard output to
+avoid corrupting the down-load) the sizes of the text, data and bss
+portions of
+.I file.
+.TP
+.B \-p
+prints down-loading protocol statistics on the diagnostic output
+(for stand-alone loads only).
+.TP
+.B \-r
+causes
+.I file
+to be relocated to an address established by a separate
+protocol during bootstrap.
+It is invoked automatically when loading a process into
+.IR mux (9.1),
+and usually need not be set explicitly.
+.TP
+.B \-z
+loads the process but doesn't run it,
+so it must be started using
+.IR 3pi (9.1).
+It works only under
+.IR mux (9.1).
+.PP
+The environment variable
+JPATH
+is the analog of the shell's
+PATH
+variable to define a set of directories in which to search for
+.IR file .
+.SH SEE ALSO
+jx(9.1), mux(9.1)	

@@ -1,0 +1,71 @@
+.TH ENVIRON 5
+.SH NAME
+environ \- user environment
+.SH SYNOPSIS
+.B extern char **environ;
+.SH DESCRIPTION
+An array of strings called the `environment' is
+made available by
+.IR exec (2)
+when a process begins.
+By convention these strings have either the form
+.RI ` name = value ',
+defining a variable, or
+.RI ` name ()\|{ value }\|',
+defining a function (see
+.IR sh (1)).
+The following variables are used by various commands:
+.TP "\w'TERMCAP 'u"
+PATH
+The sequence of directory prefixes that
+.I sh, time,
+.IR nice (1),
+etc.,
+apply in searching for a file known by an incomplete path name.
+The prefixes are separated by `:'.
+.IR Login (1)
+sets PATH=:/bin:/usr/bin.
+.TP
+HOME
+A user's login directory, set by
+.IR login (8)
+from the password file
+.IR passwd (5).
+.TP
+TERM
+The kind of terminal for which output is to be prepared.
+This information is used by commands, such as
+.I nroff
+or
+.IR plot (1),
+which may exploit special terminal capabilities.
+See
+.I /etc/termcap
+for a list of terminal types.
+.TP
+SHELL
+The name of the login shell.
+.PP
+The environment may be queried by
+.IR getenv (3)
+or by the
+.I set
+or
+.I whatis
+commands of 
+.IR sh (1).
+Names may be placed in the environment by
+the
+.I export
+command by and `name=value' arguments in
+.IR sh (1).
+Names may also be placed in the environment at the point of an
+.IR exec (2).
+It is unwise to conflict with
+certain 
+.IR sh (1)
+variables that are frequently exported by
+`.profile' files:
+MAIL, PS1, PS2, IFS.
+.SH SEE ALSO
+sh(1), exec(2), getenv(3), term(7)

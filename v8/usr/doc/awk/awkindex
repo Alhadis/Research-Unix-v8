@@ -1,0 +1,25 @@
+.pn 35
+.SH
+Index
+.sp
+.nr PS 8
+.nr VS 8p
+.LP
+.MC 1.45i
+.na
+.hy 0
+.de X0
+.in .2i
+.ti -.2i
+.ne 2
+..
+.de X1
+.in .4i
+.ti -.4i
+.ne 2
+..
+.de X2
+.in .4i
+.ti -.2i
+.ne 2
+..

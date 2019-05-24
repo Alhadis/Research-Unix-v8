@@ -1,0 +1,133 @@
+To setup the user level internet environment (assuming you've already
+compiled TCP/UDP/IP code into the kernel):
+
+1) compile and install (as root)
+... the runtime library
+	$ cd /usr/src/cmd/inet/libin; make install
+... the user commands
+	$ cd /usr/src/cmd/inet/bin; make install
+... the daemons
+	$ cd /usr/src/cmd/inet/etc; make install
+
+2) create configuration files
+... the list of hosts.  For example, ours is:
+	$ cat /usr/inet/lib/hosts
+	192.11.41.1	research
+	192.11.41.2	forbes
+	192.11.41.3	kwee
+	192.11.41.8	purdy
+	192.11.40.1	research-dk
+	192.11.40.3	bowell-dk bowell
+	192.11.40.4	ikeya-dk ikeya
+	192.11.40.5	forbes-dk
+	192.11.40.7	hunny-dk hunny
+	192.11.40.15	seki-dk seki
+	192.11.40.16	snb-dk snb
+... the list of networks.  For example, ours is:
+	$ cat /usr/inet/lib/networks
+	192.11.40.0	mh-dk127-net
+	192.11.41.0	mh-astro-net
+... the list of trusted hosts.  For example, ours is:
+	$ cat /usr/inet/lib/hosts.equiv
+	bowell
+	forbes
+	hunny
+	ikeya
+... the list of services.  For example, ours is:
+	$ cat /usr/inet/lib/services
+	ftp		21/tcp
+	telnet		23/tcp
+	smtp		25/tcp
+	date		37/udp
+	exec		512/tcp
+	rogin		513/tcp
+	login		513/tcp
+	shell		514/tcp
+	route		520/udp
+	face		666/udp
+
+3) create devices
+... for IP:
+	$ ls -l /dev/ip*
+	crw-rw-rw-  1  root    bin   42,  0 Nov 15  1984 /dev/ip0
+	crw-rw-rw-  1  root    other 42, 16 Jul 19 14:27 /dev/ip16
+	crw-rw-rw-  1  root    bin   42, 17 Jul 11 13:38 /dev/ip17
+	crw-rw-rw-  1  root    bin   42,  6 Nov 15  1984 /dev/ip6
+... for TCP:
+	$ ls -l /dev/tcp*
+	crw-------  1  root    0     43,  0 Aug  7 12:34 /dev/tcp00
+	crw-rw-rw-  1  root    bin   43,  1 Aug  6 13:42 /dev/tcp01
+	crw-------  1  root    other 43,  2 Aug  5 18:19 /dev/tcp02
+	crw-rw-rw-  1  root    other 43,  3 Aug  5 18:26 /dev/tcp03
+		...
+... for UDP:
+	$ ls -l /dev/udp*
+	crw-rw-rw-  1  bin     bin   50,  0 Jul 22 17:38 /dev/udp00
+	crw-rw-rw-  1  bin     bin   50,  1 Jul 22 11:48 /dev/udp01
+		...
+... for Interlan ethernet boards:
+	$ ls -l /dev/il*
+	crw-rw-rw-  1  bin     bin   44,  0 Nov 15  1984 /dev/il00
+	crw-rw-rw-  1  bin     bin   44,  1 Aug  7 13:12 /dev/il01
+	crw-rw-rw-  1  bin     bin   44,  8 Nov 16  1984 /dev/il10
+	crw-rw-rw-  1  bin     bin   44,  9 Aug  7 13:41 /dev/il11
+... for 3com ethernet boards:
+	$ ls -l /dev/ec*
+	crw-rw-rw-  1  bin     bin   27,  0 Nov 15  1984 /dev/ec00
+	crw-rw-rw-  1  bin     bin   27,  1 Aug  7 13:12 /dev/ec01
+
+4) start up the daemons
+... for a system with one interlan ethernet board.  In this case the
+    system name is `forbes' and the network name is `mh-astro-net'.
+	PATH=:/usr/inet/bin:/bin:/usr/bin: export PATH
+	cd /usr/inet/etc
+	###### push ip line disciplines
+	./ipconfig /dev/il00 forbes mh-astro-net /dev/il01 &
+	###### push tcp line discipline
+	./tcpconfig /dev/ip6 &
+	###### push udp line discipline
+	./udpconfig /dev/ip17 &
+	###### standard daemons
+	./rogind &
+	./telnetd &
+	./rshd &
+	###### routing (default all routing through a gateway called research
+	./route add \* research
+... for a system with two interlan ethernet boards.  In this case the
+    system name is `research' and it is acting as a gateway between
+    two networks, `mh-astro-net' and `mh-bb-net'.
+	PATH=:/usr/inet/bin:/bin:/usr/bin: export PATH
+	cd /usr/inet/etc
+	###### push ip line disciplines
+	./ipconfig /dev/il00 forbes mh-astro-net /dev/il01 &
+	./ipconfig /dev/il10 forbes-mhbb mh-bb-net /dev/il11 &
+	###### push tcp line discipline
+	./tcpconfig /dev/ip6 &
+	###### push udp line discipline
+	./udpconfig /dev/ip17 &
+	###### standard daemons
+	./rogind &
+	./telnetd &
+	./rshd &
+	###### routing daemon
+	./routed &
+... for a system with only a datakit connection.  In this case the
+    system name is `snb-dk' and will communicate via the gateway called
+    `research' on the datakit and `research-dk' on the internet.
+	PATH=:/usr/inet/bin:/bin:/usr/bin: export PATH
+	cd /usr/inet/etc
+	###### push ip line disciplines
+	./dkipconfig research snb-dk research-dk /dev/il01 &
+	###### push tcp line discipline
+	./tcpconfig /dev/ip6 &
+	###### push udp line discipline
+	./udpconfig /dev/ip17 &
+	###### standard daemons
+	./rogind &
+	./telnetd &
+	./rshd &
+	###### routing
+	./route add \* research-dk
+
+NOTE: for more information, see the following man pages:
+	dcon.1, ropy.1, internet.3, tcp.3, udp.3

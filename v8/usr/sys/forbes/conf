@@ -1,0 +1,45 @@
+#
+# Forbes
+#
+cpu		"VAX750"
+options		DISKMON
+ident		forbes
+timezone	5 dst
+maxusers	16
+
+config	up	unix
+
+controller	uba0	at nexus ?
+controller	sc0	at uba0 csr 0176700 		vector upintr
+disk		up0	at sc0 drive 0
+disk		up1	at sc0 drive 3
+device		dk0	at uba0 csr 0167770 vector dkrint dkrint
+device		dz0	at uba0 csr 0160100 vector dzrint dztint
+device		kmc0	at uba0 csr 0160200 vector kmcrint kmcxint
+device		il0	at uba0 csr 0164000 vector ilrint ilcint
+# /dev/pt/pt?? files
+pseudo-device	sp		
+# message l.d.
+pseudo-device	mesg	64	
+# tty l.d.
+pseudo-device	tty	32	
+# datakit URP protocol
+pseudo-device	dkp	32	
+# datakit controller
+pseudo-device	cm		
+# datakit KMC driver
+pseudo-device	kdi	64	
+# buffering l.d. (for cu, uucp)
+pseudo-device	bf	32	
+# IP stuff
+pseudo-device	inet	4	
+# TCP devices
+pseudo-device	tcp	16	
+# IP devices
+pseudo-device	udp	16	
+# inet address resolution
+pseudo-device	uarp	1	
+# pseudo-Berkeley tty
+pseudo-device	ntty	4	
+# special l.d. for multiple connection to stream
+pseudo-device	connld	1	

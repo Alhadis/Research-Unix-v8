@@ -1,0 +1,181 @@
+.TH TROFF 1 
+.SH NAME
+troff, nroff \- text formatting and typesetting
+.SH SYNOPSIS
+.B troff
+[ option ] ...
+[ file ] ...
+.PP
+.B nroff
+[ option ] ...
+[ file ] ...
+.SH DESCRIPTION
+.I Troff
+formats text in the named
+.I files
+for
+printing on a phototypesetter;
+.I nroff
+for typewriter-like devices.
+Their capabilities are described in the
+.I Nroff/Troff user's manual.
+.PP
+If no
+.I file
+argument is present, the standard input is read.
+An argument consisting of a single minus
+.RB ( \- )
+is taken to be
+a file name corresponding to the standard input.
+The options, which may appear in any order so long as they appear
+before the files, are:
+.TP "\w'\f3\-m\f1name 'u"
+.BI \-o list
+Print only pages whose page numbers appear in
+the comma-separated
+.I list
+of numbers and ranges.
+A range
+.IB N \- M
+means pages
+.I N
+through
+.IR M ;
+an initial
+.I \-N
+means
+from the beginning to page
+.IR N ;
+and a final
+.IR N \-
+means
+from
+.I N
+to the end.
+.TP
+.BI \-n N
+Number first generated page
+.IR N .
+.TP
+.BI \-m name
+Prepend the macro file
+.BI /usr/lib/tmac/tmac. name
+to the input
+.IR files .
+.TP
+.BI \-r aN
+Set register
+.I a
+(one character name) to
+.IR N .
+.TP
+.B \-i
+Read standard input after the input files are exhausted.
+.TP
+.B \-q
+Invoke the simultaneous input-output mode of the
+.B rd
+request.
+.TP
+.B \-z
+produce no output: diagnostics and .tm messages only
+.HP
+.bd I 3
+.I Troff only
+.br
+.bd I
+.TP
+.B \-a
+Send a printable ASCII approximation
+of the results to the standard output.
+.TP
+.BR \-T dest
+Prepare output for typesetter
+.IR dest .
+.B \-T202
+= Mergenthaler Linotron 202 (default),
+.B \-Tcat
+= Graphic Systems C/A/T,
+.B \-Taps
+= Autologic APS-5.
+.TP
+.BI \-F dir
+take font information from directory
+.I dir
+.HP
+.bd I 3
+.I Nroff only
+.br
+.bd I
+.TP
+.BI \-s N
+.I Nroff
+will halt prior to every
+.I N
+pages (default
+.IR N =1)
+to allow paper loading or
+changing, and will resume upon receipt of a newline.
+.TP
+.BI \-T name
+Prepare output for specified terminal.
+Known
+.I names
+include
+.B 37
+for the (default) 
+Teletype Corporation Model 37 terminal,
+.B lp
+(`line-printer')
+for any terminal without half-line capability,
+.B 450
+for the \s-1DASI\s+1-450
+(Diablo Hyterm),
+and
+.B think
+(HP ThinkJet, see
+.IR think (9)).
+.TP
+.B \-e
+Produce equally-spaced words in adjusted
+lines, using full terminal resolution.
+.TP
+.B \-h
+Use output tabs during horizontal spacing
+to speed output and reduce output character count.
+Tab settings are assumed to be every
+8 nominal character widths.
+.PP
+If the file
+.I /usr/adm/tracct
+is writable,
+.I troff
+writes phototypesetter accounting records there.
+The integrity of that file may be secured by making
+.I troff
+a `set user-id' program.
+.SH FILES
+.ta \w'/usr/lib/tmac/tmac.*  'u
+.br
+/tmp/trtmp*	temporary file
+.br
+/usr/lib/tmac/tmac.*	standard macro files
+.br
+/usr/lib/term/*	terminal driving tables for
+.I nroff
+.br
+/usr/lib/font/*	font width tables for
+.I troff
+.br
+/usr/adm/tracct	accounting statistics for 
+.I troff
+.SH "SEE ALSO"
+J. F. Ossanna,
+.I Nroff/Troff user's manual
+.br
+B. W. Kernighan,
+.I
+A TROFF Tutorial
+.br
+d202(1), proof(9.1), apsend(1),
+eqn(1), tbl(1), refer(1), pic(1), ideal(1), ped(9.1), doctype(1), ms(7)

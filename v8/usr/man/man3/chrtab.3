@@ -1,0 +1,16 @@
+.TH CHRTAB 3
+.SH NAME
+chrtab \- simple character bitmaps
+.SH SYNOPSIS
+.B extern char chrtab[95][16];
+.SH DESCRIPTION
+.I Chrtab
+contains 8-by-16 bitmaps for ASCII printing characters.
+The 16 bytes pointed to by
+.I chrtab[c \- \'\ \']
+are the 16 rows of character 
+.I c
+from top to bottom.
+The bottom row is always empty (has all bits 0).
+.SH SEE ALSO
+plot(3), font(9.5)

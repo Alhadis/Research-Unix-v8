@@ -1,0 +1,81 @@
+.TH SELECT 2
+.SH NAME
+select \- synchronous I/O multiplexing
+.SH SYNOPSIS
+.ft B
+#include <sys/types.h>
+.br
+int select(nfds, readfds, writefds, milli);
+.br
+fd_set *readfds, *writefds;
+.ft R
+.SH DESCRIPTION
+.I Select
+examines the IO descriptors specified by the bit masks
+.I readfds
+and
+.I writefds
+to see if they are ready for reading and/or writing respectively
+and returns, in place, a mask of those descriptors which are ready.
+Only descriptors 0 through
+.IR nfds "\-1"
+are examined.
+The total number of ready descriptors is returned.
+.PP
+File descriptors referring to ordinary files and non-stream
+special files always appear ready.
+.PP
+.I Milli
+is the maximum number of milliseconds to wait before giving
+up if no descriptors come active.
+If no maximum wait is desired a very large integer can be given.
+If
+.I milli
+is 0,
+.I select
+returns whatever information is available without blocking.
+.PP
+Either
+.I readfds
+or
+.I writefds
+may be null if no descriptors are interesting.
+.I Readfds
+and
+.I writefds
+point to a structure containing a simple bit mask:
+file descriptor
+.I f
+is represented by the bit
+.RI 1<<( f % N )
+in
+.IR readfds\->fds_bits [ f/N ],
+where 
+.I N
+is the number of bits in an int
+(given by the constant expression
+.IR NBBY*NBPW ).
+These macros manipulate the bits of mask
+.IR s :
+.TP "\w'FD_ISSET(n,s)  'u"
+.RI FD_ZERO( s )
+clear all bits
+.TP
+.RI FD_SET( n,s )
+set bit
+.I n
+.TP
+.RI FD_CLR( n,s )
+clear bit
+.I n
+.TP
+.RI FD_ISSET( n,s )
+test bit
+.I n
+.SH BUGS
+\fIMilli\fP is rounded up to the nearest second.
+.br
+.I Select
+is intended for use with streams;
+it does not work with non-stream
+special files that can block.

@@ -1,0 +1,24 @@
+.TH COREID 1
+.SH NAME
+coreid \- identify source of core image
+.SH SYNOPSIS
+.B coreid
+[ corefile ]
+.SH DESCRIPTION
+.I Coreid
+reads the file
+``core,'' or the specified
+.I corefile
+if given,
+and prints on its standard output the
+argument list of the command which
+produced the core image.
+.SH FILES
+core
+.SH "SEE ALSO"
+core(5)
+.SH BUGS
+Only works for core images from C and FORTRAN programs.
+.br
+The arguments shown are those at the time of the dump,
+not at invocation of the command.

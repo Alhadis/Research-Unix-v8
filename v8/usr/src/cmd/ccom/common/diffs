@@ -1,0 +1,36 @@
+554a555,556
+> 				if (p->fn.type == FLOAT)
+> 					p->fn.type = p->fn.csiz = DOUBLE;
+987d988
+< 	q->suse = -lineno;
+1512,1515d1512
+< 	if (t1 == FLOAT && callop(l->tn.op))
+< 		t1 = DOUBLE;
+< 	if (t2 == FLOAT && callop(r->tn.op))
+< 		t2 = DOUBLE;
+1622c1619
+< 	/* don't push a conversion down the lhs of an assign op or a call */
+---
+> 	/* don't push a conversion down the lhs of an assign op */
+1625c1622
+< 	    !(asgop(p->in.op) || callop(p->in.op)))
+---
+> 	    !asgop(p->in.op))
+1631,1641d1627
+< 	else if (pt == FLOAT && callop(p->in.op))
+< 	{
+< 		if (t == DOUBLE)
+< 			goto rew;
+< 		else
+< 		{
+< 			p->fn.type = DOUBLE;
+< 			p->fn.csiz = s;
+< 			p->fn.cdim = d;
+< 		}
+< 	}
+2146,2147c2132,2133
+< # ifdef GDEBUG
+< 	dbline();
+---
+> # ifdef SDB
+> 	sdbline();

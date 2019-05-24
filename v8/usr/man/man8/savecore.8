@@ -1,0 +1,55 @@
+.TH SAVECORE 8
+.SH NAME
+savecore \- save a core dump of the operating system
+.SH SYNOPSIS
+.B /etc/savecore
+dirname
+[
+unix
+]
+.SH DESCRIPTION
+.I Savecore
+saves a copy of the physical memory of the operating system, saved
+after a system crash.
+It is meant to be called from
+.IR rc (8)
+after normal filesystems are
+mounted.
+.PP
+.I Savecore
+checks the core dump to be certain it corresponds with the named
+.I unix
+(default `/unix').
+If it does it saves the core image in the file
+.IR dirname /core.n
+and its sibling, the namelist, in
+.IR dirname /unix.n.\ 
+The trailing `.n' in the pathnames is replaced by a number stored in
+.IR dirname /bounds
+which grows every time
+.I savecore
+is run with the same
+.I dirname
+argument.
+.PP
+Before
+.I savecore
+writes out a core image, it reads a number from the file
+.IR dirname /minfree.
+If there are fewer free kilobytes on the filesystem
+which contains
+.I dirname
+than the number obtained from the minfree file, the core dump is not done.
+If the minfree file does not exist,
+.I savecore
+always writes out the core
+file (assuming that a core dump was taken).
+.SH FILES
+.tr ~
+.ta \w'/usr/adm/shutdownlog  'u
+.br
+/unix			current unix binary
+.br
+.IR dirname /bounds	numerical~suffix
+.br
+.IR dirname /minfree	minimum~free~kilobytes~required

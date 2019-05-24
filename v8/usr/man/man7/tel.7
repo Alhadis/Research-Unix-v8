@@ -1,0 +1,24 @@
+.TH TEL 7
+.SH NAME
+tel \- local and private telephone books
+.SH SYNOPSIS
+.B tel
+name
+.SH DESCRIPTION
+.I Tel
+looks up 
+.I name 
+in a private telephone book, `$HOME/lib/tel',
+if it exists,
+and in a local book `/lib/tel.'
+.PP
+.I Tel
+is simply a script for
+.IR grep (1),
+so lookup may be by any part of the name or number.
+Customarily the local telephone book contains names, userids,
+home numbers, and office numbers of users.
+It also contains a directory of area codes and miscellaneous
+people of some general interest.
+.SH SEE ALSO
+telno(7)

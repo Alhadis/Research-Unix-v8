@@ -1,0 +1,57 @@
+.TH IOSTAT 1
+.SH NAME
+iostat, load, dkstat \- report I/O and CPU statistics
+.SH SYNOPSIS
+.B iostat
+[ interval [ count ] ]
+.PP
+.B load
+[ interval [ count [ sysfile [ corefile ] ] ] ]
+.PP
+.B dkstat
+[ interval [ count ] ]
+.SH DESCRIPTION
+.I Iostat
+periodically reports the number of characters read and written to terminals,
+and, for each disk, the number of seeks and transfers per second,
+and average milliseconds per seek.
+It also reports the percentage of time the system has
+spent in user mode, in user mode running low priority (niced) processes,
+in system mode, and idling.
+The first report is for all time since a reboot and each
+subsequent report is for the last interval only.
+.PP
+.I Load
+periodically reports the number of
+processes ready to run averaged over the preceding 1, 5, and 15 minutes.
+.PP
+.I Dkstat
+periodically reports the number of packets received and sent over 
+the Datakit network, together with error reports if any occurred.
+The first report is for all time since a reboot and each
+subsequent report is for the last interval only.
+.PP
+The optional
+.I interval
+argument causes
+a report once each
+.I interval
+seconds.
+.PP
+The optional
+.I count
+argument restricts the number of reports.
+.PP
+The optional arguments
+.I sysfile
+and
+.I corefile
+cause the named files to be consulted instead of the defaults,
+`/unix' and `/dev/kmem'.
+.SH FILES
+/dev/kmem
+.br
+/unix
+.SH SEE ALSO
+sysmon(9.1),
+vmstat(8)

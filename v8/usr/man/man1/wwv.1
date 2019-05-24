@@ -1,0 +1,32 @@
+.TH WWV 1
+.SH NAME
+wwv \- print and set the date from accurate clock
+.SH SYNOPSIS
+.B "wwv [ \-b \-s \-f \-u ]
+.SH DESCRIPTION
+.I Wwv
+connects to a clock synchronized with radio station WWV.
+With no argument it prints the time obtained.
+It accepts these arguments:
+.TP
+.B \-b
+Print both the WWV time and the system's current idea of the time.
+.TP
+.B \-s
+Set the system's time to agree with WWV.
+You must be super-user.
+The system time cannot be changed by more than 20 minutes.
+.TP
+.B \-f
+With \-s, force the time to be set by WWV even if the local time disagrees
+by more than 20 minutes.
+.TP
+.B \-u
+Report time in UTC rather than local time.
+.SH FILES
+/usr/adm/wtmp to record time-setting
+.SH SEE ALSO
+date (1), utmp(5)
+.SH BUGS
+The WWV clock has been observed to slip sync by an integral number
+of minutes or hours from the radio standard.

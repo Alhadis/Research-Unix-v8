@@ -1,0 +1,30 @@
+This directory contains the 'tbl' table-formatting
+program.  It is the standard reference
+for the source code on both UNIX
+and GCOS.
+
+To compile tbl:
+	make tbl
+or (if you don't have make)
+	cc t?.c -lS
+
+To check:
+  for all possible X
+    tbl sampleX | troff -t >junk1
+    a.out sampleX | troff -t >junk2
+    cmp junk1 junk2
+  if identical, the new version has all the features
+  of the old program.  Most easily done by
+  the 'compr' shell program or by
+
+    sh scr >scrmess (nice nohup ...)
+
+
+To install:
+  cp a.out /usr/bin/tbl
+
+
+Documentation in
+  TM 76-1274-5,  by M. E. Lesk
+and in
+  /usr/doc/mel/tables

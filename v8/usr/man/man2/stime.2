@@ -1,0 +1,37 @@
+.TH STIME 2 
+.SH NAME
+stime, settod \- set time
+.SH SYNOPSIS
+.nf
+.B stime(tp)
+.B long *tp;
+.sp
+.B long settod(toy)
+.B long toy;
+.fi
+.SH DESCRIPTION
+.I Stime
+sets the system's idea of the time and date.
+Time, pointed to by
+.I tp,
+is measured in seconds from 0000 GMT Jan 1, 1970.
+.PP
+.I Settod
+sets the VAX hardware time-of-year clock
+to
+.IR toy ,
+and returns the previous value.
+When the system is booted,
+the system's time is set from the time-of-year clock;
+while the system is running,
+the time-of-year clock is examined periodically,
+and the system's time adjusted slowly
+if necessary
+to make the two agree.
+.PP
+Only the super-user may use these calls.
+.SH "SEE ALSO"
+date(1), time(2), ctime(3)
+.SH DIAGNOSTICS
+Zero is returned if the time was set;
+\-1 if user is not the super-user.

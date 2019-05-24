@@ -1,0 +1,34 @@
+.TH POSTNEWS 1 alice
+.SH NAME
+postnews \- submit netnews articles
+.SH SYNOPSIS
+.B postnews
+[ file ]
+.SH DESCRIPTION
+.I Postnews
+submits the 
+.I file
+as a netnews article.
+It prompts for title (informative, please),
+primary newsgroup, and other newsgroup distribution (not recommended).
+.PP
+The names of newsgroups are relative pathnames
+of directories depending from 
+.I /usr/spool/netnews,
+with slashes (/) replaced by dots (.).
+.PP
+If no file is specified,
+.I postnews
+invokes an editor specified by the environment variable EDITOR
+(default
+.IR vi (1)).
+The editor's buffer is initialized with header information,
+which may be changed.
+The text of the article may be appended.
+.PP
+For more sophisticated uses, such as posting news from a program, see
+the BSD manual.
+.SH "SEE ALSO"
+readnews(1)
+.SH BUGS
+The editor default is distinctly nonclassical.

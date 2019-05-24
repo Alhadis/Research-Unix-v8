@@ -1,0 +1,128 @@
+.TH IOCTL 2 
+.SH NAME
+ioctl, stty, gtty \- miscellaneous  stream control operations
+.SH SYNOPSIS
+.nf
+.B #include <sgtty.h>
+.PP
+.B ioctl(fildes, request, argp)
+.B struct sgttyb *argp;
+.PP
+.B stty(fildes, argp)
+.B struct sgttyb *argp;
+.PP
+.B gtty(fildes, argp)
+.B struct sgttyb *argp;
+.fi
+.SH DESCRIPTION
+.I Ioctl
+performs a variety of functions
+on special files and streams.
+The writeups of various devices
+in section 4 discuss how
+.I ioctl
+applies to them.
+.PP
+For certain status setting and status inquiries
+about terminal devices, the functions
+.I stty
+and
+.I gtty
+are equivalent to
+.IP
+ioctl(fildes, TIOCSETP, argp);
+.br
+ioctl(fildes, TIOCGETP, argp);
+.LP
+respectively; see
+.IR ttyld (4).
+.PP
+The following two standard calls, however, apply to any open file.
+The defined constant NULL has value 0.
+.IP
+ioctl(fildes, FIOCLEX, NULL);
+.br
+ioctl(fildes, FIONCLEX, NULL);
+.LP
+The first causes the file to be closed automatically upon
+a successful
+.IR exec (2);
+the second causes the file to be left open.
+.PP
+The following call applies to any stream file descriptor:
+.PP
+.RS
+ioctl(fildes, FIONREAD, &count);
+.RE
+.LP
+It returns, in the integer
+.IR count ,
+the number of characters available for reading from
+.I fildes.
+.PP
+The following calls provide an advisory file locking facility,
+and apply to any open file:
+.PP
+.RS
+ioctl(fildes, FIOALOCK, NULL);
+.br
+ioctl(fildes, FIOAUNLOCK, NULL);
+.br
+ioctl(fildes, FIOAISLOCK, NULL);
+.RE
+.LP
+FIOALOCK either sets an advisory lock,
+or indicates that this file is already locked
+by returning \-1, with
+.I errno
+set to EPERM.
+.PP
+FIOAUNLOCK either clears an advisory lock,
+or indicates that the file is locked by another instance of
+.I open
+by returning \-1, with
+.I errno
+set to EPERM.
+.PP
+FIOAISLOCK returns 0 for a file with no advisory lock set,
+1 for a file with an advisory lock set using another
+instance of
+.IR open ,
+or 2 for a file with an advisory lock set on the current instance of
+.IR open .
+File descriptors belong to the same instance when they
+are copied by
+.IR dup (2)
+or
+.IR fork (2).
+Locks are detectable only through these calls, and have no effect
+on IO or ability to open files.
+.SH "SEE ALSO"
+stty(1), ttyld(4), proc(4), exec(2)
+.SH DIAGNOSTICS
+Except where otherwise stated, 0 is returned if the 
+call is successful; \-1 if the file descriptor does not refer to
+the kind of file for which it was intended,
+or if
+.I request
+attempts to modify the state of an unwritable file.
+.SH BUGS
+Strictly speaking,
+since 
+.I ioctl
+may be extended in different ways to devices with
+different properties,
+.I argp
+should have an open-ended declaration like
+.IP
+union { struct sgttyb
+.RB ... ;
+\&...
+} *argp;
+.PP
+The important thing is that the size is fixed by `struct sgttyb'.
+.br
+.I Ioctl
+requests vary among UNIX systems;
+undisciplined use is likely to compromise portability.
+

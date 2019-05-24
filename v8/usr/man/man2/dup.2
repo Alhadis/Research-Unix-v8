@@ -1,0 +1,41 @@
+.TH DUP 2 
+.SH NAME
+dup, dup2 \- duplicate an open file descriptor
+.SH SYNOPSIS
+.nf
+.B dup(fildes)
+.B int fildes;
+.PP
+.B dup2(fildes, fildes2)
+.B int fildes, fildes2;
+.fi
+.SH DESCRIPTION
+Given
+a file descriptor
+.I dup
+allocates another file descriptor
+synonymous
+with
+the original.
+The new file descriptor is returned.
+.PP
+In the second form of the call,
+.I fildes
+is a file descriptor referring to an open file, and
+.I fildes2
+is a non-negative integer less than the maximum value
+allowed for file descriptors (currently 127).
+.I Dup2
+causes
+.I fildes2
+to refer to the same file as
+.I fildes.
+If
+.I fildes2
+already referred to an open file, it is closed first.
+.SH "SEE ALSO"
+creat(2), open(2), close(2), pipe(2)
+.SH DIAGNOSTICS
+The value \-1 is returned if:
+the given file descriptor is invalid;
+there are already too many open files.

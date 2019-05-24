@@ -1,0 +1,6 @@
+# ps of several processes
+# used by uustat -p
+for i in $*
+do
+	ps $i
+done

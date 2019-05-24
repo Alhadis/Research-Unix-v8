@@ -1,0 +1,27 @@
+.TH C56 9.1
+.SH NAME
+c56 \- terminal program with data compression
+.SH SYNOPSIS
+.B c56
+.SH DESCRIPTION
+.I C56
+replaces the program in the layer on its standard output with
+an emulator for a
+Teletype DMD 5620 stand-alone terminal.
+In the resulting layer, environment variable TERM is set appropriately.
+The character stream from the host to the terminal
+is compressed using an adaptive algorithm
+that often doubles the effective data rate of
+a slow host-terminal connection.
+.PP
+This terminal program is most useful at speeds of
+2400 baud and below.
+At 9600 baud, the terminal cannot generate
+characters and put them on the screen fast enough
+to keep up, and the extra overhead introduced by
+decompression just slows things down.
+.SH BUGS
+Unexported shell parameters and functions are lost.
+.br
+Race conditions occasionally leave the tty modes set
+improperly at start-up.

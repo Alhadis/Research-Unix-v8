@@ -1,0 +1,94 @@
+.TH TSET 1 
+.SH NAME
+tset \- set terminal modes
+.SH SYNOPSIS
+.B tset
+[
+options
+] [
+.B \-m
+.RB test : type
+] ... [ type ]
+.SH DESCRIPTION
+.I Tset
+conditionally
+sets erase and kill characters, tabs, delays, etc.
+for terminals.
+It is typically used in startup profiles; see
+.IR sh (1).
+In default of a specified terminal
+.I type
+(listed in the file `/etc/termcap')
+the type is taken from the environment variable TERM.
+Option
+.B \-m
+determines the type based on source and baud rate:
+.IP
+.B \-m
+.RI [ source ][> baud ]\fB: type
+.LP
+No sources are distinguished at present.
+The test `>' may be replaced by `<', `=', or `@' (same as `=').
+The test may be preceded by `!' for negation.
+A
+.I type
+may be preceded by `?' to cause
+.I tset
+to query whether the guess is right.
+Tests are performed left-to-right until one is satisfied.
+A final default
+.I type
+prevails when all tests fail.
+Thus
+.IP
+tset \-m  \'>1200:5620\'  \'?hp\'  
+.LP
+assumes the terminal is a 5620 if the line speed exceeds 1200 baud.
+Otherwise it assumes an hp terminal but asks for confirmation,
+giving you a chance to name another type.
+.PP
+The
+.B \-s
+option causes tset to place on the standard output shell commands
+for setting the environment variables TERM and TERMCAP.
+Use this feature thus:
+.IP
+eval \`tset \-s \fIoptions...\fR\`
+.PP
+On terminals that can backspace but not overstrike
+and when the erase character is the default erase character
+(`#' on standard systems),
+the erase character is changed to a Control-H
+(backspace).
+.PP
+Other options are:
+.TP
+.BI \-e " c"
+set the erase character to  
+.I c,
+or backspace if
+.I c
+is missing
+.TP
+.BI \-k " c"
+set the kill character similarly; use ^X if
+.I c
+is missing
+.TP
+.B \-I
+supress outputting terminal initialization strings
+.TP
+.B \-Q
+supress printing
+`Erase set to' and `Kill set to' messages
+.TP
+.B \-S
+Outputs
+TERM and TERMCAP in the environment rather than in shell commands
+.SH FILES
+.ta \w'/etc/termcap  'u
+/etc/ttytype		terminal id to type map database
+.br
+/etc/termcap	terminal capability database
+.SH SEE\ ALSO
+sh(1), stty(1), environ(5), termcap(5)

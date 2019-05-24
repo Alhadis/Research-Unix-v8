@@ -1,0 +1,69 @@
+.TH GMOUNT 2 
+.SH NAME
+gmount \- mount or remove non-standard file system
+.SH SYNOPSIS
+.nf
+.B gmount(fstype, dev, flag [, more])
+.B int fstype, flag;
+.B dev_t dev;
+.fi
+.SH DESCRIPTION
+.I Gmount
+mounts or unmounts a non-standard file system
+of type
+.IR fstype .
+.I Dev
+is a device number
+identifying the object mounted;
+the minor part should be zero.
+Device numbers are not shared
+by different filesystem types.
+The filesystem is mounted if
+.I flag
+is zero,
+dismounted if it is 1.
+.PP
+Different types of filesystems may require additional arguments
+when mounting.
+Only
+.IR fstype ,
+.IR dev ,
+and
+.I flag
+need be given to unmount.
+.PP
+The possible calls are:
+.IP
+gmount(1, dev, 0, fildes, name);
+.PP
+Mount a network filesystem on directory
+.IR name ;
+.I fildes
+is the file descriptor of a stream
+connected to an appropriate server.
+.IP
+gmount(2, dev, 0);
+.PP
+Mount the process filesystem.
+.I Dev
+is (stupidly)
+really a character pointer,
+and denotes the directory
+on which to mount.
+.IP
+gmount(3, dev, 0, fildes, name);
+.PP
+Mount a process on file
+.IR name ;
+.I fildes
+is the file descriptor of a stream.
+.SH DIAGNOSTICS
+.I Gmount
+returns 0 if the action occurred; \-1 otherwise.
+.SH BUGS
+Filesystem type 0
+(the standard one)
+should work;
+it doesn't.
+.br
+The process filesystem should work like everything else.

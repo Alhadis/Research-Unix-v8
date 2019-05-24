@@ -1,0 +1,27 @@
+.TH FORTUNE 6
+.SH NAME
+fortune \- cookies
+.SH SYNOPSIS
+.B fortune
+[ file ]
+.PP
+.B say
+[ N ]
+.SH DESCRIPTION
+.I Fortune
+prints a one-line aphorism chosen at random.
+If a
+.I file
+is specified, the sayings are taken from that file;
+otherwise they are selected from /usr/games/lib/fortunes.
+.PP
+.I Say
+constructs
+.I N
+proverbs out of old parts.
+.IR N =1
+by default.
+.SH FILES
+/usr/games/lib/fortunes \(em sayings
+.br
+/usr/games/lib/fortunes.index \(em fast lookup table, maintained automatically

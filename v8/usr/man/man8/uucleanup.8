@@ -1,0 +1,102 @@
+.TH UUCLEANUP 8
+.SH NAME
+uucleanup \- uucp spool directory clean-up
+.SH SYNOPSIS
+.B /usr/lib/uucp/uucleanup
+[ options ]
+.SH DESCRIPTION
+.I Uucleanup\^
+removes old files from the
+.I uucp
+spool directories.
+It is controlled by a number of options:
+.TP .8i
+.BI \-C days\^
+Remove
+B C.
+files
+that are at least
+.I days
+old,
+and send a message to the user who queued the job.
+.TP
+.BI \-D days\^
+Remove
+.B D.
+files
+that are at least
+.I days
+old.
+If the data file appears to contain a mail message,
+an attempt will be made to deliver it;
+if it contains a netnews article
+from another system,
+it will be handed to
+.IR rnews .
+.TP
+.BI \-W days\^
+Send a warning to the user who queued any jobs
+(\c
+.BR C.
+files)
+at least
+.I days
+old.
+If one of the data files for the job appears to be a mail message,
+the message is included in the warning.
+.TP
+.BI \-X days\^
+Remove any
+.B X.
+files
+at least
+.I days
+old.
+.TP
+.BI \-m string\^
+Include
+.I string
+in warning messages.
+The default is
+``See your local administrator to locate the problem.''
+.TP
+.BI \-o days\^
+Remove any other files
+that are at least
+.I days
+old.
+.TP
+.BI \-s system\^
+Examine only files associated with
+.IR system .
+.PP
+By default,
+.B C.
+files generate a warning when
+one day old,
+and are removed after 7 days;
+.B D.
+files are removed after 7 days;
+and
+.B X.
+and other files
+are removed after 2 days.
+.PP
+This program is typically called by the shell
+.IR uudemon.cleanup ,
+which should be started regularly by
+.IR cron (8).
+.SH FILES
+.PD 0
+.TP 1.1i
+/usr/lib/uucp
+directory with commands used by
+.I uucleanup\^
+internally
+.TP
+/usr/spool/uucp
+spool directory
+.PD
+.SH SEE ALSO
+uucp(1)
+.\"	@(#)

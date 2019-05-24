@@ -1,0 +1,11 @@
+-Vexecl:1
+-Vexecle:1
+-Vexeclp:1
+-Vfprintf:2
+-Vfscanf:2
+-Vioctl:2
+-Vprintf:1
+-Vscanf:1
+-Vsprintf:2
+-Vsscanf:2
+-Vsyscall:3

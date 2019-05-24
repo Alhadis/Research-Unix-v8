@@ -1,0 +1,34 @@
+.XE
+.EQ
+delim $$
+.EN
+.TH ERF 3M 
+.SH NAME
+erf, erfc \- error function
+.SH SYNOPSIS
+.B #include <math.h>
+.PP
+.B double erf(x)
+.br
+.B double x;
+.PP
+.B double erfc(x)
+.br
+.B double x;
+.SH DESCRIPTION
+These functions calculate the error function 
+.RI erf( x )
+.if n .ig
+$=~(2/ sqrt pi ) int from 0 to x  roman exp (-t sup 2 ) dt$
+..
+and the complementary error function 
+.RI erfc( x )
+= 1 \-
+.RI erf( x ).
+The error criterion for both
+.I erf
+and
+.I erfc
+is relative.
+.SH DIAGNOSTICS
+There are no error returns.

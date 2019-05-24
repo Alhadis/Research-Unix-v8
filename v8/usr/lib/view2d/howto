@@ -1,0 +1,232 @@
+OPTIONS NOT DOCUMENTED ON THE MAN PAGE
+
+view2d -Tc:
+  -B   use blue background
+  -SF  download one frame at a time  (hence, arbitrarily long movies)
+       GO? s   snaps camera
+       GO? 4   skips 4 frames forward;  default=1
+  -SMn like -SF, but "snap n" after each frame
+  -SA  "autopilot"  like -SF, but keeps going
+  -b   don't show blank frame
+  -mf file   color map is taken from file, which has n lines (where n is
+       the number of colors, specified by -cn).  Each line has three integers
+       from 0 to 255 for red, green, and blue.
+       For a sample program, see /n/bowell/src/cmd/view2d/makemap.c.
+  -mg  use grey rather than color
+  -mr  use red to blue, omitting green
+  -v   verbose
+  -vc    print colors
+  -w   warmstart
+  -D   debugging   (don't write on /dev/cv0)
+
+view2d -Tp:
+   -clx,x,x,x  sets contour levels at x, x, x, and x.   up to 8 levels allowed.
+
+view2d -Th  produces a halftone image on the 202
+      regrid -nNX,NY ... | view2d -Th | panther /usr/ehg/bin/half NX NY
+  Panther half takes NX=NY=300 by default.
+  The default number of levels is 10, but can be changed by view2d -cN.
+
+/n/bowell/src/cmd/view2d/rksmith/rkstri.c
+   reads triangle formats and converts to grids
+
+antial -c20 | level -ma    produces antialiased movies
+  
+-----------------------------------------------------------------------
+
+............
+. commands .
+............
+
+flood r g b          fill screen.  0 <= r,g,b <= 255
+snap n   take n exposures of what is currently on the display  (default n=1)
+xhair    interactive pan and zoom.   Type ? for help.
+view2d, regrid, vdata    {see man pages}
+
+
+..........
+. titles .
+..........
+view2d -vc ... 2>movie.color
+title movie.color movie.text >t
+flood; dcv -r t
+
+
+.................
+. making slides .
+.................
+
+  mount the Contax 35mm camera on the Dunn using two bolts, hand tight
+  plug in the cord from the Contax to the Dunn
+  wiggle stretch cord where it plugs into Contax; this is flaky!
+  set switch G to 1 on the logic board inside the Dunn on the right side
+     (unlock the panel by giving a quarter-turn to a screw, reaching
+     through from the left hand side of the Dunn.)
+POWER   on the Dunn
+RESET
+  reset exposure counter
+  set aperture to f/5.6 for Ektachrome ASA 100 film
+FOCUS mode
+EXPOSE      hit again when it times out
+display typical image
+adjust camera lens focus
+    slide eyepiece into viewing position if necessary
+if necessary, adjust VERT and HORIZ POS knobs inside the Dunn cabinet
+     There is a lock tab on the side of the knob.
+NORMAL mode
+RESET
+RESET
+EXPOSE
+slide eyepiece out of the way
+open camera back by pulling on rewind lever
+load film an inch onto sprocket and takeup spool
+   see the refrigerator or Theo's "Princeton" drawer
+close back
+film advance indicator should be at S
+set motor drive to C
+advance film until indicator is 1
+set shutter speed to B at rewind knob
+
+view2d -Sf ...
+   answer s for those frames you want slides of
+   answer 6 to skip forward six frames
+
+  12-exp Polaroid cassette allows 13 or 14 exposures
+  momentarily press R level on drive
+  rewind manually
+
+Photo Express Ltd at the Short Hills Mall (near Altmans)
+  will develop Ektachrome in one hour, for $8.95/36exp
+
+-----------------------------------------------------------------------
+
+.................
+. making movies .
+.................
+
+Prepare an outline and makefile as in /n/swift/usr/ehg/cur/view2d/sample.make.
+Movies are projected at 24 frames/second; there are 40 frames/foot-of-film;
+a standard film roll is 100 feet.
+
+regrid your data files to the desired number of frames
+
+Making a movie ties up the display for a long time;  check with
+ehg to make sure you're not getting in somebody's way.
+
+We currently use 7247 or 7291 film.  (The two emulsions are similar, and
+  can be processed together.)  Often there will be film already in
+  the Bolex animation camera.
+Mount bracket using the same two bolts from the Contax camera bracket.
+  (Never remove the brackets from the cameras!)
+  The necessary 3/16" allen wrench is in the plastic Bolex bag; if it
+  is gone, check Joe's drawer in the network lab.
+  The high part of the bracket should be towards the rear of the Dunn.
+Plug in the cord from the Bolex to the Dunn.
+Set switch G on the logic board inside the panel on the right side.
+
+POWER
+set f/4; adjust baffle
+In dim light (since the film spool is not sealed!), open Bolex case.
+Focus using prism held in focal plane
+  hit expose button, switch on motor, and focus   (about .32 ft)
+   as necessary, turn off motor, then repeat.
+  verify that film advance and shutter are working correctly
+  (to reset phase of shutter, use needle-nose pliars on drive shaft)
+  An eye loupe is in the plastic camera bag.
+Stash prism and loupe; reinstall pressure plate.  Do not lose these small parts!
+To thread film:
+   Be sure that the film winds off the spool as indicated by the arrows.
+   "squeeze things together" says Lynn
+   turn on motor to verify that film is advancing properly
+   replace cover
+set two buttons to "normal", hit reset
+advance 5 feet using switch on motor drive
+  (film footage indicator moves from "ft" to "0")
+  may have to hit RESET occasionally as camera self-triggers
+hit reset
+nohup make&
+cut film and send to TVC Labs
+     TVC Labs
+     311 W. 43rd St
+     New York  NY  10036
+     800-225-6566
+The running purchase order number is 164-802.  Send the invoice to Chris.
+Enclose a letter with the negative asking "develop using normal processing and
+make a dailies print; return by first class mail the negative, print, spool,
+and can to ..."    Your home address is probably faster than the Labs mailroom.
+When the print returns, use a split reel and moviola in Lillian's office
+to transfer to a normal reel.  16mm projectors are available from CIB x2122.
+
+artistic suggestions from Lillian:
+snap 2 is ok;  snap 3 gives noticeable jerkiness
+fade up title in about 8 to 16 frames
+leave 85 frames for the first line of text, less for extra lines
+
+
+-----------------------------------------------------------------------
+
+4x5 Polacolor
+  set f/4
+  load on L
+  pull for processing on P
+     wait 2 min for developing
+
+-----------------------------------------------------------------------
+
+
+****************
+* frame buffer *     swift  /dev/cv0
+****************
+
+
+hardware
+  Raster Technologies Model One/20  controller
+    512 * 512 * 3 * 8-bit image planes
+    3 * 256 * 8 color lookup tables
+    RS170 RGB output
+    DMA interface
+  Hitachi monitor
+  Dunn camera
+
+--------------------------
+
+coordinate system:
+  lower left of screen = (0,0),  upper right = (511,511)
+
+cvinit(1);     at start of each program.      0 for warm start.
+
+cvflush();   flush i/o buffer.
+
+image(data,x0,y0,x1,y1,bank)  write 8-bit image
+  data   char[x1-x0+1][y1-y0+1]
+    stored as if a Fortran array with d(i,j) at x=i, y=j,
+       (scan rows left to right, starting with bottom row)
+    maximum image size is 128^2.
+  x0,y0,x1,y1  coordinates of lower left and upper right of window
+  bank  3-bit value  (red,green,blue)  indicating banks to be written
+
+lutrte(bank)  set which bank drives the display
+  bank  0x0   each bank indexes its own color table
+        0x7E  red drives all
+        0x75  green drives all
+        0x53  blue drives all
+
+cvmap(map,maxi,zero)
+  char *map;   /* string describing kind of map */
+  int maxi;    /* indices from 0 through maxi */
+  int zero;    /* currently unused */
+ map=ffile   read triples from file
+     r       blue-to-red  (for 8 bit in; gamma corrected)
+     s       spectrum     (for 8 bit in; gamma corrected)
+     n       normal map (for 24 bin in; not gamma corrected)
+     g       normal map (for 24 bin in; gamma corrected)
+
+cvload(n,x,y);   load coordinate register n.     0<=n<=63
+   creg 4  coordinates of center of screen    (useful for panning)
+zoom(fact)
+  fact = 1, 2, 4, or 8    (to see 512, 256, 128, or 64 -size images)
+
+cvvalue(r,g,b)    set current color
+
+cvflood()     erase screen
+ 

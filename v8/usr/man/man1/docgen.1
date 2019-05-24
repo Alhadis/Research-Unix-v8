@@ -1,0 +1,60 @@
+.TH DOCGEN 1 
+.SH NAME
+docgen \- generate a document from a script
+.SH SYNOPSIS
+.B docgen
+[ option ] ...
+[ ofile ]
+.SH DESCRIPTION
+.I Docgen
+guides interactive preparation of standard documents
+according to canned scripts and
+places the output in
+.I ofile.
+The output typically takes the form of
+.IR troff (1)
+input.
+These options invoke standard scripts:
+.TP
+.B \-mcs
+Bell Labs cover sheet; output (`temp.cover' by default)
+may be typeset thus: 
+.I troff temp.cover
+.TP
+.B \-ms
+(default) all kinds of document known to the macro package
+.IR ms (7);
+output (`temp' by default) may be typeset thus:
+.I troff \-ms temp
+.TP
+.B \-mm
+similarly for the MM macro package of System V
+.PP
+Other options are:
+.TP
+.BI \-f " file"
+take script from 
+.I file
+.TP
+.B \-v
+(verbose) print document as it is generated
+.TP
+.B \-d
+(debug) print information about the script
+as it is read
+.PP
+The reference tells how to construct scripts.
+.SH FILES
+/usr/lib/docgen/*  scripts
+.br
+temp.cover
+.br
+temp
+.SH "SEE ALSO"
+troff(1), ms(7), mcs(7)
+.br
+L. L. Cherry,
+.I Docgen,
+AT&T Bell Laboratories, 1980
+.SH BUGS
+Not all document types are implemented.

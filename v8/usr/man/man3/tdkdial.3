@@ -1,0 +1,61 @@
+.TH TDKDIAL 3X
+.SH NAME
+dkdial, dkerror \- open a datakit connection to a remote server
+.SH SYNOPSIS
+.B #include <dk.h>
+.PP
+.B tdkdial(srvname, traffic)
+.br
+.B char *srvname;
+.PP
+.B extern char *dkerror;
+.SH DESCRIPTION
+These routines are loaded by option
+.B \-ldk
+of
+.IR ld (1).
+.PP
+.I Tdkdial
+opens an available datakit channel, and attempts to
+connect it to the named server.
+The server is told the
+.I  srvname
+string, the identity of the host computer originating the call, and
+the effective userid of the process making the request.
+If successful, the file descriptor of the open circuit is returned.
+.PP
+.I Traffic
+type tells the network the characteristics of the
+intended traffic on this circuit.
+Current defined values are
+0 for terminal-like traffic, and 2 for high-speed host-host traffic.
+.PP
+.I Srvname
+consists of a required network destination name,
+optionally followed by a period and some arbitrary parameters for the server
+being called.
+A general destination name has three components, separated by slashes.
+The first is an area code (e.g.
+.BR mh )
+the second is a controller node in that area (e.g.
+.BR astro )
+the last is a service offered in that node.
+A standard service offered by each machine attached to a node is
+remote login, and the service name is the same as the machine name
+(e.g.
+.BR research ).
+.PP
+The additional information is of limited length, and
+should only be used to inform the server what type of session is
+desired and what higher level protocol should be used to exchange further
+information.
+.PP
+.SH FILES
+.ta \w'/dev/dk 'u
+/dev/dk	directory containing files naming each channel
+.SH SEE ALSO
+dkmgr(3)
+.SH DIAGNOSTICS
+Value \-1 returned on error, and pointer to diagnostic message 
+stored in 
+.I dkerror.

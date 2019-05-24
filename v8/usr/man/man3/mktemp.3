@@ -1,0 +1,42 @@
+.TH MKTEMP 3 
+.SH NAME
+mktemp, tmpnam \- make a unique file name
+.SH SYNOPSIS
+.nf
+.B char *mktemp(template)
+.B char *template;
+.PP
+.B #include <stdio.h>
+.PP
+.B char *tmpnam(s)
+.B char s[L_tmpnam];
+.fi
+.SH DESCRIPTION
+.I Mktemp
+replaces
+.I template
+by a unique file name, and returns the
+address of the template.
+The template should look like a file name with six trailing
+X's, which will be replaced with the
+current process id and a unique letter.
+.PP
+.I Tmpnam
+places in the string pointed to by
+.I s
+a unique file name referring to a standard directory 
+for temporary files (/tmp) and returns
+.I s.
+If
+.I s
+is 0,
+.I tmpnam
+returns the address of a fixed internal buffer that contains the name.
+(Note: it is bad form to leave files in the temporary directory.)
+.SH "SEE ALSO"
+getuid(2) for
+.I getpid
+.SH BUGS
+.I Tmpnam
+should not be tied to
+.IR stdio (3).

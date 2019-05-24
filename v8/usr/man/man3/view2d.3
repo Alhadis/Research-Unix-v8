@@ -1,0 +1,83 @@
+.TH VIEW2D 3X
+.SH NAME
+view2d, moviefil \- movie of a function f(x, y, t)
+.SH SYNOPSIS
+.B "view2d(fd, nx, ny, time, u, v, fixuv, pmin, pmax, p)"
+.br
+.B short "p[];"
+.br
+.B double time;
+.sp
+.B "moviefil(fd, nx, ny, time, outside, f)"
+.br
+.B float "time, outside, f[];"
+.SH DESCRIPTION
+.I View2d
+writes a frame in the format
+.IR view2d (5)
+onto the file specified by
+.I fd,
+a file descriptor for an open file.
+Use
+.IR ld (1)
+option
+.BR \-lview2d .
+.I Nx, ny
+give the grid size.
+.I Time
+is a (nondecreasing) frame index, typically set to simulation time
+or iteration count.
+.I U
+and
+.I v
+describe the relation between pixel values and user function values:
+.IP
+.I p
+=
+.I u
++
+.IR f /2\(**\(** v.
+.LP
+U and v may vary from one frame to the next.
+When the global scaling is known beforehand,
+put
+.I fixuv
+= 1 and set 
+.I pmin
+and
+.I pmax
+to the limits of the data.
+(Otherwise put
+.IR fixuv =0;
+.I pmin
+and
+.I pmax
+will be ignored.)
+.PP
+.I P
+is the 
+.I nx
+by
+.I ny
+array of pixel values,
+with the
+.I x
+index running fastest.
+There is a threshold for describing nonrectangular regions:
+any pixel value less than or equal to \-32766 is treated as an
+out of bounds marker and will appear as black.
+Other pixel values should lie in the range [\-32765,32765].
+.PP
+.I Moviefil
+is an alternate version that
+is somewhat less flexible
+but easier to use.
+It takes floats
+and scales automatically to shorts.
+Any array element
+.IR f [ i ][ j ]
+less than
+.I outside
+is treated as undefined and will appear as black.
+.SH "SEE ALSO"
+view2d(1), view2d(5)

@@ -1,0 +1,47 @@
+Bootstrap code for VAXes lives here.
+
+The goal on any type of VAX: somehow load the secondary boot program `boot' into
+memory, and get it to load /unix.
+
+On the VAX-11/780 and 785, the console BOOT command executes a command file
+according to its arguments: B SDF invokes SDFBOO.CMD from the floppy; B
+without args calls DEFBOO.CMD.  For Unix, the command file typically does
+anything that must be done early (turning on interleaved memory, for
+instance), loads a copy of `boot' from the floppy, puts boot flags in R11
+and perhaps a device type in R10, and starts boot.
+
+./floppy contains junk that should be put (verbatim) on the console floppy.
+Other, site-specific junk (like the microcode appropriate to your system)
+should go on the floppy too.
+
+On the VAX-11/750, the B command causes a tiny ROM program to be called,
+with parameters set from arguments: B XY3 picks a ROM named `XY' and passes
+the unit number 3 in a register.  Standard ROMs read block 0 from some device
+into low memory, and start it at address 0xC.  Some standard registers are
+set up with things like the device unit number and the address of a driver
+subroutine in the ROM, so it's possible to have a device-independent boot
+block.  It's a nice setup, and nobody uses it much.  Unix boot blocks read
+/boot from the root filesystem and start it.
+
+./bb contains source to several boot blocks.  1kboot and 4kboot are device-
+independent boot blocks (using the driver provided by the ROM) for 1k and 4k
+filesystems; /boot doesn't know about the device-independent conventions (yet),
+so ?kboot tell /boot that the system device is a UDA50 disk.  upboot is a
+boot block for some kinds of SMD disk on a UNIBUS Emulex controller; hpboot
+is for MASSBUS controllers.  upboot is Emulex-dependent in the way it guesses
+the size of the disk; look for references to the hr register to fix that.
+There are some other boots too; do what you like with them.
+
+./stand contains the source for `boot,' and a few other standalone utilities.
+Only boot is thought to work.  Boot assumes that ra disks have 4k filesystems,
+that up/hp disks have 1k filesystems, and probably doesn't work with anything
+else.
+
+To set things up on an 11/780, add the contents of ./star to the console floppy.
+If you have interleaved memory, de-comment the DEPOSIT lines in all the
+command files first.
+To set things up on an 11/750, install the appropriate boot block as block 0
+of the root filesystem (which should be the first partition on unit 0), and
+make sure you have a working boot ROM as well.  Copy boot to /boot.
+
+Caveat booter.

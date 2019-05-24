@@ -1,0 +1,118 @@
+.TH TROFF 7
+.SH NAME
+troff \- addenda to troff manual
+.SH DESCRIPTION
+These addenda apply to the reference.
+.PP
+New requests; none cause breaks:
+.HP
+\&.ab \fIt\fR	print text
+.I t
+on standard error and stop
+.PD0
+.HP
+\&.cf \fIf\fR	copy file
+.I f
+into troff output uninterpreted;
+assume net motion is 0
+.HP
+\&.sy \fIc\fR	execute unix comand
+.I c
+.HP
+\&.pi \fIc\fR	pipe output of
+.I troff
+through command
+.I c
+.PD
+.PP
+Deleted request:
+.HP 
+\&.li
+.PP
+New escape sequences
+.TP
+\eD\'l \fIdh dv\fR\'
+draw line
+.I dh
+horizontally and
+.I dv
+vertically
+.PD0
+.TP
+\eD\'\fIc d\fR\'
+draw circle with diameter
+.I d
+extending right from current position
+.TP
+\eD\'e \fIh v\fR\' draw ellipse with axis
+.I h
+extending right from current position and vertical axis
+.I v
+.TP
+\eD\'a \fIdh1 dv1 dh2 dv2\fR\'
+arc counterclockwise from here, centered at 
+.I dh1,dv1
+to
+.I dh1+dh2,dv1+dv2
+.TP
+\eD\'\(ap \fIdh1 dv1 dh2 dv2\fR ...\' quadratic spline
+.TP
+.RI \eg r " or \eg(" rr
+format of number register
+.IR r
+or
+.IR rr ;
+empty if not defined
+.TP
+\eH\'\f2n\fP\'
+character height of present font is
+.I n
+points, width unchanged; 
+.IR n =0
+for present point size; 
+.RI + n
+increments;
+.RI \- n
+decrements
+.TP
+\eS\'\f2n\fP\'
+slant output
+.I n
+degrees;
+.I n
+may be negative
+.PD
+.PP
+New number registers:
+.HP
+$$	process id of
+.IR troff ;
+read only
+.PD0
+.HP
+\&.L	line spacing (.ls); read only
+.HP
+\&.P	1 if page is being printed; 0 if suppressed by -o; read only
+.HP
+\&.R	number of unused number registers
+.HP
+\&.b	emboldening factor (.bd)
+.HP
+\&.j	.ad setting, usable as argument to .ad
+.HP
+\&.k	horizontal size of text (excluding indent) of current partial output line
+.HP
+\&c.	input line-number, counting from 1 in each file;
+same as .c, but writable
+.HP
+\&.T	troff output device name (a string: \e*(.T)
+.PD
+.PP
+Number register deleted:
+.PP
+hp
+.SH SEE ALSO
+J. F. Ossanna,
+.I NROFF/TROFF Reference Manual
+.br
+troff(1)

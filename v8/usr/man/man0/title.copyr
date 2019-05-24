@@ -1,0 +1,47 @@
+.fp 3 H
+.ps8
+.ps16
+.sp 3.0i
+.ce
+UNIX\s-4\fH\v'-6p'TM\v'6p'\fP\s0 TIME-SHARING SYSTEM
+.sp .75i
+.ps 18
+.ce
+PROGRAMMER'S MANUAL
+.ps12
+.sp |4.5i
+.ft I
+.ce
+Research Version
+.sp .4i
+.ce
+Eighth Edition, Volume 1
+.sp .4i
+.ce
+February, 1985
+.ps 10
+.sp |9.5i-1
+.ft R
+.ce
+AT&T Bell Laboratories
+.ce
+Murray Hill, New Jersey
+.bp
+.ll 4.8i
+.in .75i
+.hy 0
+.vs 12p
+.ps 10
+--
+.sp |8i
+Copyright 1985, AT&T Bell Laboratories,
+with acknowledgement for certain portions to the Regents
+of the University of California and the Electrical Engineering
+and Computer Sciences Department at the Berkeley campus thereof.
+Holders of an Eighth Edition UNIX\u\s-2\fHTM\fP\s0\d
+software agreement from AT&T Technologies or
+AT&T Bell Laboratories
+are permitted to copy this document, or any portion
+of it, as necessary for licensed use of the software,
+provided this copyright notice and statement of permission
+are included.

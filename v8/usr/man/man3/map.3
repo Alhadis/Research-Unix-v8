@@ -1,0 +1,271 @@
+.TH MAP 3X local
+.br
+.SH NAME
+orient, normalize \- map projections
+.SH SYNOPSIS
+.B orient(lat, lon, rot)
+.br
+.B float lat, lon, rot;
+.PP
+.ft B
+.nf
+struct place {
+	float latrad, latsin, latcos;
+	float lonrad, lonsin, loncos;
+};
+.fi
+.ft R
+.PP
+.B normalize(p)
+.br
+.B struct place *p;
+.PP
+.B int
+.BR (* projection ())()
+.PP
+.B int
+.RB project (p,
+.B xptr, yptr)
+.br
+.B struct place p;
+.br
+.B float *xptr, *yptr;
+.SH DESCRIPTION
+These functions are loaded with
+.IR ld (1)
+option
+.BR \-lmap .
+Most of them
+calculate maps for a spherical earth.
+Each map projection is available in one standard
+form, into which data must be normalized
+for transverse
+or nonpolar projections.
+The projection is specified by invoking one of the
+following functions, known collectively as
+.I projection.
+Each function returns the name
+.I project
+of a function that will do the actual work of
+calculating coordinates, or 0 if the required projection
+is not available.
+The short summaries of properties pertain to standard maps
+of the earth in standard orientation.
+.PP
+Equatorial projections centered on the Prime Meridian
+(longitude 0).
+Parallels are straight horizontal lines.
+.IP
+.B mercator()
+equally spaced straight meridians, conformal,
+straight compass courses
+.br
+.B sinusoidal()
+equally spaced parallels,
+equal-area
+.br
+.B cylequalarea(lat0)
+equally spaced straight meridians, equal-area,
+true scale on
+.I lat0
+.br
+.B cylindrical()
+central projection on tangent cylinder
+.br
+.B rectangular()
+equally spaced straight parallels and meridians
+.br
+.B mollweide()
+(homalographic) equal-area, hemisphere is a circle
+.PP
+Azimuthal projections centered on the North Pole.
+Parallels are concentric circles.
+Meridians are equally spaced radial lines.
+.IP
+.B azequidistant()
+equally spaced parallels,
+true distances from pole
+.br
+.B azequalarea()
+equal-area
+.br
+.B gnomonic()
+central projection on tangent plane,
+straight great circles
+.br
+.B perspective(dist)
+viewed
+.I dist
+earth radii from center of earth
+.br
+.B orthographic()
+viewed from infinity
+.br
+.B stereographic()
+conformal, viewed from opposite pole
+.br
+.B laue()
+radius = tan(2\(mucolatitude), used in xray crystallography
+.PP
+Polar conic projections symmetric about the Prime Meridian.
+Parallels are segments of concentric circles.
+Except in the Bonne projection,
+meridians are equally spaced radial
+lines orthogonal to the parallels.
+.IP
+.B conic(lat0)
+central projection on cone tangent at
+.I lat0
+.br
+.B bonne(lat0)
+equally spaced parallels, equal-area,
+parallel
+.I lat0
+developed from tangent cone
+.br
+.B lambert(lat0,lat1)
+conformal, true scale on 
+.I lat0
+and 
+.I lat1
+.br
+.B albers(lat0,lat1)
+equal-area, true scale on
+.I lat0
+and 
+.I lat1
+.PP
+Projections with bilateral symmetry about
+the Prime Meridian
+and the equator.
+.IP
+.B polyconic()
+parallels developed from tangent cones
+uniformly distributed along Prime Meridian
+.br
+.B aitoff()
+equal-area projection of globe onto 2-to-1
+ellipse, based on azimuthal equal area projection
+.br
+.B gilbert()
+conformal, maps whole sphere into a circle
+.br
+.B bicentric(lon0)
+points plotted at true azimuth from two
+centers on the equator at longitudes
+.I \(+-lon0,
+great circles are straight lines
+(a stretched gnomonic projection)
+.br
+.B elliptic(lon0)
+points are plotted at true distance from
+two centers on the equator at longitude
+.I \(+-lon0
+.PP
+Doubly periodic projections.
+.IP
+.B guyou()
+conformal, W and E hemispheres are square
+.br
+.B square()
+conformal, world is square with Poles
+at diagonally opposite corners
+.br
+.B tetra()
+conformal map onto regular tetrahedron with an edge
+tangent to the Prime Meridian at the South Pole,
+developed into equilateral triangle
+.br
+.B hex()
+conformal map onto a hexagon centered
+on North Pole, N and S hemispheres are equilateral
+triangles
+.PP
+Miscellaneous.
+.IP
+.B mecca(lat0)
+equally spaced vertical meridians,
+straight line from any point to `Mecca'
+.RI ( lat0
+on the Prime Meridian)
+has the true bearing of Mecca
+.PP
+Maps based on the spheroid.
+Of geodetic quality, these projections do not make sense
+for tilted orientations (see below).
+For descriptions, see corresponding maps above.
+.IP
+.B sp_mercator()
+.br
+.B sp_albers(lat0,lat1)
+.PP
+The
+.I project
+functions return a value 1 for a good point,
+0 for a point on a wrong
+sheet (for example the back of the world in a perspective
+projection), and \-1 for a point that is deemed
+unplottable.
+.PP
+Each standard projection is displayed with the Prime
+Meridian being a straight vertical line, along which North
+is up.
+The orientation of nonstandard projections is specified by
+.I orient.
+Imagine a transparent gridded sphere around the globe.
+First turn the overlay about the North Pole
+so that the Prime Meridian (longitude 0)
+of the overlay coincides with meridian
+.I lon
+on the globe.
+Then tilt the North Pole of the
+overlay along its Prime Meridian to latitude
+.I lat
+on the globe.
+Finally again turn the
+overlay about its `North Pole' so
+that its Prime Meridian coincides with the previous position
+of meridian
+.I rot.
+Project the desired map in
+the standard form appropriate to the overlay, but presenting
+information from the underlying globe.
+.PP
+.I Normalize
+converts latitude-longitude coordinates on the globe
+to coordinates on the overlaid grid.
+The coordinates and their sines and cosines
+are input to
+.I normalize
+in a structure pointed to by
+.I p.
+Transformed coordinates and their sines and cosines
+are returned in the same structure.
+.PP
+The
+.I project
+functions convert normalized coordinates in the structure pointed to by
+.I p
+to x-y coordinates
+for the desired map.
+Scaling may be determined from the x-y coordinates of
+selected points.
+.PP
+Latitudes and longitudes are measured in degrees for
+ease of specification for
+.I orient 
+and
+.I projection,
+but in radians for ease of calculation 
+for
+.I normalize
+and
+.I project.
+In either case
+latitude is measured positive north of the equator,
+and longitude positive west of Greenwich.
+Radian longitude should be limited to the range
+.if t .I \-\(*p\(<=lon<\(*p.
+.if n .I -pi <= lon < pi.
+.SH "SEE ALSO"
+map(7), map(5), plot(3)

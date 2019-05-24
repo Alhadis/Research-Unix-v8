@@ -1,0 +1,12 @@
+/dev/ra00:/:rw:1:1
+/dev/ra05:/tmp:rw:1:2
+/dev/ra02:/usr:rw:1:3
+/dev/ra13:/usr1:rw:1:4
+/dev/ra04:/usr2:rw:1:4
+/dev/ra11::sw::
+/dev/ra14:/src:rw:1:2
+/dev/ra12:/fsave:rw:1:3
+/dev/ra15:/usr/spool:rw:1:5
+/dev/ra21::sw::
+/dev/ra22:/v8:rw:1:3
+/dev/ra23:/sys:rw:1:4

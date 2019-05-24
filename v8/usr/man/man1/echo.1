@@ -1,0 +1,34 @@
+.TH ECHO 1 
+.SH NAME
+echo \- echo arguments
+.SH SYNOPSIS
+.B echo
+[
+.B \-n
+] [
+.B \-e
+]
+[ arg ] ...
+.SH DESCRIPTION
+.I Echo
+writes its arguments separated by blanks and terminated by
+a newline on the standard output.
+Option
+.B \-n
+suppresses the newline.
+.PP
+Option 
+.B \-e
+enables the interpretation of C-style escape codes,
+\\b, \\f, \\n, \\r, \\t, \\\\, and 
+.RI \e ddd,
+where
+.I d
+is an octal digit,
+plus the special code \\c, which terminates the output.
+.PP
+.I Echo
+is useful for producing diagnostics in
+shell programs and for writing constant data on pipes.
+To send diagnostics to the standard error file, do
+`echo ... 1>&2'.

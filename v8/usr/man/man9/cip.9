@@ -1,0 +1,45 @@
+.TH CIP 9.1
+.SH NAME
+cip \- picture drawing program
+.SH SYNOPSIS
+.B cip
+.SH DESCRIPTION
+.I Cip
+is an interactive drawing program that
+writes
+.IR pic (1)
+input files.
+It provides a pallette of 
+.IR pic
+shapes (box, circle, ellipse, line, arc, spline, and text)
+for drawing and editing pictures on a screen.
+There is a macro
+facility for treating a collection of drawn shapes as a single entity.
+The mouse
+provides positional information.
+The buttons invoke
+drawing, editing, and command functions.
+The keyboard is used only for typing in text 
+strings and filenames.
+The pictures are saved as 
+.I pic
+descriptions, and can be included with text,
+tables, and equations as input to 
+.I troff.
+Existing
+.I pic
+descriptions of pictures can be displayed and edited as well.  
+.PP
+.I Cip
+relies on the host machine only for file transfers.
+If the host crashes
+while you are creating or modifying a picture, there is no way to save
+the picture.
+.SH FILES
+/usr/jerq/mbin/cip.m \(em terminal program
+.SH SEE ALSO
+pic(1), ped(9.1)
+.br
+Sally A. Browning,
+.I
+Cip User's Manual: One Picture is Worth a Thousand Words.

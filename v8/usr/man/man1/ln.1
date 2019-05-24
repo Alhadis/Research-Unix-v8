@@ -1,0 +1,61 @@
+.TH LN 1 
+.SH NAME
+ln \- make links
+.SH SYNOPSIS
+.B ln
+[
+.B \-s
+]
+name1 [ name2 ]
+.br
+.B ln
+name ... directory
+.SH DESCRIPTION
+A link is a directory entry referring
+to a file; the same file (together with
+its size, all its protection
+information, etc.)
+may have several links to it.
+There are two kinds of links: hard links and symbolic links.
+.PP
+By default
+.I ln
+makes hard links.
+A hard link to a file is indistinguishable from the
+original directory entry; changes to the
+file are effective regardless of the name used
+to reference the file.
+Hard links may not span file systems and may not refer to directories.
+.PP
+The
+.B \-s
+option makes symbolic links.
+A symbolic link contains the name of the file to
+which it is linked.
+Except in special cases, such as
+.IR rm (1),
+.IR unlink (2),
+.I lstat,
+and
+.I readlink,
+the contents of a symbolic link is taken as the pathname
+of the file.
+Symbolic links may span file systems and may refer to directories.
+.PP
+Given one or two nondirectory arguments,
+the second not being a directory,
+.I ln
+makes a link to an existing file
+.IR name1 .
+If
+.I name2
+is given, the link has that name, otherwise
+.I name2
+is understood to be the same as the last component of 
+.I name1.
+.PP
+Given two or more arguments, the last being a directory,
+.I ln
+makes therein links to all the named files.
+.SH "SEE ALSO"
+rm(1), cp(1), mv(1), link(2), stat(2)

@@ -1,0 +1,9 @@
+M=/usr/man/man0
+cd $M
+for i in /usr/man/man[1-9]
+do
+	sh /usr/man/man0/makind1 $i
+done >$M/junk1
+ptx -f -w 90 -i $M/ignore -b $M/bfile -r $M/junk1 >$M/junk2
+sed -f $M/comm.sed $M/junk2 |
+fgrep -v -i -f $M/donotprint >$M/permindex

@@ -1,0 +1,25 @@
+.TH RENICE 8
+.SH NAME
+renice \- alter priority of running process by changing nice
+.SH SYNOPSIS
+.B /etc/renice
+[ \-pri ]
+pid ...
+.SH DESCRIPTION
+.I Renice
+alters the 
+priority of the process with process-id
+.I pid.
+The default
+.I pri
+is 19.
+Changing the priority requires permission to write
+.IR /proc/ pid
+(see
+.IR proc (4)),
+so only the super-user can alter an arbitrary process's priority.
+Only the super-user can raise a process's priority.
+.SH FILES
+.RI /proc/ pid
+.SH SEE ALSO
+nice(1), nice(2), proc(4)

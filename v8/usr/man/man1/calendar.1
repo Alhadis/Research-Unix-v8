@@ -1,0 +1,68 @@
+.TH CALENDAR 1 
+.SH NAME
+calendar \- reminder service
+.SH SYNOPSIS
+.B calendar
+[
+.B \-
+]
+[ n ]
+.SH DESCRIPTION
+.I Calendar 
+consults calendar files
+and prints out lines that contain today's date or
+any date up through the
+.IR n th
+working day hence
+.RI ( n =1
+by default).
+Most American-style month-day dates such as `Dec. 7,'
+`december 7,' `12/7,' etc., are recognized, but not
+`7/12'.
+The symbol `*' denotes every month as in `* 7' or `*/7'.
+A year may follow the day, as in `Dec 7, 84', `Dec 7 1984',
+or `12/7/84'.
+.PP
+By default, the program consults the file `calendar'
+in the $HOME directory (see
+.IR sh (1)),
+or in the current directory if a home directory is not known.
+Other calendar files to be consulted may be specified by lines
+of the form
+.IP
+\fB#include "\fRfile\^\fB"
+.LP
+in the calendar file.
+Includes do not nest.
+.PP
+When 
+the `\-' argument is present,
+.I calendar
+reminds all users of their calendar engagements by
+.IR mail (1).
+Normally this happens daily in the wee hours under control of
+.IR cron (8).
+Calendars not in home directories, or recipients not registered
+as users, may be registered
+for reminder service by placing lines of the form
+`pathname mailname' in file /usr/lib/calendar.
+.SH FILES
+calendar files
+.br
+/usr/lib/calendar
+.br
+/etc/passwd
+.br
+/tmp/cal*
+.br
+egrep, echo, join, sort, sed, mail, /usr/lib/calendar?	subprocesses
+.SH "SEE ALSO"
+at(1)
+.SH BUGS
+The mail reminder service doesn't work when 
+it finds less than two calendars.
+.br
+Your calendar must be public information for you
+to get reminder service.
+.br
+Holidays are what the program says they are.

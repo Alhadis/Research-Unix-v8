@@ -1,0 +1,1 @@
+awk < /usr/net/friends 'NF == 4 {print "/usr/net/unmount", $3}' | sh -x

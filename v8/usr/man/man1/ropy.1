@@ -1,0 +1,72 @@
+.TH ROPY 1 research
+.SH NAME
+ropy \- remote file copy for arpa internet
+.SH SYNOPSIS
+.B /usr/inet/bin/ropy
+file1 file2
+.br
+.B /usr/inet/bin/ropy
+[
+.B \-r
+] file ... directory
+.SH DESCRIPTION
+.I Ropy
+copies files between machines over an 
+.SM ARPA
+internet connection.
+Each non-option
+argument is either a remote file name of the
+form `rhost:path', or a local path name.
+In the first form
+.I ropy
+copies
+.I file1
+to
+.I file2.
+In the second form it copies one or more
+.I files
+into the named
+.I directory
+with their original file-names.
+.PP
+Option
+.B \-r
+causes
+.I ropy
+to copy the contents of any named directory recursively;
+the destination must be a directory.
+.PP
+If
+.I path
+is not a full path name, it is interpreted relative to
+your login directory on the remote machine.
+.PP
+.I Ropy
+requires
+.IR rsh
+capability;
+see
+.IR dcon (1).
+.SH FILES
+/usr/inet/lib/*
+.br
+$HOME/.rhosts
+.SH SEE ALSO
+push(1),
+cp(1),
+dcon(1),
+netstat(8)
+.SH BUGS
+.I Ropy
+works by remotely executing the command
+.I rcp
+(sic);
+hence your
+.I .profile
+on the remote machine
+must arrange for the command
+.I rcp
+to invoke
+.IR /usr/inet/bin/rcp ,
+not
+.IR /usr/bin/rcp .

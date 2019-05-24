@@ -1,0 +1,7 @@
+|define_string(date_string, DT)
+|define_string(att_logo, LO)
+|define_counter(page_counter, P)
+|define_string(page_header, PH)
+|define_counter(page_length, L)
+|define_counter(page_width, W)
+|define_counter(font_size, S)

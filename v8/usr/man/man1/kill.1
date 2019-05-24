@@ -1,0 +1,50 @@
+.TH KILL 1 
+.SH NAME
+kill \- terminate a process with extreme prejudice
+.SH SYNOPSIS
+.B kill
+[
+.BR \- sig
+]
+processid ...
+.br
+.B kill
+.B \-l
+.SH DESCRIPTION
+.I Kill
+sends the TERM (terminate, 15) signal to the specified processes.
+If a signal name or number preceded by `\-' is given
+as first argument, that signal is sent instead of
+terminate
+(see
+.IR  signal (2)).
+The signal names are listed by
+`kill \-l', and are as given in
+.I /usr/include/signal.h,
+stripped of the common SIG prefix.
+.PP
+The terminate signal will kill processes that do not catch the signal;
+`kill \-9 ...' is a sure kill, as the KILL signal (signal 9) cannot be caught.
+By convention, if process number 0 is specified, all members
+in the process group (i.e. processes resulting from 
+the current login) are signaled.
+The killed processes must belong
+to the current user unless
+he is the super-user.
+.PP
+To shut the system down and bring it up single user
+the super-user may send the initialization process a TERM (terminate)
+signal by `kill 1'; see
+.IR init (8).
+To force
+.I init
+to close and open terminals
+according to what is currently in
+/etc/ttys
+use `kill \-1 1' (sending a hangup, signal 1).
+.PP
+The process number of an asynchronous process
+started with `&' is reported by the shell and by
+.IR ps (1).
+.SH "SEE ALSO"
+ps(1), kill(2), signal(2)

@@ -1,0 +1,637 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+|associate(author;
+incr A, clear T,
+clear string T1 T2 T3
+T4 T5 T6;
+
+store string A\nA T1,
+store string I\nA T2,
+store string L\nA T3,
+store string D\nA T4,
+store string E\nA T5,
+store string R\nA T6;
+
+[name $;
+incr T, set string T1 $;]
+[initials $;
+incr T, set string T2 $;]
+[location $;
+incr T, set string T3 $;]
+[department $;
+incr T, set string T4 $;]
+[extension $;
+incr T, set string T5 $;]
+[room $;
+incr T, set string T6 $;]
+[$;
+incr T,
+set string T\nT $;])
+|comment<summary: author (name, initials, location, department, extension, and room for title box and coversheet)>
+
+|associate(document;
+incr D, clear T,
+clear string T1 T2 T3;
+
+store string S\nD T1,
+store string F\nD T2,
+store string W\nD T3;
+
+[number $;
+incr T, set string T1 $;]
+[file_case $;
+incr T, set string T2 $;]
+[work_program $;
+incr T, set string T3 $;]
+[$;
+incr T,
+set string T\nT $;])
+|comment<summary: document (number, file_case, and work_program for title box and coversheet)>
+
+|environment(title;
+divert.input on TI;)
+|comment<summary: title (title of document for title box and coversheet)>
+
+|environment(date;
+divert.string DT;)
+|comment<summary: date (date of tm for title box and coversheet)>
+
+|environment(abstract;
+divert.input on AS;)
+|comment<summary: abstract (abstract for coversheet)>
+
+|environment(keywords;
+divert.input on KW;)
+|comment<summary: keywords (keywords for cover sheet)>
+
+|environment(titlebox;
+;
+
+new.page, indent.line +4.375i, string LO,
+blank.lines 2, size -2, remember P0,
+page.offset -.5i, text "subject:", new.line,
+return P0, indent +4.875i, text "date:", blank.lines,
+text "from:", indent, new.line, page.offset, size,
+line.length 3i, font bold, return P0, fill off,
+macro TI, fill on, line.length, new.line,
+size -1,
+|for i in 1 2 3 4 5 6 7 8 9 [
+if begin "\nD>=$i",
+new.line, text "Work Program ", string W$i,
+text " File Case ", string F$i,
+if end,
+]
+size,
+return P0, indent +4.75i, string DT,
+|for i in 1 2 3 4 5 6 7 8 9 [
+if begin "\nA>=$i",
+blank.lines,
+string A$i, new.line,
+string L$i, text " ",
+string D$i, new.line,
+string R$i, text " ",
+string E$i,
+if end,
+]
+spacing on, blank.lines, fill off,
+string S1, fill on, blank.lines 3,
+indent, center on, temporary.font italics "TECHNICAL MEMORANDUM",
+center off, blank.lines 2, font roman)
+|comment<summary: titlebox (produce title box here)>
+
+
+
+
+
+
+
+
+
+
+|associate(mercury;
+clear T, clear string T1 T2
+T3 T4 T5 T6
+T7;
+
+if begin "@\*(T1@yes@",
+incr M,
+set string M\nM
+"CHM - Chemistry and Materials",
+if end,
+if begin "@\*(T2@yes@",
+incr M, set string M\nM
+"CMM - Communications",
+if end,
+if begin "@\*(T3@yes@",
+incr M, set string M\nM
+"CMP - Computing",
+if end,
+if begin "@\*(T4@yes@",
+incr M, set string M\nM
+"ELC - Electronics",
+if end,
+if begin "@\*(T5@yes@",
+incr M, set string M\nM
+"LFS - Life Sciences",
+if end,
+if begin "@\*(T6@yes@",
+incr M,
+set string M\nM
+"MAS - Mathematics and Statistics",
+if end,
+if begin "@\*(T7@yes@",
+incr M, set string M\nM
+"PHY - Physics",
+if end;
+
+[chm;
+incr T, incr M,
+set string M\nM
+"CHM - Chemistry and Materials";]
+[cmm;
+incr T, incr M,
+set string M\nM "CMM - Communications";]
+[cmp;
+incr T, incr M,
+set string M\nM "CMP - Computing";]
+[elc;
+incr T, incr M,
+set string M\nM "ELC - Electronics";]
+[lfs;
+incr T, incr M,
+set string M\nM "LFS - Life Sciences";]
+[mas;
+incr T, incr M,
+set string M\nM
+"MAS - Mathematics and Statistics";]
+[phy;
+incr T, incr M,
+set string M\nM "PHY - Physics";]
+[yes;
+incr T,
+set string T\nT yes;]
+[no;
+incr T,
+set string T\nT no;])
+|comment<summary: mercury (chm, cmm, cmp, elc, lfs, mas, and phy mercury distribution for cover sheet)>
+
+|associate(proprietary_class;;;
+[yes; set string PC yes;]
+[no; set string PC no;])
+|comment<summary: proprietary_class (proprietary classification for cover sheet)>
+
+|associate(government_security;;;
+[yes; set string GS yes;]
+[no; set string GS no;])
+|comment<summary: government_security (government security clearance for cover sheet)>
+
+|associate(earlier;
+clear T, clear string T1
+T2 T3 T4;
+
+store string EN T1,
+store string EF T2,
+store string EA T3,
+store string ED T4;
+
+[document_number $;
+incr T, set string T1 $;]
+[file_case_number $;
+incr T, set string T2 $;]
+[author $;
+incr T, set string T3 $;]
+[date $;
+incr T, set string T4 $;]
+[$;
+incr T,
+set string T\nT $;])
+|comment<summary: earlier (replacing earlier document_number, file_case_number, author and date for cover sheet)>
+
+|associate(att;
+clear T, clear string T1 T2;
+
+store string AN T1,
+store string AR T2;
+
+[is_networking yes;
+incr T, set string T1 yes;]
+[is_networking no;
+incr T, set string T1 no;]
+[is_release yes;
+incr T, set string T2 yes;]
+[is_release no;
+incr T, set string T2 no;]
+[yes;
+incr T,
+set string T\nT yes;]
+[no;
+incr T,
+set string T\nT no;])
+|comment<summary: att (att is_networking and is_release for cover sheet)>
+
+|environment(director_name;
+divert.string DN;)
+|comment<summary: director_name (director's name for cover sheet)>
+
+|environment(distribute_complete_memo;
+divert.input on CM;)
+|comment<summary: distribute_complete_memo (distribution list for complete memo for cover sheet)>
+
+|environment(distribute_cover_sheet;
+divert.input on CS;)
+|comment<summary: distribute_cover_sheet (distribution list for cover sheet for cover sheet)>
+
+|associate(totals;
+clear T,
+store T1 P,
+set T2 0,
+store T3 FG,
+store T4 TB,
+store T5 RF;
+
+store TP T1,
+store OP T2,
+store FG T3,
+store TB T4,
+store RF T5;
+
+[text $;
+incr T, set T1 $;]
+[other $;
+incr T, set T2 $;]
+[figures $;
+incr T, set T3 $;]
+[tables $;
+incr T, set T4 $;]
+[references $;
+incr T, set T5 $;]
+[$;
+incr T, set T\nT $;])
+|comment<summary: totals (text, other, figures, tables, references counts for cover sheet)>
+
+|environment(cover_sheet;
+clear string PH, new.page,
+line.length 7.5i, page.offset .3i, font.family helvetica,
+cs_heading_page1,
+cs_title,
+cs_authors,
+cs_numbers,
+cs_keywords,
+cs_mercury,
+cs_abstract_part1,
+cs_footer_page1,
+cs_abstract_part2,
+cs_heading_page2,
+cs_distribution_list,
+cs_spacing,
+cs_proprietary,
+cs_government,
+cs_att,
+cs_other_companies,
+cs_signatures,
+cs_earlier,
+cs_footer_page2;)
+|comment<summary: cover_sheet (produce the coversheet here)>
+
+|environment(cs_heading_page1;
+spacing on, size 16, font bold, goto 0.2i,
+text "AT&T Bell Laboratories", horizontal.motion 2.35i,
+text "Document Cover Sheet", blank.lines 0.1i, indent.line 4.4i,
+text "for Technical Memorandum"; thick.line)
+
+|environment(cs_title;
+new.line, remember P0, font bold,
+text "Title:", horizontal.motion 5.5i,
+text "Author's Date:", font,
+return P0,
+indent .5i, line.length 5.0i,
+macro TI,
+line.length 7.5i, indent,
+return P0, blank.lines, indent.line 6i,
+string DT, new.line; blank.lines -0.1i, thick.line)
+
+|environment(cs_authors;
+tab.stops 1.5i 4.25i 5.5i 6.75i, font bold,
+if else "\nA>1",
+set string SS "s",
+if else,
+clear string SS,
+tab, text "Author", string SS,
+tab, text "Location", tab, text "Ext.",
+tab, text "Dept.",
+font, tab.stops 4.2i 4.5i 5.5i 6.7i,
+|for i in 1 2 3 4 5 6 7 8 9 [
+if begin "\nA>=$i",
+new.line, string A$i, tab,
+string L$i, text " ", string R$i, tab,
+string E$i, tab, string D$i,
+if end,
+]
+new.line; blank.lines -0.1i, thick.line)
+
+|environment(cs_numbers;
+tab.stops 0.9i 3.4i 5.65i, font bold,
+if else "\nD>1",
+set string SS "s",
+if else,
+clear string SS,
+tab, text "Document No", string SS, text ".",
+tab, text "Filing Case No", string SS, text ".",
+tab, text "Work Program No", string SS, text ".",
+font, tab.stops 0.8i 3.5i 5.75i,
+|for i in 1 2 3 4 5 6 7 8 9 [
+if begin "\nD>=$i",
+new.line, tab, string S$i,
+tab, string F$i, tab, string W$i,
+if end,
+]
+new.line; blank.lines -0.1i, thick.line)
+
+|environment(cs_keywords;
+temporary.font bold "Keywords",
+blank.lines 0.1i, indent.line .2i, adjust off,
+macro KW, new.line; blank.lines -0.1i, thick.line)
+
+|environment(cs_mercury;
+tab.stops 3.4i 5.65i,
+temporary.font bold "MERCURY Announcement Bulletin Sections",
+blank.lines 0.1i, indent .9i, font.size 8,
+|for i in 1 4 7 [
+if begin "\nM>=$i",
+set i $i+1,
+set j $i+2,
+string M$i, tab,
+string M\ni, tab,
+string M\nj,
+if end,
+]
+new.line; blank.lines -0.1i, thick.line)
+
+|environment(cs_abstract_part1;
+temporary.font bold "ABSTRACT", new.line,
+remember P0;)
+
+|environment(cs_footer_page1;
+goto 8.375i,
+remember P1,
+thick.line,
+
+font.size 8, add TT TP OP,
+text "Pages of Text  ", size +2, number TP, size -2, text "  ",
+text "Other Pages  ", size +2, number OP, size -2, text "  ",
+text "Total  ", size +2, number TT, size -2, new.line,
+text "No. Figs.  ", size +2, number FG, size -2, text "  ",
+text "No. Tables  ", size +2, number TB, size -2, text "  ",
+text "No. Refs.  ", size +2, number RF, size -2, font.size,
+
+return P1, blank.lines 1i,
+if begin "@\*(PC@yes@",
+indent .5i,
+temporary.font italics
+"       AT&T BELL LABORATORIES \(em PROPRIETARY",
+new.line,
+text "Not for use or disclosure outside AT&T Bell Laboratories",
+new.line,
+text "   except by written approval of the Director of the",
+new.line,
+text "      originating organization (see G.E.I. 2.2).",
+new.line, indent,
+if end,
+
+return P1, blank.lines .75i, indent.line 5.25i,
+temporary.font bold "Mailing Label";)
+
+|environment(cs_abstract_part2;
+return P0, indent .2i, line.length 7i,
+macro AS; line.length 7.5i)
+
+|environment(cs_heading_page2;
+new.page, spacing on, goto 0.2i,
+
+font bold,
+text "Initial Distribution Specifications", horizontal.motion 3.0i,
+string S1, new.line; blank.lines -0.1i, thick.line)
+
+|environment(cs_distribution_list;
+font bold, horizontal.motion 1.25i,
+text "Complete Copy", horizontal.motion 2.75i, text "Cover Sheet Only",
+font, new.line, remember P0, fill off,
+macro CM, return P0, indent 4i,
+macro CS;)
+
+|environment(cs_spacing;
+goto 1.50i,
+
+if "!@\*(PC@yes@",
+blank.lines 1.0i,
+if "!@\*(GS@yes@",
+blank.lines 0.35i,
+if "\nA<=1",
+blank.lines 0.5i,
+if "\nA<=4",
+blank.lines 0.5i,
+if "\nA<=7",
+blank.lines 0.5i,
+if "@\*(EN\*(EF\*(EA\*(ED@@",
+blank.lines 0.65i;
+thick.line)
+
+|environment(cs_proprietary;
+if begin "@\*(PC@yes@",
+temporary.font bold "Proprietary Classification", blank.lines .05i,
+text "This document will be be classified",
+text "       AT&T BELL LABORATORIES \(em PROPRIETARY.",
+blank.lines 0.2i, indent.line 1.0i,
+temporary.font bold "Approval:  ", line 3.5i, indent.line 2.0i,
+string DN, text ", Director",
+blank.lines -.1i, thick.line,
+if end;)
+
+|environment(cs_government;
+if begin "@\*(GS@yes@",
+tab.stops 0.25i, box x, tab,
+temporary.font bold "Government Security Classified",
+blank.lines -0.05i, thick.line,
+if end;)
+
+|environment(cs_att;
+temporary.font bold "AT&T-IS Distribution", new.line,
+text "To expedite the movement of documents to AT&T-IS, ",
+text "Director-level action is requested ",
+text "regarding items (1) and (2) below, when the document is first ",
+text "distributed. In those cases where approval is not provided on ",
+text "the cover sheet, approval will be sought when a request is ",
+text "received from AT&T-IS, with consequent delay in filling the request.",
+blank.lines 0.1i,
+text "Indicate whether the document:", blank.lines 0.1i, indent .18i,
+indent.line -.18i,
+temporary.font bold "(1) ",
+text "Contains network planning information, customer proprietary ",
+text "information, or nongeneric software for use in AT&T-IS ",
+text "products or services that AT&T-BL may not furnish to AT&T-IS.",
+if else begin "@\*(AN@yes@",
+text "  ", box x, text " Yes", horizontal.motion .4i,
+box empty, text " No",
+if end,
+if else begin,
+text "  ", box empty, text " Yes", horizontal.motion .4i,
+box x, text " No",
+if end,
+blank.lines 0.1i,
+indent.line -.18i,
+temporary.font bold "(2) ",
+text "May be supplied on request to AT&T-IS R&D organizations.",
+if else begin "@\*(AR@yes@",
+text "  ", box x, text " Yes", horizontal.motion .4i,
+box empty, text " No",
+if end,
+if else begin,
+text "  ", box empty, text " Yes", horizontal.motion .4i,
+box x, text " No",
+if end,
+indent, blank.lines, indent.line 3.25i,
+temporary.font bold "Approval:  ", line 3.5i, indent.line 4.25i,
+string DN, text ",  Director";
+
+blank.lines -0.1i, thick.line)
+
+|environment(cs_other_companies;
+temporary.font bold "Other AT&T Company Distribution", new.line,
+text "May be supplied on request to other AT&T company requesters.",
+blank.lines, indent.line 3.25i,
+temporary.font bold "Approval:  ", line 3.5i, indent.line 4.25i,
+string DN, text ",  Director";
+
+blank.lines -0.1i, thick.line)
+
+|environment(cs_signatures;
+if else "\nA>1",
+set string SS "s",
+if else,
+clear string SS,
+font bold,
+text "Author Signature", string SS, font, new.line,
+|for i in 0 3 6 [
+tab.stops 2.635i 5.25i,
+if "\nA>$i",
+blank.lines 0.1i,
+if "\nA=($i+1)",
+line 2.25i,
+if begin "\nA=($i+2)",
+line 2.25i, tab, line 2.25i,
+if end,
+if begin "\nA>($i+2)",
+line 2.25i, tab, line 2.25i, tab, line 2.25i,
+if end,
+new.line,
+if begin "\nA>$i",
+tab.stops 0.25i 2.875i 5.5i,
+set i $i+1,
+set j $i+2,
+set k $i+3,
+tab, string A\ni,
+tab, string A\nj,
+tab, string A\nk,
+if end,
+]
+;
+
+blank.lines -0.1i, thick.line)
+
+|environment(cs_earlier;
+if begin "!@\*(EN\*(EF\*(EA\*(ED@@",
+temporary.font bold
+"Complete if this document supersedes or amends an earlier one:",
+new.line,
+remember P0, blank.lines 0.05i,
+text "Earlier Document Number ", line 2.6i,
+text " Author ", line 2.8i,
+return P0, tab.stops 2.0i 5.0i,
+tab, string EN, tab,
+string EA, new.line,
+remember P0, blank.lines 0.05i,
+text "Filing Case No. ", line 3.25i, text " Date ", line 2.9i,
+return P0, tab.stops 1.5i 5.0i,
+tab, string EF, tab,
+string ED,
+blank.lines -0.1i, thick.line,
+if end;)
+
+|environment(cs_footer_page2;
+temporary.font bold "For Use by Recipient of Cover Sheet:", font.size -3,
+blank.lines 0.05i,
+remember P0,
+text "     To get a complete copy of this document:",
+blank.lines 0.1i, line.length 3.5i, indent .1i, indent.line -.1i,
+text "1 Be sure your correct location is given on the mailing ",
+text "label on the other side.",
+new.line, indent.line -.1i,
+text "2 Fold this sheet in half with this side out.",
+new.line, indent.line -.1i,
+text "3 Check the address of your local Internal Technical Document ",
+text "Service if listed; otherwise, use HO 4F-112. Use no envelope.",
+new.line, indent.line -.1i,
+text "4 Indicate whether microfiche or paper copy is desired.",
+return P0, line.length 7.5i, indent 4i,
+text "\ Internal Technical Document Service",
+blank.lines, tab.stops 1i,
+text "( ) HO 4F-112", tab, text "( ) ALC 1B-102", new.line,
+text "( ) IH 7K-101", tab, text "( )  MV 1D-40", new.line,
+text "( ) WH 3E-204", tab, text "( )  CB 1C-338", blank.lines,
+text "Please send a complete ", size +2, box, size -2,
+text "\ microfiche ", size +2, box, size -2,
+text "\ paper copy of this document to the address shown on the ",
+text "other side. Computing network users may order copies via the ",
+temporary.font italics "library ",
+text "system; for information, type ``man library'' after logon.",
+new.line;)
+
+
+
+|environment(:document;
+clear A D M
+OP TP,
+clear string GS PC;)
+
+|environment(signature;
+here on, blank.lines 1, indent 30, font bold,
+|for i in 1 2 3 4 5 6 7 8 9 [
+if begin "\nA>=$i",
+blank.lines 3, string A$i,
+if end,
+]
+font, indent, blank.lines -1
+
+;blank.lines 3)
+|comment<summary: signature (signatures and typing credits)>

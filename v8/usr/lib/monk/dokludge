@@ -1,0 +1,2 @@
+/^.DUMMY$/d
+s/[ 	]*.DUMMY[ 	]*//g

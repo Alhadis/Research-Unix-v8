@@ -1,0 +1,6 @@
+daemon	6,21,36,51 * * * *	/etc/dmesg - >> /usr/adm/messages
+uucp	43 3 * * *	/usr/lib/uucp/uudemon.day > /dev/null
+uucp	30 5 * * 1	/usr/lib/uucp/uudemon.week
+uucp	40 * * * *	/usr/lib/uucp/uudemon.hr
+root	0,10,20,30,40,50 * * * *	/usr/lib/atrun
+daemon	0 * * * *	echo -e "`date`\r" >/dev/console

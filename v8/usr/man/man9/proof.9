@@ -1,0 +1,88 @@
+.TH PROOF 9.1
+.SH NAME
+proof \- troff output interpreter for jerq
+.SH SYNOPSIS
+.B proof
+[
+.BR \-f fonts
+]
+[ file ]
+.SH DESCRIPTION
+.I Proof
+reads
+.IR troff (1)
+intermediate language output from
+.I file
+and displays a simulation of the resulting pages on the screen.
+If no file name is given and the standard input is the terminal,
+proof terminates immediately leaving a `proof layer',
+otherwise it reads the standard input.
+By invoking 
+.I proof
+in a proof layer you can avoid download time.
+.PP
+Fonts are loaded as required.
+The default font is used for unknown fonts.
+The font option can be used to preload fonts.
+Use the names of the fonts relative to
+.I /usr/jerq/font 
+separated by commas.
+The most-used fonts are `\-fR.10,I.10,S.10'.
+.PP
+After a layer's worth of text is displayed,
+.I proof
+pauses for a command.
+Commands may come from the host, the keyboard, or 
+the button 3 menu.
+The typed versions of commands are:
+.TP
+<newline>
+Go on to next portion of text.
+(Button 3 equivalent: `more'.)
+.TP
+q
+Quit, leaving a proof layer.
+.TP
+x
+Exit and restart the regular terminal program.
+(Equivalent to `q' followed by
+.IR jterm (9.1).)
+.TP
+.BI p n
+Print page
+.I n.
+An out-of-bounds page number means the end nearer to that number;
+a missing number means page 0;
+a signed number means an offset to the current page.
+.PP
+Button 1 gets a scroll box, which represents a full page of text.
+An interior rectangle shows what part of the page is now visible.
+The interior rectangle moves with the mouse, causing the layer to
+scroll both vertically and horizontally.
+Button 2 gets a speedometer.
+The bar of the speedometer moves with the mouse
+to control the rate at which new information is displayed.
+.SH FILES
+.ta \w'/usr/jerq/font/.missing  'u
+/usr/jerq/font/*		fonts
+.br
+/usr/jerq/font/.missing	list of referenced but unconverted fonts
+.SH SEE ALSO
+d202(1), font(7)
+.br
+`A Typesetter-independent Troff,' Brian W. Kernighan
+.SH BUGS
+There is a maximum number of fonts (currently 50) that can be loaded
+at once.
+.br
+Windowing can get confused if the
+.I troff
+ouput is not approximately
+sorted in ascending
+.IR y -order.
+.br
+A proof layer imitates
+.I term
+.IR 33 (9.1),
+not 
+.IR mux (9.1).

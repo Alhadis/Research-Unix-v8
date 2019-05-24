@@ -1,0 +1,85 @@
+.TH INTERNET 3 
+.SH NAME
+in_host, in_ntoa, in_address, in_service - internet operations
+.SH SYNOPSIS
+.nf
+.B #include <sys/inet/in.h>
+.PP
+.B char *in_host(hostaddr)
+.B in_addr hostaddr;
+.PP
+.B char *in_ntoa(hostaddr)
+.B in_addr hostaddr;
+.PP
+.B in_addr in_address(hostname)
+.B char *hostname;
+.PP
+.B struct in_service *in_service(name, proto, port)
+.B char *name, *proto;
+.B unsigned int port;
+.PP
+.SH DESCRIPTION
+These routines are loaded by the 
+.B \-lin
+option of
+.IR ld (1).
+.PP
+Internet addresses, type
+.I in_addr,
+are 32 bit quantities global to the network.
+The ascii representation for an
+.I in_addr
+can be either a host name or the form
+.I b1.b2.b3.b4,
+where each 
+.I `bx'
+is the value of the x'th byte of the
+address in decimal.
+The mapping of an internet address to a host name is an
+.I n
+to
+.I m
+mapping.
+Since host names are considered local `aliases' for internet
+addresses, the host to address mapping is subjective.
+.PP
+.I In_address
+maps an internet host name to an address.
+.PP
+.I In_host
+maps an internet address into a host name.
+.PP
+.I In_ntoa
+maps an internet address to its ascii numeric format.
+.PP
+.I In_service
+looks up an entry in the services file and returns the
+closest match.
+If either
+.I name
+or 
+.I port
+are 0, they will match any name or port.
+If 
+.I proto
+is 0, the ``tcp'' protocol is assumed.
+.SH FILES
+.nf
+/usr/inet/lib/hosts	mapping between host names and addresses
+/usr/inet/lib/networks	mapping between network names and addresses
+/usr/inet/lib/services	database of services
+/usr/inet/lib/hosts.equiv	machines with common administration
+.SH SEE ALSO
+tcp(3), udp(3)
+.SH BUGS
+.PP
+The mappings between internet addresses and names is arbitrary at best.
+The hosts file may contain many addresses for each name and/or many
+names for each address.
+.I In_address
+and
+.I in_host
+each start at the beginning of the file and search sequentially for a match.
+Therefore, 
+.B "in_addr(in_host(addr)) \=\= addr"
+is not necessarily true.

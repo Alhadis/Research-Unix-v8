@@ -1,0 +1,47 @@
+.TH DU 1 
+.SH NAME
+du \- summarize disk usage
+.SH SYNOPSIS
+.B du
+[
+.B \-s
+] [
+.B \-a
+] [ name ... ]
+.SH DESCRIPTION
+.I Du
+gives the number of kilobytes (kilo=1024) allocated to data blocks
+of named files and of named directories including (recursively) their contents.
+If
+.I name
+is missing,
+.RB ` . '
+is used.
+.PP
+Option
+.B \-s
+causes only the grand total to
+be given.
+Option
+.B \-a
+causes an entry to be generated
+for each file.
+Absence of either causes an entry to be generated for
+each directory only.
+.PP
+A file which has two links to it is counted only once.
+.SH SEE\ ALSO
+df(1), quot(8)
+.SH BUGS
+In the absence of option
+.B \-a
+non-directories
+given as arguments are not listed.
+.br
+If there are too many distinct linked files,
+.I du
+counts the excess files multiply.
+.br
+Unwritten holes in files count as if real data were present,
+and indirect blocks are not counted.
+

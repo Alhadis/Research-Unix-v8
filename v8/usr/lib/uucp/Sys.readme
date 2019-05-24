@@ -1,0 +1,21 @@
+our uucp looks at several files for systems data.  here is what they
+are for.  they are searched in the order named here.
+
+Systems.local
+	entries local to this machine.  if you want your own local
+	addenda that won't be shipped over, this is where to put them.
+Systems.dk
+	systems reachable over datakit.  this is constructed from the
+	monthly distribution from indian hill, plus a few local entries
+	(to make sure IH don't break them).  it is shipped periodically,
+	so don't bother to make local changes; they'll go away.
+Systems
+	systems IH don't know about, but we do.  alice & research only.
+Systems1
+	used for debugging and temporary stuff.  don't use it.
+Systems.gen
+	indian hill phone line data.  alice & research only
+
+the comets generally have only Systems.dk and perhaps Systems.local (and
+maybe Systems1, which comes and goes of its own volition).  put your
+local entries in Systems.local.

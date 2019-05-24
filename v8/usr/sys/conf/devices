@@ -1,0 +1,103 @@
+block-device 0		hp	hp	strategy dump
+block-device 1		tu	ht	open close strategy dump B_TAPE
+block-device 2		up	up	strategy dump
+block-device 3		rk	rk	strategy dump
+standard block-device 4	sw	sw	strategy
+block-device 5		te	tm	open close strategy dump B_TAPE
+block-device 6		ts	ts	open close strategy dump B_TAPE
+block-device 7		ra	ud	open close strategy dump
+block-device 8		mu	mt	open close strategy dump B_TAPE
+block-device 9		tj	ut	open close strategy dump B_TAPE
+
+standard stream-device 0 cn	cn	info
+stream-device 1		dz	dz	info
+device 2		ctu	ctu	open close read write
+: #if NCTU == 0
+: cturint() {printf("cons mass storage stray\n");}
+: ctuxint() {printf("cons mass storage stray\n");}
+: #endif
+standard device 3	mem	mm	read write
+: int mem_no = 3;	/* major device number of memory special file */
+device 4		hp	hp	read write ioctl
+device 5		tu	ht	open close read write ioctl
+device 6		vp	vp	open close write ioctl reset
+standard device 7	sw	sw	read write
+if VAX780 device 8	fl	fl	open close read write
+device 10		va	va	open close write ioctl reset
+device 11		rk	rk	read write reset
+device 13		up	up	read write reset
+device 14		te	tm	open close read write ioctl reset
+device 15		lp	lp	open close write reset
+device 16		ts	ts	open close read write ioctl reset
+stream-device 17	dk	dk	info
+stream-device 18	sp	sp	info
+device 19		dn	dn	open close write
+device 22		mu	mt	open close read write ioctl
+device 23		tri	tri	open close write
+device 25		rtk	rtk	open close read write ioctl
+device 26		kmc	kmc	open close read write ioctl
+stream-device 27	ec	ecs	info
+device 28		ra	ud	open close read write ioctl
+device 29		ekx	ekx	open close read write ioctl
+device 30		cv	cv	open close read write ioctl reset
+stream-device 31	kdi	kdi	info reset
+stream-device 32	mg	mg	info
+device 33		ju	ju	open close read write ioctl
+device 34		chaos	chr	open close read write ioctl reset
+: #if NCHAOS > 0
+: #define CHDEV_OFFSET	32
+: long cdevpath = 1L << (34 - CHDEV_OFFSET);
+: #endif NCHAOS
+device 36		chil
+device 37		lex	lex	open close read write ioctl
+device 38		bpd	bpd	open close read ioctl
+device 39		om	om	open close read write ioctl
+device 40		std
+: int stdio_no = 40;	/* major device number of stdio special file */
+device 41		ds	ds	open close read write ioctl
+stream-device 42	inet	ipd	info
+stream-device 43	tcp	tcpd	info
+stream-device 44	il	ils	info
+device 45		scn	scn	open close read write ioctl
+device 46		sn	sn	open close ioctl
+device 47		an	an	open close read write ioctl
+stream-device 48	ch	chd	info
+device 49		iti	iti	open close ioctl
+stream-device 50	udp	udpd	info
+stream-device 51	de	de	info
+device 52		tj	ut	open close read write ioctl
+
+file-system 0	fs	fs	nami mount
+file-system 1	na	na	put get free updat read write trunc stat nami mount
+file-system 2	pr	pr	put get free updat read write trunc stat nami mount ioctl
+file-system 3	mp	mp	put get free updat read write trunc stat nami mount ioctl
+
+standard line-discipline 0	tty	tty	info
+line-discipline 1		dkp	cdkp	info
+line-discipline 2		cm	rdk	info
+line-discipline 3		pk	pk	info
+standard line-discipline 4	msg	msg	info
+line-discipline 5		dkp	dkp	info
+line-discipline 6		ntty	ntty	info
+line-discipline 7		bf	buf	info
+line-discipline 8		trc	trc	info
+standard line-discipline 9	rmsg	rmsg	info
+line-discipline 10		inet	ip	info
+line-discipline 11		tcp	tcp	info
+line-discipline 12		chroute	chroute	info
+line-discipline 13		arp	arp	info
+line-discipline 14		udp	udp	info
+line-discipline 15		ch	ch	info
+line-discipline 16		filter	filt	info
+line-discipline 17		dumpld	dump	info
+line-discipline 18		connld	connld	info
+: /*
+:  * Swapdev is a fake device implemented
+:  * in sw.c used only internally to get to swstrategy.
+:  * It cannot be provided to the users, because the
+:  * swstrategy routine munches the b_dev and b_blkno entries
+:  * before calling the appropriate driver.  This would horribly
+:  * confuse, e.g. the hashing routines. Instead, /dev/drum is
+:  * provided as a character (raw) device.
+:  */
+: dev_t	swapdev = makedev(4, 0);

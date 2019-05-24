@@ -1,0 +1,49 @@
+.TH LDPCS 8 VAX-11/750
+.SH NAME
+ldpcs \- load comet microcode
+.SH SYNOPSIS
+.B /etc/ldpcs
+[
+.B \-f
+] [
+.B \-v
+]
+pcsfile
+.SH DESCRIPTION
+.I Ldpcs
+loads microcode
+from
+.I pcsfile
+into the VAX-11/750 patchable control store.
+Normally,
+the system ID is checked
+to see that the system is a
+750
+and that its base microcode revision level
+is appropriately high;
+the
+.B \-f
+option
+removes the checks.
+The
+.B \-v
+option causes the microcode version number
+to be printed after loading.
+.PP
+.I Ldpcs
+is conventionally invoked
+from
+.I /etc/rc
+to load the most recent DEC microcode patches
+from
+.IR /etc/pcs750.bin .
+.SH FILES
+/dev/mem
+.br
+/dev/mtpr
+.SH BUGS
+Calling
+.I ldpcs
+is a good idea,
+but it is not mandatory;
+the system will run without the patches.

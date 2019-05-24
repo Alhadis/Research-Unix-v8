@@ -1,0 +1,30 @@
+/tmp/xxx looks like a 1048576 byte file, but it is all holes except for the last
+block.
+:;time cat /tmp/xxx > /dev/null
+0.1u 2.4s 3r 	 cat /tmp/xxx
+:;time cat /n/debug/tmp/xxx > /dev/null
+0.2u 20.0s 66r 	 cat /n/debug/tmp/xxx
+Thus the netfs without disk delay is running at 15887 bytes per second.
+If the file is buffered in the server there is no noticable change.
+Thus the slow rate is in the protocol.
+ws%time cat /n/seki/tmp/__2148 > /dev/null #totally buffered in server
+0.1u 21.2s 52r 	 cat /n/seki/tmp/__2148
+ws%time cat /n/seki/tmp/xxx > /dev/null #hole file, no buffering in server
+0.0u 20.8s 53r 	 cat /n/seki/tmp/xxx
+ws%time cat /n/seki/tmp/xxx > /dev/null #no holes either
+0.0u 20.8s 53r 	 cat /n/seki/tmp/xxx
+the netfs runs at bout 19784 bytes per second, with no perceptible
+effect of disk or buffering at host end.
+
+1000 local fstats take about 11 seconds of system time,
+while 1000 getuids take about 2.7 seconds.
+1000 remote fstats of /n/debug take 33 seconds of real time, about 10 milliseconds
+a message.
+
+Now if the server and setup are connected through a pipe, instead of the
+network, catting the file with holes:
+:;time cat m/tmp/9489 > /dev/null
+0.1u 5.1s 12r 	 cat m/tmp/9489
+without holes:
+:;:;time cat m/tmp/x > /dev/null
+0.1u 5.2s 12r 	 cat m/tmp/x

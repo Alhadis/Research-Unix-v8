@@ -1,0 +1,59 @@
+.TH MEM 4 
+.SH NAME
+mem, kmem, kmemr, kUmem, mtpr \- main memory
+.SH DESCRIPTION
+.lg
+.I Mem
+is a special file that is an image of the main memory
+of the computer.
+It may be used, for example, to examine
+(and even to patch) the system.
+.PP
+Byte addresses in
+.I mem
+are interpreted as physical memory addresses.
+References to non-existent locations cause errors to be returned.
+.PP
+The files
+.IR kmem ,
+.IR kmemr ,
+and
+.I kUmem
+are the same as 
+.I mem
+except that kernel virtual memory
+rather than physical memory is accessed.
+.I Kmemr
+is read-only, and excludes system buffer pools and device addresses; it is
+intended as a ``safe'' and ``secure'' mechanism for accessing system tables.
+.I KUmem
+guarantees that reads and writes will be done
+in two-byte quantities;
+this is convenient for UNIBUS accesses.
+.PP
+On the VAX,
+.I mtpr
+accesses internal processor registers.
+Registers are 4 bytes long;
+register
+.I n
+may be read or written at address
+.IR n \(**4.
+.SH FILES
+/dev/mem,
+/dev/kmem,
+/dev/kmemr,
+/dev/kUmem,
+/dev/mtpr
+.SH BUGS
+On PDP11's and VAX's, memory files are accessed one byte
+at a time, an inappropiate method for some
+device registers.
+.PP
+Examining and patching device and processor registers is likely
+to lead to unexpected results when read-only or write-only
+bits are present.
+.PP
+An attempt to read a nonexistent processor register
+returns 0
+instead of an error.

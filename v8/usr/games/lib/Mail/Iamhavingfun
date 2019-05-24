@@ -1,0 +1,28 @@
+here is a program you might find useful.
+the original was due to rob; i took it over, and have been merrily adding
+features (since that is very much in the spirit of the venture)
+be discreet with it; it might turn into a usenix paper yet.
+(it's at least as good as what yost presented this time)
+
+some things you'll have to fix:
+the definition of $f at the top obviously changes.
+put all the files somewhere, and point $f at it.
+rMail is the executable.
+i just link it to Mail in my bin.  (on cithep, something execute-only
+that runs it is in /usr/ucb/Mail)
+
+if your fortune(6) doesn't take an argument, make it do so.  it's easy.
+to get the Authentic-Sender: line to work, you'll have to have /dev/stdin
+for fortune to use, or use a temporary file, or put a `-' hack in fortune.
+take your pick.
+
+the stuff that sets $wmi and $fullname is doubtless wrong.  change to suit.
+
+the Newsbreak: line will probably have to go.  what it did: newsbreak is
+just a shell script that picks an AP story at random from /usr/spool/ap,
+strips out the first paragraph, and prints it.  (the sed stuff is to get
+proper RFC822 indentation, so it's all one header line.)  i suppose you
+could do something with netnews, but it's harder to pick out just a
+paragraph (or other small, complete sample), because the format is so
+irregular.  besides, real life is better (if we're not in anaheim).
+look in /usr/games/lib/Mail/newsbreak for a starter.

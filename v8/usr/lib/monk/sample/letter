@@ -1,0 +1,25 @@
+|make(letter)
+
+|begin(ret_address)
+<|s(AT&T) Bell Laboratories 2C-568
+Murray Hill, New Jersey 07974
+
+October 15, 1984>
+|end(ret_address)
+
+|begin(address)
+<G. H. Reiber
+|s(AT&T) Communications
+Room 3C-110
+Bedminster, |s(NJ) 07921>
+|end(address)
+
+|greeting(<George Reiber:>)
+
+|begin(body)
+<Thank you very much.>
+|end(body)
+
+|closing(<Sincerely,>)
+
+|signature(<T. J. Kowalski>)

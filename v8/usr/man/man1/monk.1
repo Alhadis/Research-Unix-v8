@@ -1,0 +1,261 @@
+.TH MONK 1
+.SH NAME
+monk, monksample \- typeset documents and letters
+.SH SYNOPSIS
+.B monk
+[ options ] [ files ]
+.PP
+.B monksample
+[ sample ]
+.SH DESCRIPTION
+.I Monk
+formats the text in the named
+.I files
+for
+phototypesetting, using other
+.IR troff (1)
+preprocessors as necessary.
+.I Options\^
+are given below.
+Any other arguments or flags (e.g.,
+.BR \-o1\-2 )
+are passed
+to
+.IR troff (1).
+Options can occur in any order and can be intermixed with files.
+If no arguments are given,
+.I monk
+prints a list of its options.
+.PP
+.PD 0
+.TP
+. \".B \-12
+. \"Indicates that the document is to be produced in 12-pitch.
+. \"May be used with
+. \".B $TERM
+. \"is set to one of
+. \".BR 300 ,
+. \".BR 300s ,
+. \".BR 450 ,
+. \"and
+. \".BR 1620 .
+. \"(The pitch switch on the
+. \".SM DASI
+. \"300 and 300s terminals must be manually set to
+. \".B 12
+. \"if this option is used.)
+. \".TP
+.BI \-A commands
+Invoke the
+.I commands
+after all preprocessors and before
+.IR troff (1).
+.TP
+.BI \-B commands
+Invoke the
+.I commands
+after
+.I monk
+and before any other preprocessor.
+.TP
+.B \-E
+Invoke the
+.B \-e
+option of
+.IR troff (1).
+.TP
+.BR \-R file
+Use
+.I file
+as the index file for
+.IR refer (1).
+.TP
+.BI \-T dest
+Prepare output for typesetter or terminal
+.IR dest ;
+Where dest can be:
+.ta \w'\-T52imagen  'u
+.br
+.BR \-T202 "	Mergenthaler Linotron 202"
+.br
+.BR \-T9700 "	Xerox 9700 printer"
+.br
+.BR \-Taps "	Autologic APS-5"
+.br
+.BR \-Tcanon "	Canon laser printer, see"
+.IR candest (7)
+(default)
+.br
+.BR \-Tcat "	Graphic Systems C/A/T"
+.br
+.BR \-Timagen "	Imagen printer, see"
+.IR i10send (1)
+.br
+.BR \-Tjerq "	5620 or blit terminal"
+. \".br
+. \".BR \-Tlp "	line printer"
+. \".br
+. \"If this option is
+. \".I not
+. \"used,
+. \".I monk
+. \"will use the shell variable
+. \".B $TERM
+. \"from the environment (See
+. \".IR profile (5)
+. \"and
+. \".IR environment (7))
+. \"as the value of
+. \".IR dest .
+.TP
+.B \-T\-
+The output from
+.IR troff (1)
+is placed on standard output instead of the default printer.
+.TP
+.B \-x
+Shows the preprocessors that are being invoked.
+.PD
+.PP
+The following options are not normally needed because monk automatically
+determines which preprocessor are required.
+However, if the commands in
+.B \-A
+or
+.B \-B
+options require a preprocessor, you can force
+.I monk
+to invoke them using the following options.
+.PP
+.PD 0
+.TP
+.B \-c
+.IR col (1)
+(postprocessor)
+. \"note that
+. \".IR col (1)
+. \"is invoked automatically by
+. \".I monk
+. \"for the
+. \".BR \-T300 ,
+. \".BR \-T300s ,
+. \".BR \-T450 ,
+. \".BR \-T4014 ,
+. \".BR \-Ttek ,
+. \".BR \-T1620 ,
+. \".BR \-T300-12 ,
+. \".BR \-T300s-12 ,
+. \".BR \-T450-12 ,
+. \".BR \-T1620-12 ,
+. \".BR \-T37 ,
+. \".BR \-T4000a ,
+. \".BR \-T382 ,
+. \".BR \-TX ,
+. \".BR \-Thp ,
+. \".BR \-T2621 ,
+. \".BR \-T2640 ,
+. \".BR \-T2645 ,
+. \".BR \T735 ,
+. \".BR \-T745 ,
+. \".BR \-T43 ,
+. \".BR \-T40/4 ,
+. \".BR \-T40/2
+. \"terminals.
+.TP
+.B \-cn
+.IR cite (1)
+.TP
+.B \-e
+.IR eqn (1)
+.TP
+.B \-g
+.IR grap (1)
+.TP
+.B \-i
+.IR ideal (1)
+.TP
+.B \-p
+.IR pic (1)
+.TP
+.B \-r
+.IR refer (1)
+.TP
+.B \-s
+.IR soelim (1)
+.TP
+.B \-t
+.IR tbl (1)
+.TP
+.B \-tp
+.IR tped (1)
+.PD
+.PP
+.I Monksample
+produces on the standard output a skeleton document that you can
+redirect into a file and edit.
+If no argument is given,
+.I monksample
+prints a list of the available
+.I samples.
+They are:
+.PP
+.PD 0
+.TP 8
+.B cspress
+Computer Science Press galley sheets.
+.TP
+.B letter
+Personal letter
+.TP
+.B model
+IEEE/ACM model sheets.
+.TP
+.B rp
+AT&T Bell Laboratories release paper.
+.TP
+.B song
+Song sheets for singing at nursing homes.
+.TP
+.B tm
+AT&T Bell Laboratories technical memorandum.
+.PD
+.SH FILES
+.ta \w'/usr/lib/monk/dorefer  'u
+.br
+/usr/lib/monk/cite	forward and backward reference preprocessor
+.br
+/usr/lib/monk/db	monk databases
+.br
+/usr/lib/monk/dorefer	sed script for
+.IR refer (1)
+.br
+/usr/lib/monk/monk	monk compiler
+.br
+/usr/lib/monk/soelim	preprocessor for
+.IR troff (1)
+`.so' directives
+.br
+/usr/lib/monk/tmac.p	macros for
+.IR pic (1)
+preprocessor
+.br
+/usr/lib/monk/sample	directory for existing samples
+.SH "SEE ALSO"
+Murrel, S. L.,
+Kowalski, T. J.,
+.I "Typing Documents on the UNIX System: Using Monk 0.2"
+.br
+apsend(1),
+cite(1),
+d202(1),
+. \"environment(7),
+eqn(1),
+grap(1),
+ideal(1),
+ped(9.1),
+pic(1),
+. \"profile(5),
+proof(9.1),
+refer(1),
+tbl(1),
+troff(1)

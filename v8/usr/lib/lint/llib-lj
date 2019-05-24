@@ -1,0 +1,94 @@
+#include "/usr/jerq/include/jerq.h"
+#include "/usr/jerq/include/font.h"
+
+#define	void	int	/* goddam lint */
+Point PT;
+Rectangle RECT;
+Word *WP;
+Texture *TP;
+char *CP;
+Bitmap *BP;
+Font *FP;
+struct Mouse mouse;
+Bitmap *Jdisplayp;
+
+Point add(p, q) Point p, q; {return PT;}
+Word *addr(b, p) Bitmap *b; Point p; {return WP;}
+void alarm(n) int n; {}
+char *alloc(nbytes) unsigned nbytes; {return CP;}
+void free(s) char *s; {}
+int atan2(x, y) int x, y; {return 1;}
+Bitmap *balloc(r) Rectangle r; {return BP;}
+void bfree(b) Bitmap *b; {}
+void bitblt(sb, r, db, p, f) Bitmap *sb, *db; Rectangle r; Point p; Code f; {}
+void circle(b, p, r, f) Bitmap *b; Point p; int r; Code f; {}
+void disc(b, p, r, f) Bitmap *b; Point p; int r; Code f; {}
+void arc(b, p0, p1, p2, f) Bitmap *b; Point p0, p1, p2; Code f; {}
+int cos(d) int d; {return d;}
+int sin(d) int d; {return d;}
+int sqrt(d) long d; {return 0;}
+void cursallow()  {}
+void cursinhibit() {}
+Texture *cursswitch(t) Texture *t; {return t;}
+Point div(p, n) Point p; int n; {return PT;}
+void ellipse(bp, p, a, b, f) Bitmap *bp; Point p; int a,b; Code f; {}
+void eldisc(bp, p, a, b, f) Bitmap *bp; Point p; int a,b; Code f; {}
+void elarc(bp, p0, a, b, p1, p2, f) Bitmap *bp; Point p0, p1, p2; int a,b; Code f; {}
+int eqpt(p, q) Point p, q; {return 1;}
+int eqrect(r, s) Rectangle r, s; {return 1;}
+void exit() {}
+Font *infont(inch) int (*inch)(); {return FP;}
+Font *getfont(file) char *file; {return FP;}
+int outfont(f, ouch) Font *f; int (*ouch)(); {return 1;}
+void ffree(f) Font *f; {}
+char *gcalloc(n, w) unsigned long n; char **w; {return CP;}
+void gcfree(c) char *c; {}
+Rectangle getrect() {return RECT;}
+Rectangle inset(r, n) Rectangle r; int n; {return RECT;}
+void jcircle(p, r, f) Point p; int r; Code f; {}
+void jdisc(p, r, f) Point p; int r; Code f; {}
+void jarc(p0, p1, p2, f) Point p0, p1, p2; Code f; {}
+void jellipse(p, a, b, f) Point p; int a, b; Code f; {}
+void jeldisc(p, a, b, f) Point p; int a, b; Code f; {}
+void jelarc(p0, a, b, p1, p2, f) Point p0, p1, p2; int a, b; Code f; {}
+void jinit() {}
+void jline(p, f) Point p; Code f; {}
+void jlineto(p, f) Point p; Code f; {}
+void jmove(p) Point p; {}
+void jmoveto(p) Point p; {}
+void jpoint(p, f) Point p; Code f; {}
+void jrectf(r, f) Rectangle r; Code f; {}
+void jsegment(p, q, f) Point p, q; Code f; {}
+Point jstring(s) char *s; {return PT;}
+int jstrwidth(s) char *s; {return 1;}
+void jtexture(r, m, f) Rectangle r; Texture *m; Code f; {}
+int kbdchar() {return 1;}
+int menuhit(m, n) Menu *m; int n; {return 1;}
+Point mul(p, n) Point p; int n; {return PT;}
+void nap(nticks) int nticks; {}
+int norm(x, y, z) int x, y, z; {return 1;}
+int own() {return 1;}
+void point(b, p, f) Bitmap *b; Point p; Code f; {}
+Point Pt(x, y) int x, y; {return PT;}
+int ptinrect(p, r) Point p; Rectangle r; {return 1;}
+Rectangle raddp(r, p) Rectangle r; Point p; {return RECT;}
+int rcvchar() {return 1;}
+Rectangle Rect(a,b,c,d)	int a, b, c, d; {return RECT;}
+int rectXrect(r, s) Rectangle r, s; {return 1;}
+int rectclip(rp, s) Rectangle *rp, s; {return 1;}
+void rectf(b, r, f) Bitmap *b; Rectangle r; Code f; {}
+int request(r) int r; {}
+Rectangle Rpt(p, q) Point p, q; {return RECT;}
+int rol(a, b) int a, b; {return 1;}
+int ror(a, b) int a, b; {return 1;}
+Rectangle rsubp(r, p) Rectangle r; Point p; {return RECT;}
+void screenswap(b, r, s) Bitmap *b; Rectangle r, s; {}
+void segment(b, p, q, f) Bitmap *b; Point p, q; Code f; {}
+void sendchar(x) int x; {}
+void sendnchars(n, s) int n; char *s; {}
+void sleep(nticks) int nticks; {}
+Point string(ft, s, b, p, c) Font *ft; char *s; Bitmap *b; Point p; Code c; {return PT;}
+int strwidth(f, s) Font *f; char *s; {return 1;}
+Point sub(p, q) Point p, q; {return PT;}
+void texture(b, r, m, f) Bitmap *b; Rectangle r; Texture *m; Code f; {}
+int wait(r) int r; {return 1;}

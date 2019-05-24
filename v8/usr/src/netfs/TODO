@@ -1,0 +1,15 @@
+1. no devices OK
+2. debugging verbosity OK
+3. permission stuff OK
+4. restartable after child death? OK
+5. why did stat /net/seki/dev/tty7 hang? OK
+6. fix the binary searches stupid OK
+7. no loops OK
+8. children check /etc/net/people changes OK
+9. children time out on reads OK
+10. setup check /etc/net/friends periodically OK
+11. better failure info in logs
+12. fshare and setup into /etc/nrc	OK
+13. time on startup and shutdowns in logs
+14. setup retry periodically OK
+15. why does it get out of synch?

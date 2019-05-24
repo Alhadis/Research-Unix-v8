@@ -1,0 +1,43 @@
+# doctype:  synthesize proper command line for troff
+case $1 in
+-e)	shift
+	x="`doctype $*`"
+	echo $x 1>&2
+	eval $x
+	exit
+	;;
+esac
+
+egrep -h '\$LIST|^\.(EQ|TS|\[|PS|IS|GS|G1|PP)|^\.P$' $* |
+sort -u |
+awk '
+BEGIN	{ files = "'"$*"'" }
+/\$LIST/ { e++ }
+/^\.PP/	{ ms++ }
+/^\.EQ/	{ eqn++ }
+/^\.TS/	{ tbl++ }
+/^\.PS/	{ pic++ }
+/^\.IS/	{ ideal++ }
+/^\.GS/ { tped++ }
+/^\.G1/ { grap++ }
+/^\.\[/	{ refer++ }
+/^\.P$/	{ mm++ }
+END {
+	x = ""
+	if (refer) {
+		if (e)	x = "refer -e " files " | "
+		else	x =  "refer " files "| "
+		files = ""
+	}
+	if (ideal) { x = x "ideal -q " files " | "; files = "" }
+	if (grap)  { x = x "grap " files " | "; files = "" }
+	if (pic)   { x = x "pic -D " files " | "; files = "" }
+	if (tped)  { x = x "tped " files " | "; files = "" }
+	if (tbl)   { x = x "tbl " files " | "; files = "" }
+	if (eqn)   { x = x "eqn " files " | "; files = "" }
+	x = x "troff "
+	if (ms) x = x "-ms"
+	else if (mm) x = x "-mm"
+	x = x " " files
+	print x
+} '

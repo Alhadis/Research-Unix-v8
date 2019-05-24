@@ -1,0 +1,65 @@
+#
+# Configuration file for Alice
+#
+cpu		"VAX780"
+options		DISKMON
+ident		ALICE
+timezone	5 dst
+maxusers	60
+
+config	alice	unix
+config	hphp	hpunix
+
+controller	mba0	at nexus ?
+controller	mba1	at nexus ?
+controller	mba2	at nexus ?
+controller	uba0	at nexus ?
+controller	uba1	at nexus ?
+disk		hp0	at mba0 drive 0
+disk		hp1	at mba0 drive 1
+master		mt0	at mba? drive ?
+tape		mu0	at mt0 slave 0
+master		ht0	at mba? drive ?
+tape		tu0	at ht0 slave 0
+#
+# NOTE: The RA81 drives are hardwired to the indicated controllers.
+#
+controller	uda1	at uba? csr 0172150 vector udintr
+controller	uda0	at uba? csr 0172160 vector udintr
+disk		ra0	at uda0 drive 0
+disk		ra1	at uda1 drive 1
+disk		ra2	at uda0 drive 2
+disk		ra3	at uda1 drive 3
+# following are optional & need not actually be present.
+disk		ra4	at uda0 drive 4
+disk		ra5	at uda1 drive 5
+device		dk0	at uba? csr 0167600 vector dkrint dkrint
+device		dn0	at uba? csr 0175200 vector dnint
+device		dr0	at uba? csr 0167570 vector drrint drxint
+device		dz0	at uba? csr 0160100 vector dzrint dztint
+device		dz1	at uba? csr 0160110 vector dzrint dztint
+device		dz2	at uba? csr 0160120 vector dzrint dztint
+device		dz3	at uba? csr 0160130 vector dzrint dztint
+device		dz4	at uba? csr 0160140 vector dzrint dztint
+device		dz5	at uba? csr 0160150 vector dzrint dztint
+device		dz6	at uba? csr 0160160 vector dzrint dztint
+device		kmc0	at uba? csr 0160200 vector kmcrint kmcxint
+device		tri0	at uba? csr 0177534 vector triintr
+# `stream pipe' (bad name: actually /dev/pt/pt??)
+pseudo-device	sp		
+# message l.d.
+pseudo-device	mesg	128	
+# ordinary tty l.d.
+pseudo-device	tty	256	
+# almost-Berkeley l.d.
+pseudo-device	ntty	64	
+# buffering l.d. for cu and uucp
+pseudo-device	bf	32	
+# datakit URP protocol
+pseudo-device	dkp	256	
+# datakit controller l.d.
+pseudo-device	cm		
+# datakit KMC-11 driver
+pseudo-device	kdi	96	
+# special l.d. for multiple connection to stream
+pseudo-device	connld		

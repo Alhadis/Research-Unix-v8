@@ -1,0 +1,4394 @@
+.TR 118
+.EQ
+delim @@
+.EN
+.\" The release date, receding into the future...
+.ds d June, 1985
+.nr P 0		\" program number, as in (P.n)
+.de sq
+.ch FO 16i
+.ch FX 16i
+.sp -1
+.ch FO -\\n(FMu
+.ch FX -\\n(FMu
+.nr P \\nP+1
+.tl '''(P.\\nP)'
+.br
+..
+.nr dP 1
+.nr dV 1
+.nr dT 8
+.so /usr/bwk/src/cprog.mac
+.de T
+.ta 15n 25n 35n 45n 55n
+..
+.de T
+..
+.TL
+Awk \(em A Pattern Scanning and Processing Language
+.br
+Programmer's Manual
+.AU "MH 2C-522" 4862
+Alfred V. Aho
+.AU "MH 2C-518" 6021
+Brian W. Kernighan
+.AU "MH 2C-514" 7214
+Peter J. Weinberger
+.AI
+.MH
+.AB
+.IT Awk
+is a programming language that allows many tasks of
+information retrieval,
+data processing,
+and report generation
+to be specified simply.
+An
+.IT awk
+program is a sequence of pattern-action statements
+that searches a set of files for lines matching
+any of the specified patterns and
+executes the action associated with each matching pattern.
+For example, the
+pattern
+.P1
+$1 == "name"
+.P2
+is a complete
+.IT awk
+program that prints all input lines whose first field
+is the string
+.UL name ;
+the action
+.P1
+{ print $1, $2 }
+.P2
+is a complete program that prints the first and second fields of each input line;
+and
+the pattern-action statement
+.P1
+$1 == "address"  { print $2, $3 }
+.P2
+is a complete program that prints
+the second and third fields of each input line whose first field
+is
+.UL address .
+.PP
+.IT Awk
+patterns may include arbitrary combinations of regular expressions
+and comparison operations on strings, numbers, fields, variables, and array elements.
+Actions may include the same pattern-matching constructions as in patterns
+as well as
+arithmetic and string expressions; assignments;
+.UL if-else ,
+.UL while
+and
+.UL for
+statements;
+function calls;
+and multiple input and output streams.
+.PP
+This manual describes the version of
+.IT awk
+released in \*d.
+.AE
+.CS 1 2 3 4 5 6
+.NH
+Basic Awk
+.PP
+.IT Awk
+is a programming language for
+information retrieval and data manipulation.
+Since it was first introduced in 1979,
+.IT awk
+has become popular even among
+people with no programming background.
+This manual begins with the basics of
+.IT awk ,
+and is intended to make it easy for anyone
+to get started;
+the rest of the manual describes the complete language
+and is somewhat less tutorial.
+For the experienced
+.IT awk
+user,
+Appendix A contains a summary of the language;
+Appendix B contains a synopsis of the new
+features added to the language in the \*d release.
+.NH 2
+Program Structure
+.PP
+.ix program~structure
+.ix form~of awk~program
+The basic operation of
+.IT awk
+is to scan a set of input lines one after another,
+searching for lines that match any of a set of patterns
+or conditions
+that the user has specified.
+For each pattern, an action can be specified;
+this action will be performed on each line that matches the pattern.
+Accordingly, an
+.IT awk
+program is a sequence of pattern-action statements of the form
+.ix pattern-action statement
+.P1
+.ft 2
+pattern	{ action }
+pattern	{ action }
+\&...
+.P2
+The third program in the abstract,
+.P1
+$1 == "address"  { print $2, $3 }
+.P2
+is a typical example,
+consisting of one pattern-action statement.
+Each line of input
+is matched against
+each of the patterns in turn.
+For each pattern that matches, the associated action
+(which may involve multiple steps)
+is executed.
+Then the next line
+is read and the matching starts over.
+This process typically continues until all the input has been read.
+.PP
+Either the pattern or the action
+in a pattern-action statement may be omitted.
+If there is no action with a pattern,
+as in
+.P1
+$1 == "name"
+.P2
+the matching line is
+printed.
+If there is no pattern with an action,
+as in
+.P1
+{ print $1, $2 }
+.P2
+then the action is performed for every input line.
+Since patterns and actions are both optional,
+actions are enclosed in braces
+to distinguish them from patterns.
+.NH 2
+Usage
+.PP
+.ix awk~command usage
+There are two ways to run an
+.IT awk 
+program.
+You can type the command
+.P1
+awk '\f2pattern-action statements\fP' \f2optional list of input files\fP
+.P2
+to execute the
+.IT pattern-action
+.IT statements
+on the set of named input files.
+For example, you could say
+.P1
+awk '{ print $1, $2 }' data1 data2
+.P2
+If no files are mentioned on the command line, the
+.IT awk
+interpreter will read the standard input.
+Notice that
+the pattern-action statements
+are enclosed in single quotes.
+.ix quotes
+This protects characters like
+.UL $
+from being interpreted by the shell
+and also allows
+the program to be longer than one line.
+.PP
+The arrangement above is convenient when the
+.IT awk
+program is short (a few lines).
+If the
+program
+is long, it is often more convenient
+to put it into a separate file,
+say
+.UL myprogram ,
+and use
+the
+.UL -f
+option
+.ix [-f] option
+to fetch it:
+.P1
+awk -f myprogram \f2optional list of input files\fP
+.P2
+Any filename can be used in place of
+.UL myprogram .
+.NH 2
+Fields
+.ix Fields
+.PP
+.IT Awk
+normally reads its input one line at a time;
+it splits each line into a sequence of 
+.IT fields ,
+where, by default, a field is a string of non-blank, non-tab characters.
+.ix default field~separator
+.ix separator,~default~field
+.PP
+As input for many of the
+.IT awk
+programs in this manual, we will use the following file,
+.UL countries .
+Each line contains the name of a country,
+its area in thousands of square miles,
+its population in millions, and the continent where it is,
+for the ten largest countries in the world.
+(Data are from 1978; the U.S.S.R. has been arbitrarily placed in Asia.)
+.P1
+USSR	8650	262	Asia
+Canada	3852	24	North America
+China	3692	866	Asia
+USA	3615	219	North America
+Brazil	3286	116	South America
+Australia	2968	14	Australia
+India	1269	637	Asia
+Argentina	1072	26	South America
+Sudan	968	19	Africa
+Algeria	920	18	Africa
+.P2
+The wide space between fields is a tab in the original input;
+a single blank separates
+.UL North
+and
+.UL South
+from
+.UL America .
+This file
+is typical
+of the kind of data that
+.IT awk
+is good at processing \(em
+a mixture of words and numbers
+separated into fields by blanks and tabs.
+.PP
+The number of fields in a line is determined by the
+.IT field
+.IT separator .
+Fields are normally separated by sequences of blanks and/or tabs,
+.ix default field~separator
+.ix separator,~default~field
+in which case the first line of
+.UL countries
+would have 4 fields,
+the second 5, and so on.
+It's possible to set the field separator to just tab,
+so each line would have 4 fields,
+matching the meaning of the data;
+we'll show how to do this shortly.
+For the time being, we'll use the default:
+fields separated by blanks and/or tabs.
+.PP
+The first field within a line is called
+.UL $1 ,
+.ix [$]{n} field
+the second
+.UL $2 ,
+and so forth.
+The entire line is called
+.UL $0 .
+.ix [$0] record
+.ix [$0] input~line
+.NH 2
+Printing
+.ix printing
+.PP
+If the pattern
+in a pattern-action statement
+is missing, the action
+is executed for
+all
+input lines.
+.ix default action
+The simplest action is to print each line;
+this can be accomplished by the
+.IT awk
+program consisting of a single
+.UL print
+statement:
+.ix [print] statement
+.P1
+{ print }
+.sq
+.P2
+so the command
+.P1
+awk '{ print }' countries
+.P2
+prints each line of
+.UL countries ,
+thus copying the file
+to the standard output.
+.PP
+In the remainder of this paper, we shall only show
+.IT awk
+programs, without the command line that invokes them.
+Each complete program is identified by
+.UL (P.\f2n\fP)
+in the right margin;
+in each case, the program can be run either by enclosing
+it in quotes as the first argument of the
+.UL awk
+command
+as shown above,
+or by putting it in a file and invoking
+.UL awk
+with the
+.UL -f
+.ix [-f] option
+flag, as discussed in Section 1.2.
+In an example, if no input is mentioned, it is assumed to be the file
+.UL countries .
+.PP
+The
+.UL print
+statement can be used to print parts of a record;
+for instance, the program
+.P1
+{ print $1, $3 }
+.sq
+.P2
+prints the first and third fields of each input line.
+Thus
+.P1
+awk '{ print $1, $3 }' countries
+.P2
+produces as output the sequence of lines:
+.P1
+USSR 262
+Canada 24
+China 866
+USA 219
+Brazil 116
+Australia 14
+India 637
+Argentina 26
+Sudan 19
+Algeria 18
+.P2
+When printed, items separated by a comma in the
+.UL print
+statement are separated by the
+.IT "output field separator" ,
+which by default is a single blank.
+Each line printed is terminated by the
+.IT "output record separator" ,
+which by default is a newline.
+.ix output field separator
+.ix output record separator
+.NH 2
+Formatted Printing
+.ix Formatted Printing
+.PP
+For more carefully formatted output,
+.IT awk
+provides a C-like
+.UL printf
+statement
+.ix [printf] statement
+.P1
+printf @format@, @expr sub 1@, @expr sub 2@, @. . .@ , @expr sub n@
+.P2
+which prints the @expr sub i@'s
+according to the specification
+in the string
+.IT format .
+For example, the
+.IT awk
+program
+.P1
+{ printf "%10s %6d\en", $1, $3 }
+.sq
+.P2
+prints 
+the first field
+.UL $1 ) (
+as a string of 10 characters (right justified),
+then a space,
+then the third field
+.UL $3 ) (
+as a decimal number in a six-character field,
+then a newline
+.UL \en ). (
+.ix [\\\&n]~newline
+With input from file
+.UL countries ,
+program
+.UL (P.\nP)
+prints an aligned table:
+.P1
+      USSR    262
+    Canada     24
+     China    866
+       USA    219
+    Brazil    116
+ Australia     14
+     India    637
+ Argentina     26
+     Sudan     19
+   Algeria     18
+.P2
+With
+.UL printf ,
+no output separators or newlines are produced automatically;
+you must create them yourself,
+which is the purpose of the
+.UL \en
+in the format specification.
+Section 4.3 contains a full description of
+.UL printf .
+.NH 2
+Built-In Variables
+.ix Built-in~Variables
+.PP
+Besides reading the input and splitting it into fields,
+.IT awk
+counts the number of lines read
+and the number of fields within the current line;
+you can use these counts in your
+.IT awk
+programs.
+The variable
+.UL NR
+.ix [NR] variable
+is the number of the current input line,
+and
+.UL NF
+.ix [NF] variable
+is the number of fields.
+So the program
+.P1
+{ print NR, NF }
+.sq
+.P2
+prints the number of each line and how many fields it has,
+while
+.P1
+{ print NR, $0 }
+.sq
+.P2
+prints each line preceded by its line number.
+.NH 2
+Simple Patterns
+.ix simple patterns
+.PP
+You can select specific lines for printing or other processing
+with simple patterns.
+For example,
+the operator
+.UL ==
+tests for equality.
+.ix [==]~equality operator
+To print the lines for which
+the fourth field equals the string
+.UL Asia
+we can use the program consisting of the single pattern:
+.P1
+$4 == "Asia"
+.sq
+.P2
+With the file
+.UL countries
+as input, this program yields
+.P1
+USSR	8650	262	Asia
+China	3692	866	Asia
+India	1269	637	Asia
+.P2
+The complete set of comparisons is
+.UL > ,
+.UL >= ,
+.UL < ,
+.UL <= ,
+.UL ==
+(equal to)
+and
+.UL !=
+(not equal to).
+.ix [>]~greater~than operator
+.ix [>=]~greater~or~equal operator
+.ix [<]~less~than operator
+.ix [<=]~less~or~equal operator
+.ix [!=]~inequality operator
+.ix relational operators
+These comparisons can be used to test both numbers and strings.
+For example,
+suppose we want
+to print only countries
+with more than 100 million population.
+The
+program
+.P1
+$3 > 100
+.sq
+.P2
+is all that is needed
+(remember that
+the third field is the population in millions);
+it prints all lines in which the third field exceeds 100.
+.PP
+You can also use patterns called ``regular expressions''
+.ix regular~expression
+to select lines.
+The simplest form of a regular expression
+is a string of characters enclosed in slashes:
+.P1
+/US/
+.sq
+.P2
+This program prints each line that contains the (adjacent) letters
+.UL US
+anywhere;
+with file
+.UL countries
+as input, it prints
+.P1
+USSR	8650	262	Asia
+USA	3615	219	North America
+.P2
+We will have a lot more to say about regular expressions
+in \(sc2.4.
+.PP
+There are two special patterns,
+.UL BEGIN
+and
+.UL END ,
+.ix [BEGIN] pattern
+.ix [END] pattern
+that ``match'' before the first input line has been read
+and after the last input line has been processed.
+This program uses
+.UL BEGIN
+to print a title:
+.P1
+BEGIN	{ print "Countries of Asia:" }
+/Asia/	{ print "     ", $1 }
+.sq
+.P2
+The output is
+.P1
+Countries of Asia:
+      USSR
+      China
+      India
+.P2
+.NH 2
+Simple Arithmetic
+.ix Arithmetic
+.PP
+In addition to the built-in variables like
+.UL NF
+and
+.UL NR ,
+.IT awk
+lets you define your own variables,
+which you can use for storing data, doing arithmetic,
+and the like.
+To illustrate, consider computing the total population
+and the average population represented by the data in file
+.UL countries :
+.P1
+	{ sum = sum + $3 }
+.sq
+END	{ print "Total population is", sum, "million"
+	  print "Average population of", NR, "countries is", sum/NR }
+.P2
+The first action accumulates the population from the third field;
+the second action, which is executed after
+the last input,
+prints the sum and average:
+.P1
+Total population is 2201 million
+Average population of 10 countries is 220.1
+.P2
+.NH 2
+A Handful of Useful ``One-liners''
+.ix one-liners
+.PP
+Although
+.IT awk
+can be used to write large programs of some complexity,
+many programs are not much more complicated than
+what we've seen so far.
+Here is a collection of other short programs
+that you might find useful and/or instructive.
+They are not explained here, but any new constructs do
+appear later in this manual.
+.P1
+\f1Print last field of each input line:\fP
+	{ print $NF }
+.sq
+.sp 0.5
+\f1Print 10th input line:\fP
+	NR == 10
+.sq
+.sp 0.5
+\f1Print last input line:\fP
+		{ line = $0}
+	END	{ print line }
+.sq
+.sp 0.5
+\f1Print input lines that don't have 4 fields:\fP
+	NF != 4 { print $0, "does not have 4 fields" }
+.sq
+.sp 0.5
+\f1Print input lines with more than 4 fields:\fP
+	NF > 4
+.sq
+.sp 0.5
+\f1Print input lines with last field more than 4:\fP
+	$NF > 4
+.sq
+.sp 0.5
+\f1Print total number of input lines:\fP
+	END	{ print NR }
+.sp 0.5
+\f1Print total number of fields:\fP
+		{ nf = nf + NF }
+	END	{ print nf }
+.sq
+.sp 0.5
+\f1Print total number of input characters:\fP
+		{ nc = nc + length($0) }
+	END	{ print nc + NR }
+.sq
+.fi
+\f1(Adding NR includes in the total the number of newlines.)\fP
+.nf
+.sp 0.5
+\f1Print the total number of lines that contain\fP Asia\f1:\fP
+	/Asia/	{ nlines++ }
+	END	{ print nlines }
+.sq
+\f1(The statement \f8nlines++\f1 has the same effect as \f8nlines = nlines + 1\f1.)\fP
+.P2
+.NH 2
+Errors
+.ix errors
+.PP
+If you make an error in your
+.IT awk
+program,
+you will generally get a message like
+.P1
+awk: syntax error near source line 2
+awk: bailing out near source line 2
+.ix bailing~out
+.ix syntax~error
+.P2
+The first message means that you have made a grammatical error
+that was finally detected near the line specified;
+the second indicates that no recovery was possible.
+Sometimes
+you will get a little more help about what the error was,
+for instance a report of missing braces or
+unbalanced parentheses.
+.PP
+The ``bailing out'' message means that because of the syntax errors
+.IT awk
+made no attempt to execute your program.
+Some errors may be detected when your program is running.
+For example, if you try to divide
+a number by zero,
+.IT awk
+will stop processing
+and report the input line number and the line number in the program.
+.NH 1
+Patterns
+.ix Patterns
+.PP
+In a pattern-action statement,
+.ix pattern-action statement
+the pattern is an expression
+that selects the input lines for which the
+associated action is to be executed.
+This section describes the kinds of
+expressions that may be used as patterns.
+.NH 2
+\s-2BEGIN\s0 and \s-2END\s0
+.ix [BEGIN] pattern
+.PP
+The special pattern
+.UL BEGIN
+matches before the first input record is read,
+so any statements in the action part of a
+.UL BEGIN
+are done once before
+.IT awk
+starts to read its first input file.
+The pattern
+.UL END
+.ix [END] pattern
+matches the end of the input,
+after the last file has been processed.
+.UL BEGIN
+and
+.UL END
+provide a way to gain control
+for initialization and wrapup.
+.PP
+The field separator
+is stored in a built-in variable called
+.UL FS .
+.ix [FS] variable
+.ix input field separator
+Although
+.UL FS
+can be reset at any time,
+usually the only sensible place is in a
+.UL BEGIN
+section, before any input has been read.
+For example, the following
+.IT awk
+program uses
+.UL BEGIN
+to set the field separator to tab
+.UL \et ) (
+.ix [\\\&t]~tab
+and to put column headings on the output.
+The second
+.UL printf
+statement,
+.ix [printf] statement
+which is executed for each input line,
+formats the output into a table, neatly aligned
+under the column headings.
+The
+.UL END
+action prints the totals.
+Notice that a long line can be continued after a comma.)
+.ix line continuation
+.P1
+BEGIN { FS = "\et"
+        printf "%10s %6s %5s   %s\en",
+		"COUNTRY", "AREA", "POP", "CONTINENT" }
+      { printf "%10s %6d %5d   %s\en", $1, $2, $3, $4
+	area = area + $2; pop = pop + $3 }
+END   { printf "\en%10s %6d %5d\en", "TOTAL", area, pop }
+.sq
+.P2
+With the file
+.UL countries
+as input,
+.UL (P.\nP)
+produces
+.P1
+   COUNTRY   AREA   POP   CONTINENT
+      USSR   8650   262   Asia
+    Canada   3852    24   North America
+     China   3692   866   Asia
+       USA   3615   219   North America
+    Brazil   3286   116   South America
+ Australia   2968    14   Australia
+     India   1269   637   Asia
+ Argentina   1072    26   South America
+     Sudan    968    19   Africa
+   Algeria    920    18   Africa
+
+     TOTAL  30292  2201
+.P2
+.NH 2
+Relational Expressions
+.ix Relational Expressions
+.PP
+An
+.IT awk
+pattern can be any expression
+involving comparisons between strings of characters or numbers.
+.IT Awk
+has six relational operators, and two
+regular expression matching operators
+.UL ~
+(tilde)
+and
+.UL !~
+that will be discussed in the next section.
+.KF
+.sp 0.5
+.ps 9p
+.TS
+center;
+c s
+c|c
+cf8|cf1.
+T\s-2ABLE\s+2 1.  C\s-2OMPARISON\s+2 O\s-2PERATORS\s+2
+.sp 0.5
+=
+O\s-2PERATOR\s+2	M\s-2EANING\s+2
+_
+<	less than
+<=	less than or equal to
+==	equal to
+!=	not equal to
+>=	greater than or equal to
+>	greater than
+~	matches
+!~	does not match
+_
+.TE
+.ix table~of relational operators
+.ix [_~]~match operator
+.ix [!_~]~non-match operator
+.KE
+.LP
+In a comparison, if both operands are numeric,
+a numeric comparison is made;
+otherwise the operands are compared as strings.
+.ix string comparison
+.ix numeric comparison
+(Every value might be either a number or a string;
+usually
+.IT awk
+can tell what was intended.
+The full story is in \(sc3.4.)
+Thus, the pattern
+.UL $3>100
+selects lines where the third field exceeds 100, and
+.P1
+$1 >= "S"
+.sq
+.P2
+selects lines that begin with an
+.UL S ,
+.UL T ,
+.UL U ,
+etc., which in our case are
+.P1
+USA	3615	219	North America
+Sudan	968	19	Africa
+.P2
+In the absence of any other information,
+fields are treated as strings, so
+the program
+.P1
+$1 == $4
+.sq
+.P2
+will compare the first and fourth fields
+as strings of characters,
+and with the file
+.UL countries
+as input, will
+print the single line for which this test succeeds:
+.P1
+Australia	2968	14	Australia
+.P2
+If both fields appear to be numbers,
+the comparisons are done numerically.
+.NH 2
+Regular Expressions
+.ix Regular Expressions
+.PP
+.IT Awk
+provides more powerful patterns for searching
+for strings of characters than the comparisons
+illustrated in the previous section.
+These patterns are called
+@regular@ @expressions@,
+and are like those in the Unix\(tm  programs
+.IT egrep
+and
+.IT lex .
+.PP
+The simplest regular expression is a string of characters enclosed in slashes,
+like
+.P1
+/Asia/
+.sq
+.P2
+Program
+.UL (P.\nP)
+prints all input lines that contain any occurrence
+of the string
+.UL Asia .
+(If a line contains
+.UL Asia
+as part of a larger word like
+.UL Asian
+or
+.UL Pan-Asiatic ,
+it will also be printed.)
+.PP
+If
+.IT re
+is a regular expression, then
+the pattern
+.P1
+/\f2re\fP/
+.P2
+matches any line that contains a substring specified by the regular expression 
+.IT re .
+To restrict the match to a specific field,
+use the matching operators
+.UL ~
+(for matches) and
+.UL !~
+(for does not match):
+.ix [_~]~match operator
+.ix [!_~]~non-match operator
+.P1
+$4 ~ /Asia/ { print $1 }
+.sq
+.P2
+prints the first field of all lines in which the fourth field
+matches
+.UL Asia ,
+while
+.P1
+$4 !~ /Asia/ { print $1 }
+.sq
+.P2
+prints the first field of all lines in which the fourth field
+does
+.IT not
+match
+.UL Asia .
+.PP
+In
+regular expressions the symbols
+.P1
+\e ^ $ . [] * + ? () |
+.P2
+have special meanings and are called
+.IT metacharacters  .
+.ix metacharacters
+For example, the metacharacters
+.UL ^
+and
+.UL $
+.ix [^] regular~expression
+.ix [$] regular~expression
+match the beginning and end, respectively,
+of a string,
+and the metacharacter
+.UL .
+matches any single character.
+.ix [\&.] regular~expression
+Thus,
+.P1
+/^.$/
+.sq
+.P2
+will match all lines that contain exactly one character.
+.PP
+A group of characters enclosed in brackets
+matches any one of the enclosed characters;
+.ix character~class,~see~regular~expression
+.ix _[{...}_] regular~expression
+for example,
+.UL /[ABC]/
+matches lines containing any one of
+.UL A ,
+.UL B
+or
+.UL C 
+anywhere.
+Ranges of letters or digits can be abbreviated:
+.UL /[a-zA-Z]/
+matches any single letter.
+If the first character after the
+.UL [
+is a
+.UL ^ ,
+this complements the class so it matches any character
+.ul
+not
+in the set:
+.UL /[^a-zA-Z]/
+matches any non-letter.
+.ix _[^{...}_] regular~expression
+.PP
+The program
+.P1
+$2 !~ /^[0-9]+$/
+.sq
+.nr x \nP
+.P2
+prints all lines in which the second field is not a string
+of one or more digits
+.UL ^ "" (
+for beginning of string,
+.UL [0-9]+
+for one or more digits,
+and
+.UL $
+for end of string).
+Programs of this nature are often used for data validation.
+.PP
+Parentheses
+.UL ()
+are used for grouping and
+.UL |
+is used for alternatives:
+.ix [|] regular~expression
+.ix [()] regular~expression
+.P1
+/(apple|cherry) (pie|tart)/
+.sq
+.P2
+matches lines containing any one of the four substrings
+.UL apple
+.UL pie ,
+.UL apple
+.UL tart ,
+.UL cherry
+.UL pie ,
+or
+.UL cherry
+.UL tart .
+.PP
+To turn off the special meaning of a metacharacter,
+precede it by a
+.UL \e
+(backslash).
+.ix backslash
+Thus, the
+program
+.P1
+/a\e$/
+.sq
+.P2
+will print all lines containing an
+.UL a
+followed by a dollar sign.
+.PP
+.IT Awk
+recognizes the following C escape sequences within regular expressions
+and strings:
+.P1
+\eb	\f1backspace\fP
+\ef	\f1formfeed\fP
+\en	\f1newline\fP
+\er	\f1carriage return\fP
+\et	\f1tab\fP
+\e\f2ddd\fP	\f1octal value \fP\f2ddd\fP
+\e\&"	\f1quotation mark\fP
+\e\f2c\fP	\f1any other character \fP\f2c\fP \f1literally\fP
+.P2
+.ix table~of escape~sequences
+.ix characters,~table~of~escape
+.ix escape~sequence
+.ix [\\\&n]~newline
+.ix [\\\&t]~tab
+For example,
+to print all lines containing a
+tab
+use the program
+.P1
+/\et/
+.sq
+.P2
+.ix [\\\&t]~tab
+.PP
+.IT Awk
+will interpret any string or variable on the right side of
+a
+.UL ~
+or
+.UL !~
+.ix [_~]~match operator
+.ix [!_~]~non-match operator
+as a regular expression.
+.ix dynamic regular~expression
+For example, we could have written program
+.UL (P.\nx)
+as
+.P1
+BEGIN	{ digits = "^[0-9]+$" }
+$2 !~ digits
+.sq
+.P2
+.PP
+When a literal
+quoted string like
+.ix quotes
+.UL \&"^[0-9]+$"
+is used as a regular expression,
+one extra level of backslashes is needed to protect
+regular expression metacharacters.
+.ix backslash
+The reason may seem arcane, but it is merely
+that one level of backslashes is removed when a string
+is originally parsed.
+If a backslash is needed in front of a character
+to turn off its special meaning in a regular expression,
+then that backslash needs a preceding backslash to protect it in a string.
+.PP
+For example,
+suppose we wish to match strings containing an
+.UL a
+followed by a dollar sign.
+The regular expression for this pattern is
+.UL a\e$ .
+If we want to create a string to represent this regular expression,
+we must add one more backslash:
+.UL \&"a\e\e$" .
+The regular expressions on each of the following lines are equivalent.
+.ix quoting metacharacters
+.P1
+.ta 1.5i
+x ~ "a\e\e$"	x ~ /a\e$/
+x ~ "a\e$"	x ~ /a$/
+x ~ "a$"	x ~ /a$/
+x ~ "\e\et"	x ~ /\et/
+.P2
+Of course, if the context of a matching operator is
+.P1
+x ~ $1
+.P2
+then the additional level of backslashes is not needed in the first field.
+.PP
+The precise form of
+regular expressions and the substrings they match
+is given in Table 2.
+The unary operators
+.UL * ,
+.UL + ,
+and
+.UL ?
+have the highest precedence,
+then concatenation, and then alternation
+.UL | .
+All operators are left associative.
+.ix precedence~of metacharacters
+.KF
+.sp 0.5
+.ps 9p
+.TS
+center;
+c s
+c|c
+cf8|l.
+T\s-2ABLE\s+2 2. Awk R\s-2EGULAR\s+2 E\s-2XPRESSIONS\s+2
+.sp 0.5
+=
+E\s-2XPRESSION\s+2	M\s-2ATCHES\s+2
+_
+@c@	any non-metacharacter @c@
+\e@c@	character @c@ literally
+^	beginning of string
+$	end of string
+\&.	any character but newline
+[@s@]	any character in set @s@
+[^@s@]	any character not in set @s@
+@r@*	zero or more @r@'s
+@r@+	one or more @r@'s
+@r@?	zero or one @r@
+(@r@)	@r@
+@r sub 1 r sub 2@	@r sub 1@ then @r sub 2@ (concatenation)
+@r sub 1@|@r sub 2@	@r sub 1@ or @r sub 2@ (alternation)
+_
+.TE
+.LP
+.ix table~of metacharacters
+.ix table~of regular~expressions
+.KE
+.NH 2
+Combinations of Patterns
+.ix Combinations~of Patterns
+.PP
+A compound pattern combines simpler patterns with
+parentheses and the logical operators
+.UL ||
+(or),
+.UL &&
+(and),
+.UL !
+(not).
+.ix [||]~OR operator
+.ix [&&] AND operator
+.ix [!]~negation operator
+.ix logical~operators
+For example,
+suppose we wish to print all countries in Asia with a population
+of more than 500 million.
+The following program does this by selecting all lines
+in which the fourth field is
+.UL Asia
+and the third field exceeds 500:
+.P1
+$4 == "Asia" && $3 > 500
+.sq
+.P2
+The program
+.P1
+$4 == "Asia" || $4 == "Africa"
+.sq
+.P2
+selects lines with Asia or Africa as the fourth field.
+Another way to write
+the latter query is to use a regular expression
+with the
+alternation operator
+.UL | :
+.P1
+$4 ~ /^(Asia|Africa)$/
+.sq
+.P2
+.ix [|] regular~expression
+.PP
+The negation operator
+.UL !
+has the highest precedence, then
+.UL && ,
+and finally
+.UL || .
+.ix precedence~of logical~operators
+The operators
+.UL &&
+and
+.UL ||
+evaluate their operands
+from left to right;
+evaluation stops as soon as truth or falsehood
+is determined.
+.NH 2
+Pattern Ranges
+.ix Pattern~Ranges
+.PP
+A pattern range
+consists of two patterns separated by a comma, as in
+.P1
+@pat sub 1@, @pat sub 2@	{ ... }
+.P2
+In this case, the action is performed for each line between
+an occurrence of
+@pat sub 1@
+and the next occurrence of
+@pat sub 2@
+(inclusive).
+As an example, the
+pattern
+.P1
+/Canada/, /Brazil/
+.sq
+.P2
+matches lines starting with the first line that
+contains
+.UL  Canada
+up through the next occurrence of
+.UL Brazil :
+.P1
+Canada	3852	24	North America
+China	3692	866	Asia
+USA	3615	219	North America
+Brazil	3286	116	South America
+.P2
+Similarly, since
+.UL FNR
+.ix [FNR] variable
+is the number of the current record in the current input file,
+the program
+.P1
+FNR == 1, FNR == 5 { print FILENAME, $0 }
+.sq
+.P2
+.ix [FILENAME] variable
+.ix current input file
+prints the first five records
+of each input file with the name of the current input file prepended.
+.NH 1
+Actions
+.ix Actions
+.PP
+In a pattern-action statement, the pattern selects
+.ix pattern-action statement
+input records;
+the action determines what is to be done with them.
+Actions frequently are simple print or assignment statements,
+but may be an arbitrary sequence of statements
+separated by newlines or semicolons.
+.ix semicolon~statement~separator
+This section describes the statements that can
+make up actions.
+.NH 2
+Built-in Variables
+.ix Built-in~Variables
+.PP
+Table 3 lists the built-in variables
+that
+.IT awk
+maintains.
+Some of these we have already met;
+others will be used in this and later sections.
+.KF
+.ps 9p
+.TS
+center;
+c s s
+c|c|c
+lf8|l|c.
+T\s-2ABLE\s+2 3.  B\s-2UILT-IN\s+2 V\s-2ARIABLES\s+2
+.sp 0.5
+=
+V\s-2ARIABLE\s+2	M\s-2EANING\s+2	D\s-2EFAULT\s+2
+_
+ARGC	number of command-line arguments	-
+ARGV	array of command-line arguments	-
+FILENAME	name of current input file	-
+FNR	record number in current file	-
+FS	input field separator	blank&tab
+NF	number of fields in current record	-
+NR	number of records read so far	-
+OFMT	output format for numbers	\f8%.6g\fP
+OFS	output field separator	blank
+ORS	output record separator	newline
+RS	input record separator	newline
+_
+.TE
+.ix table~of built-in variables
+.ix [ARGV] variable
+.ix [ARGC] variable
+.ix [FILENAME] variable
+.ix [FNR] variable
+.ix [FS] variable
+.ix [NF] variable
+.ix [NR] variable
+.ix [OFMT] variable
+.ix [OFS] variable
+.ix [ORS] variable
+.ix [RS] variable
+.KE
+.NH 2
+Arithmetic
+.ix Arithmetic
+.PP
+Actions use conventional arithmetic expressions
+to compute numeric values.
+As a simple example, suppose we want to print the population
+density for each country.
+Since the second field is the area in thousands of square miles
+and the third field is
+the population in millions,
+the expression
+.UL "1000 * $3 / $2
+gives the population density in people per square mile.
+The
+program
+.P1
+{ printf "%10s %6.1f\en", $1, 1000 * $3 / $2 }
+.sq
+.P2
+applied to
+.UL countries
+prints the name of the country and its population density:
+.P1
+      USSR   30.3
+    Canada    6.2
+     China  234.6
+       USA   60.6
+    Brazil   35.3
+ Australia    4.7
+     India  502.0
+ Argentina   24.3
+     Sudan   19.6
+   Algeria   19.6
+.P2
+.PP
+Arithmetic is done internally in floating point.
+The arithmetic operators are
+.UL + ,
+.UL - ,
+.UL * ,
+.UL / ,
+.UL %
+(remainder)
+.ix [%] remainder operator
+and
+.UL ^
+(exponentiation;
+.UL **
+is a synonym).
+.ix arithmetic operators
+.ix [^] exponentiation operator
+.ix [**],~see~[^]
+Arithmetic expressions can be created by applying these operators
+to constants,
+variables, field names, array elements, functions,
+and other expressions, all of which are discussed later.
+Note that
+.IT awk
+recognizes and produces scientific (exponential) notation:
+.UL 1e6 ,
+.UL 1E6 ,
+.UL 10e5 ,
+and
+.UL 1000000
+are numerically equal.
+.ix scientific~notation
+.ix exponential notation
+.PP
+.IT Awk
+has C-like assignment statements.
+The simplest form is the assignment statement
+.P1
+@v@ = @e@
+.P2
+where
+.IT v
+is a variable or field name,
+and
+.IT e
+is an expression.
+.ix [=]~assignment operator
+For example,
+to compute the total population and number of Asian countries,
+we could write
+.P1
+$4 == "Asia"	{ pop = pop + $3; n = n + 1 }
+.sq
+END		{ print "population of", n,\e
+			"Asian countries in millions is", pop }
+.P2
+(A long
+.IT awk
+statement can also be split across several lines
+by continuing each line with a
+.UL \e ,
+.ix line continuation
+.ix backslash
+as in the
+.UL END
+action of
+.UL (P.\nP) ).
+Applied to
+.UL countries ,
+.UL (P.\nP)
+produces
+.P1
+population of 3 Asian countries in millions is 1765
+.P2
+The action associated with the pattern
+.UL $4
+.UL ==
+.UL \&"Asia"
+contains two assignment statements,
+one to accumulate population, and the other to count countries.
+The variables
+were not explicitly initialized, yet everything worked properly
+because
+.IT awk
+initializes each variable
+.ix initialization~of variables
+with the string value
+.UL \&""
+and the numeric value
+.UL 0 .
+.PP
+The assignments in the previous program can be written more concisely
+using the operators
+.UL +=
+and
+.UL ++ :
+.ix [++]~increment operator
+.ix [+=]~assignment operator
+.P1
+$4 == "Asia"	{ pop += $3; ++n }
+.P2
+The operator
+.UL +=
+is borrowed from the programming language C.
+It has the same effect as the longer version
+\(em the variable on the left is incremented
+by the value of the expression on the right \(em
+but
+.UL +=
+is shorter and runs faster.
+The same is true of
+the
+.UL ++
+operator,
+which adds 1 to a variable.
+.PP
+The abbreviated assignment operators are
+.UL += ,
+.UL -= ,
+.UL *= ,
+.UL /= ,
+.UL %= ,
+and
+.UL ^= .
+.ix [+=]~assignment operator
+.ix [-=]~assignment operator
+.ix [*=]~assignment operator
+.ix [/=]~assignment operator
+.ix [%=]~assignment operator
+.ix [^=]~assignment operator
+.ix assignment operators
+Their meanings are similar:
+\fIv op\f8= \fIe\fR has the same effect as
+\fIv = v \fIop e\fR.
+The increment operators are
+.UL ++
+and
+.UL -- .
+.ix [--]~decrement operator
+As in C, they may be used as prefix operators
+.UL ++x ) (
+or postfix
+.UL x++ ). (
+If
+.UL x
+is 1, then
+.UL i=++x
+increments
+.UL x ,
+then sets
+.UL i
+to 2,
+while
+.UL i=x++
+sets
+.UL i
+to 1, then increments
+.UL x .
+An analogous interpretation applies to prefix and postfix
+.UL -- .
+.PP
+Assignment and increment and decrement operators
+may all be used in arithmetic expressions.
+.PP
+We use default initialization to advantage in the following program,
+.ix initialization~of variables
+which finds the country with the largest population:
+.P1
+maxpop < $3	{ maxpop = $3; country = $1 }
+END		{ print country, maxpop }
+.sq
+.nr x \nP
+.P2
+Note, however, that this program would not be correct if all values of
+.UL $3
+were negative.
+.PP
+.IT Awk
+provides the built-in arithmetic functions
+shown in Table 4.
+.KF
+.sp 0.5
+.ps 9p
+.TS
+center;
+c s
+c|c
+lf8|l.
+T\s-2ABLE\s+2 4.  B\s-2UILT-IN\s+2 A\s-2RITHMETIC\s+2 F\s-2UNCTIONS\s+2
+.sp 0.5
+=
+F\s-2UNCTION\s+2	V\s-2ALUE\s+2 R\s-2ETURNED\s+2
+_
+atan2(@y,x@)	arctangent of @y/^x@ in the range @- pi@ to @pi@
+cos(@x@)	cosine of @x@, with @x@ in radians
+exp(@x@)	exponential function of @x@
+int(@x@)	integer part of @x@ truncated towards 0
+log(@x@)	natural logarithm of @x@
+rand()	random number between 0 and 1
+sin(@x@)	sine of @x@, with @x@ in radians
+sqrt(@x@)	square root of @x@
+srand(@x@)	@x@ is new seed for \f8rand()\fP
+_
+.TE
+.ix table~of arithmetic functions
+.ix [atan2] function
+.ix [cos] function
+.ix [sin] function
+.ix [exp] function
+.ix [int] function
+.ix [log] function
+.ix [sqrt] function
+.KE
+@x@ and @y@ are arbitrary expressions.
+The function
+.UL rand()
+.ix [rand] function
+returns a pseudo-random floating point number in the range (0,1), and
+.UL srand(\f2x\fP)
+.ix [srand] function
+can be used to set the seed of the generator.
+If
+.UL srand()
+has no argument, the seed is derived from the time of day.
+.NH 2
+Strings and String Functions
+.ix String Functions
+.PP
+A string constant is created by enclosing a sequence of characters
+inside quotation marks, as in
+.UL \&"abc" 
+or
+.UL \&"hello,
+.UL everyone" .
+.ix string constant
+String constants may contain
+the C escape sequences for special characters
+.ix escape~sequence
+listed in \(sc2.3.
+.PP
+String expressions are created by concatenating
+.ix string concatenation
+constants, variables, field names, array elements, functions,
+and other expressions.
+The program
+.P1
+	{ print NR ":" $0 }
+.sq
+.P2
+prints each record preceded by its record number and a colon, with no blanks.
+The three strings representing the record number, the colon, and the record
+are concatenated and the resulting string is printed.
+The concatenation operator has no explicit representation
+.ix concatenation operator
+other than juxtaposition.
+.PP
+.IT Awk
+provides the built-in string functions shown in Table 5.
+In this table,
+@r@ represents a regular expression
+(either as a string or as
+.UL /\f2r\fP/ ),
+@s@ and @t@ string expressions,
+and
+.IT n
+and
+.IT p
+integers.
+.KF
+.sp 0.5
+.ps 9p
+.TS
+center;
+c s
+c|c
+lf8|l.
+T\s-2ABLE\s+2 5.  B\s-2UILT-IN\s+2 S\s-2TRING\s+2 F\s-2UNCTIONS\s+2
+.sp 0.5
+=
+F\s-2UNCTION\s+2	D\s-2ESCRIPTION\s+2
+_
+gsub(@r@,@s@)	substitute @s@ for @r@ globally in current record, return number of substitutions
+gsub(@r@,@s@,@t@)	substitute @s@ for @r@ globally in string @t@, return number of substitutions
+index(@s@,@t@)	return position of string @t@ in @s@, 0 if not present
+length	return length of \f8$0\fP
+length(@s@)	return length of @s@
+split(@s@,@a@)	split @s@ into array @a@ on \f8FS\fR, return number of fields
+split(@s@,@a@,@r@)	split @s@ into array @a@ on regular expression @r@, return number of fields
+sprintf(@fmt@,@expr\(hylist@)	return @expr\(hylist@ formatted according to format string @fmt@
+sub(@r@,@s@)	substitute @s@ for first @r@ in current record, return number of substitutions
+sub(@r@,@s@,@t@)	substitute @s@ for first @r@ in @t@, return number of substitutions
+substr(@s@,@p@)	return suffix of @s@ starting at position @p@
+substr(@s@,@p@,@n@)	return substring of @s@ of length @n@ starting at position @p@
+_
+.TE
+.ix table~of string functions
+.KE
+.PP
+The functions
+.UL sub
+and
+.UL gsub
+are patterned after the substitute
+command in the text editor
+.IT ed .
+The function
+.UL gsub(@r@,@s@,@t@)
+.ix [gsub] function
+replaces successive occurrences of substrings matched
+by the regular expression @r@ with the replacement string @s@
+in the target string @t@.
+(As in
+.IT ed ,
+leftmost longest matches are used.)
+It returns the number of substitutions made.
+The function
+.UL gsub(@r@,@s@)
+is a synonym for
+.UL gsub(@r@,@s@,$0) .
+For example, the program
+.P1
+{ gsub(/USA/, "United States"); print }
+.sq
+.P2
+will transcribe its input, replacing
+occurrences of ``USA'' by ``United States''.
+The
+.UL sub
+.ix [sub] function
+functions are similar, except that they only replace the first matching substring
+in the target string.
+.PP
+The function
+.UL index(@s@,@t@)
+.ix [index] function
+returns the leftmost position where the string
+.IT t
+begins in
+.IT s ,
+or zero if
+.IT t
+does not occur in
+.IT s .
+The first character in a string is at position 1.
+For example,
+.P1
+index("banana",\ "an")
+.P2
+returns 2.
+.PP
+The
+.UL length
+.ix [length] function
+function
+returns the number of characters in its argument string;
+thus,
+.P1
+{ print length($0), $0 }
+.sq
+.P2
+prints each record, preceded by its length.
+.UL $0 "" (
+does not include the input record separator.)
+The program
+.P1
+length($1) > max	{ max = length($1); name = $1 }
+END			{ print name }
+.sq
+.P2
+applied to the file
+.UL countries
+prints the longest country name:
+.P1
+Australia
+.P2
+.PP
+The function
+\f8sprintf(@format@, @expr sub 1@, @expr sub 2@, @. . .@ , @expr sub n@)\f1
+.ix [sprintf] function
+.ix formatted output
+returns (without printing) a string containing
+@expr sub 1@, @expr sub 2@, @. . .@, @expr sub n@
+formatted according to the
+.UL printf
+.ix [printf] statement
+specifications in the string
+.IT format .
+Section 4.3 contains a complete specification of the
+format conventions.
+Thus, the statement
+.P1
+x = sprintf("%10s %6d", $1, $2)
+.P2
+assigns to
+.UL x
+the string produced by formatting
+the values of
+.UL $1
+and
+.UL $2
+as a ten-character string and a decimal number in a field of width at least six;
+.UL x
+may be used in any subsequent computation.
+.PP
+The function
+.UL substr(@s@,@p@,@n@)
+.ix [substr] function
+returns the substring of
+.IT s
+that begins at position
+.IT p
+and is at most
+.IT n
+characters long.
+If
+.UL substr(@s@,@p@)
+is used,
+the substring goes to the end of
+.IT s ;
+that is, it consists of the suffix of
+.IT s
+beginning at position
+.IT p .
+For example, we could abbreviate the country names
+in
+.UL countries
+to their first three characters
+by invoking the program
+.P1
+{ $1 = substr($1, 1, 3); print }
+.sq
+.P2
+on this file to produce
+.P1
+USS 8650 262 Asia
+Can 3852 24 North America
+Chi 3692 866 Asia
+USA 3615 219 North America
+Bra 3286 116 South America
+Aus 2968 14 Australia
+Ind 1269 637 Asia
+Arg 1072 26 South America
+Sud 968 19 Africa
+Alg 920 18 Africa
+.P2
+Note that setting
+.UL $1
+forces
+.IT awk
+to recompute
+.UL $0
+and thus the fields are separated by
+blanks (the default value of
+.UL OFS ),
+.ix [OFS] variable
+not by tabs.
+.PP
+Strings are stuck together (concatenated)
+merely by writing them one after another in an expression.
+.ix string concatenation
+.ix concatenation operator
+For example, when invoked on file
+.UL countries ,
+.P1
+	{ s = s substr($1, 1, 3) " " }
+END	{ print s }
+.sq
+.P2
+prints
+.P1
+USS Can Chi USA Bra Aus Ind Arg Sud Alg 
+.P2
+by building 
+.UL s
+up a piece at a time
+from an initially empty string.
+.NH 2
+Field Variables
+.ix Field~Variables
+.ix variables,~field
+.PP
+The fields of the current record can be referred to by the field variables
+.UL $1 ,
+.UL $2 ,
+\&...,
+.UL $NF .
+.ix [NF] variable
+.ix [$]{n} field
+Field variables
+share all of the properties of other variables \(em
+they may be used in arithmetic or string operations,
+and may be assigned to.
+Thus one can
+divide the second field of the file
+.UL countries
+by 1000
+to convert the area from thousands to millions of square miles:
+.P1
+{ $2 /= 1000; print }
+.sq
+.P2
+or assign a new string to a field:
+.P1
+BEGIN			{ FS = OFS = "\et" }
+$4 == "North America"	{ $4 = "NA" }
+$4 == "South America"	{ $4 = "SA" }
+.sq
+			{ print }
+.P2
+The
+.UL BEGIN
+action
+in
+.UL (P.\nP)
+resets the input field separator
+.UL FS
+and the output field separator
+.UL OFS
+to a tab.
+.ix [FS] variable
+.ix [OFS] variable
+Notice that the
+.UL print
+in the fourth line of
+.UL (P.\nP)
+prints the value of
+.UL $0
+after it has been modified by previous assignments.
+.PP
+Fields can be accessed by expressions.
+For example,
+.UL $(NF-1)
+is the second last field of the current record.
+The parentheses are needed:
+the value of
+.UL $NF-1
+is 1 less than the value in the last field.
+.PP
+A field variable referring to a nonexistent field, e.g.,
+.UL $(NF+1)
+has as its initial value the empty string.
+A new field can be created, however, by assigning a value to it.
+For example, the following program invoked on the file
+.UL countries
+creates a fifth field giving the population density:
+.P1
+BEGIN	{ FS = OFS = "\et" }
+	{ $5 = 1000 * $3 / $2; print }
+.sq
+.P2
+.PP
+The number of fields can vary from record to record,
+but there is usually an implementation limit of 100 fields per record.
+.NH 2
+Number or String?
+.ix Number~or~String
+.PP
+Variables, fields and expressions
+can have both a numeric value and a string value.
+They take on numeric
+or string values according to context.
+.ix string variables
+.ix numeric variables
+For example, in the context of an arithmetic expression like
+.P1
+pop += $3
+.P2
+.UL pop
+and
+.UL $3
+must be treated numerically,
+so their values will be
+.IT coerced
+.ix coercion
+to numeric type if necessary.
+.PP
+In a string context like
+.P1
+print $1 ":" $2
+.P2
+.UL $1
+and
+.UL $2
+must be strings to be concatenated, so they will be coerced if necessary.
+.PP
+In an assignment
+@v~=~e@ or @v ~op=~e@,
+.ix [=]~assignment operator
+the type of
+.IT v
+becomes the type of
+.IT e .
+.PP
+In an ambiguous context like
+.P1
+$1 == $2
+.P2
+.ix [==]~equality operator
+the type of the comparison
+depends on whether the fields are numeric or string,
+and this can only be determined when the program runs;
+it may well differ from record to record.
+.PP
+In comparisons, if both operands are numeric, the comparison is numeric;
+otherwise, operands are coerced to strings, and the comparison is made
+on the string values.
+.ix coercion
+All field variables are of type string;
+in addition, each field that contains only a number is also considered numeric.
+This determination is done at run time.
+For example, the comparison
+.UL "$1 == $2" '' ``
+.ix string comparison
+.ix numeric comparison
+will succeed on any pair of the inputs
+.P1
+1	1.0	+1	0.1e+1	10E-1	1e2	10e1	001
+.P2
+but fail on the inputs
+.P1
+\f1(null)\fP	0
+\f1(null)\fP	0.0
+0a	0
+1e50	1.0e50
+.P2
+.PP
+There are two idioms for coercing an expression
+of one type to the other:
+.P1
+.ta 1.2i
+\f2number\fP ""	\f1 concatenate a null string to a\fP \f2number\fP \f1to coerce it to type string\fP
+\f2string\fP + 0	\f1 add zero to a\fP \f2string\fP \f1to coerce it to type numeric \fP
+.P2
+.ix coercion~to number
+.ix coercion~to string
+Thus, to force a string comparison between two fields, say
+.P1
+$1 "" == $2 ""
+.sq
+.P2
+.PP
+The numeric value of a string is the value of any prefix of the string
+that looks numeric;
+thus the value of
+.UL 12.34x
+is
+12.34, while the value of 
+.UL x12.34
+is zero.
+The string value of an arithmetic expression is computed by formatting the
+string with the output format conversion
+.UL OFMT .
+.ix [OFMT] variable
+.PP
+Uninitialized variables have numeric value 0
+and string value
+.UL \&"" .
+Nonexistent fields and fields that are explicitly null have only
+the string value
+.ix non-existent field
+.ix initialization
+.UL \&"" ;
+they are not numeric.
+.NH 2
+Control Flow Statements
+.ix control~flow statements
+.PP
+.IT Awk
+provides
+.UL if-else ,
+.UL while ,
+and
+.UL for
+statements,
+and statement grouping with braces, as in C.
+.PP
+The
+.UL if
+statement syntax is
+.P1
+if (@expression@) @statement sub 1@ else @statement sub 2@
+.P2
+.ix [if]~[else] statement
+The
+.IT expression
+acting as the conditional
+has no restrictions;
+it can include the relational operators
+.UL < ,
+.UL <= ,
+.UL > ,
+.UL >= ,
+.UL == ,
+and
+.UL != ;
+.ix relational operators
+the regular expression matching operators
+.UL ~
+and
+.UL !~ ;
+.ix [_~]~match operator
+.ix [!_~]~non-match operator
+the logical operators
+.UL || ,
+.UL && ,
+and
+.UL ! ;
+.ix [&&]~AND operator
+.ix [||]~OR operator
+.ix~[!] negation operator
+juxtaposition for concatenation;
+and parentheses for grouping.
+.PP
+In the
+.UL if
+statement,
+the 
+@expression@
+is first evaluated.
+If it is non-zero and non-null,
+@statement sub 1@
+is executed;
+otherwise
+@statement sub 2@
+is executed.
+The
+.UL else
+part is optional.
+.PP
+A single statement can always be replaced by a statement list
+enclosed in braces.
+The statements in the statement list are terminated by newlines
+or semicolons.
+.PP
+Rewriting the maximum population program
+.UL (P.\nx)
+from
+\(sc3.1 with an
+.UL if
+statement results in
+.P1
+{	if (maxpop < $3) {
+		maxpop = $3
+		country = $1
+.sq
+	}
+}
+END	{ print country, maxpop }
+.P2
+.PP
+The
+.UL while
+statement is exactly that of C:
+.P1
+while (\f2expression\fP) \f2statement\fP
+.P2
+.ix [while] statement
+The \f2expression\fP is evaluated; if it is non-zero and non-null the \f2statement\fP
+is executed and the
+.IT expression
+is tested again.
+The cycle repeats as long as the \f2expression\fP is non-zero.
+For example, to print all input fields one per line,
+.P1
+{	i = 1
+	while (i <= NF) {
+		print $i
+.sq
+		i++
+	}
+}
+.P2
+.PP
+The
+.UL for
+statement is like that of C:
+.P1
+for (@expression sub 1@; @expression@; @expression sub 2@) @statement@
+.P2
+.ix [for] statement
+has the same effect as
+.P1
+@expression sub 1@
+while (@expression@) {
+	@statement@
+	@expression sub 2@
+}
+.P2
+so
+.P1
+{ for (i = 1; i <= NF; i++)  print $i }
+.sq
+.P2
+does the same job as the
+.UL while
+example above.
+An alternate version of the
+.UL for 
+statement is described in the next section.
+.PP
+The
+.UL break
+.ix [break] statement
+statement causes an immediate exit
+from an enclosing
+.UL while
+or
+.UL for ;
+the
+.UL continue
+.ix [continue] statement
+statement
+causes the next iteration to begin.
+.PP
+The
+.UL next
+.ix [next] statement
+statement
+causes
+.IT awk
+to skip immediately to
+the next record and begin matching patterns
+starting from the first pattern-action statement.
+.PP
+The
+.UL exit
+.ix [exit] statement
+statement
+causes the program to behave as if the end of the input
+had occurred; no more input is read, and the
+.UL END
+.ix [END] pattern
+action, if any, is executed.
+Within the
+.UL END
+action,
+.P1
+exit \f2expr\fP
+.P2
+causes the program to return the value of
+.IT expr
+as its exit status.
+If there is no
+.IT expr ,
+the exit status is zero.
+.ix exit~status
+.NH 2
+Arrays
+.ix Arrays
+.PP
+.IT Awk
+provides
+one-dimensional arrays.
+Arrays and array elements need not be declared;
+like variables,
+they spring into existence by being mentioned.
+An array subscript may be
+a number or a string.
+.PP
+As an example of a conventional numeric subscript,
+.ix array subscripts
+the statement
+.P1
+x[NR] = $0
+.P2
+assigns the current input line to
+the
+@font 8 NR sup roman th@
+element of the array
+.UL x .
+In fact, it is possible in principle (though perhaps slow)
+to read the entire input into an array
+with the
+.IT awk
+program
+.P1
+	{ x[NR] = $0 }
+END	{ \f2... processing ...\fP }
+.P2
+The first action merely records each input line in
+the array
+.UL x ,
+indexed by line number;
+processing is done in the
+.UL END
+statement.
+.PP
+Array elements may also be named by nonnumeric values,
+a facility that gives
+.IT awk
+a capability rather like the associative memory of
+.ix array subscripts
+.ix associative array
+Snobol tables.
+For example, the following program
+accumulates the total population
+of
+.UL Asia
+and
+.UL Africa
+into the associative array
+.UL pop .
+The
+.UL END
+action prints the total population of these two continents.
+.P1
+/Asia/		{ pop["Asia"] += $3 }
+.sq
+/Africa/	{ pop["Africa"] += $3 }
+END		{ print "Asian population in millions is", pop["Asia"]
+		  print "African population in millions is", pop["Africa"] }
+.P2
+On
+.UL countries ,
+.UL (P.\nP)
+generates
+.P1
+Asian population in millions is 1765
+African population in millions is 37
+.P2
+In program
+.UL (P.\nP) ,
+if we had used
+.UL pop[Asia]
+instead of
+.UL pop["Asia"]
+the expression would have used the value of the variable
+.UL Asia
+as the subscript, and since the variable is uninitialized, the values would
+.ix uninitialized variables
+.ix initialization
+have been accumulated in
+.UL pop[""] .
+.PP
+Suppose our task is to determine the total area
+in each continent of the file
+.UL countries .
+Any expression can be used as a subscript in an array reference.
+Thus
+.P1
+area[$4] += $2
+.P2
+uses the string in the fourth field of the current input record
+to index the array
+.UL area
+and in that entry accumulates the value of the second field:
+.P1
+BEGIN	{ FS = "\et" }
+	{ area[$4] += $2 }
+.sq
+END	{ for (name in area)
+		print name, area[name] }
+.P2
+Invoked on
+.UL countries ,
+.UL (P.\nP)
+produces
+.P1
+South America 4358
+Africa 1888
+Asia 13611
+Australia 2968
+North America 7467
+.P2
+.PP
+.UL (P.\nP)
+uses a form of the
+.UL for
+statement that iterates over
+all defined subscripts of an array:
+.P1
+for (i in array) \f2statement\fP
+.P2
+.ix [for]~{...}~[in] statement
+executes
+.ul
+statement
+with 
+the variable
+.UL i
+set in turn to each value of
+.UL i
+for which
+.UL array[i]
+has been defined.
+The loop is executed once for each defined subscript,
+in a random order.
+Chaos will result if 
+.UL i
+is altered during the loop.
+.PP
+.IT Awk
+does not provide multi-dimensional arrays
+.ix multi-dimensional array
+so you cannot write
+.UL "x[i,j]"
+or
+.UL "x[i][j]" .
+You can, however,
+create your own subscripts by concatenating
+row and column values with a suitable separator.
+For example,
+.P1
+for (i = 1; i <= 10; i++)
+	for (j = 1; j <= 10; j++)
+		arr[i "," j] = ...
+.P2
+creates an array whose subscripts have
+the form
+.UL i,j ,
+such as
+.UL 1,1
+or
+.UL 1,2 .
+(The comma distinguishes a subscript like
+.UL 1,12
+from one like
+.UL 11,2 .)
+.PP
+You can determine whether a particular subscript
+.IT i
+occurs in an array
+.IT arr
+by testing the condition
+.IT i
+.UL in
+.IT arr ,
+.ix [if]~{...}~[in] statement
+as in
+.P1
+if ("Africa" in area) ...
+.P2
+This condition performs the test without the side effect of creating
+.UL area["Africa"] ,
+which would happen if we used
+.P1
+if (area["Africa"] != "") ...
+.P2
+Note that neither is
+a test of whether
+the array
+.UL area
+contains an element with value
+.UL \&"Africa" .
+.PP
+It is also possible to split any string
+into fields in the elements of an array using the built-in function
+.UL split .
+The function
+.P1
+split("s1:s2:s3", a, ":")
+.P2
+.ix [split] function
+splits 
+the string
+.UL s1:s2:s3
+into three fields, using the separator
+.UL :
+and storing
+.UL s1
+in
+.UL a[1] ,
+.UL s2
+in
+.UL a[2] ,
+and
+.UL s3
+in
+.UL a[3] .
+The number of fields found, here 3, is returned as
+the value of
+.UL split .
+The third argument of
+.UL split
+is a regular expression to be used as the field separator.
+.ix regular~expression field~separator
+If the third argument is missing,
+.UL FS
+is used as the field separator.
+.ix [FS] variable
+.PP
+An array element may be deleted with the
+.UL delete
+statement:
+.ix [delete] statement
+.P1
+delete \f2arrayname\fP[\f2subscript\fP]
+.P2
+.NH 2
+User-Defined Functions
+.ix User-defined Functions
+.PP
+.IT Awk
+provides user-defined functions.
+A function is defined as
+.P1
+func \f2name\fP(\f2argument-list\fP) {
+	\f2statements\fP
+}
+.P2
+.ix [func] statement
+The definition can occur anywhere a pattern-action statement can.
+The argument list is a list of variable names
+separated by commas;
+within the body of the function these variables
+refer to the actual parameters when the function is called.
+There must be no space between the function name and the left parenthesis
+of the argument list when the function is called;
+otherwise it looks like a concatenation.
+For example, to define and test
+the usual recursive factorial function,
+.P1
+func fact(n) {
+	if (n <= 1)
+		return 1
+	else
+.sq
+		return n * fact(n-1)
+}
+{ print $1 "! is " fact($1) }
+.P2
+.ix factorial~function
+.ix recursion
+Array arguments are passed by reference, as in C,
+.ix array arguments
+so it is possible for the function to alter array elements
+or create new ones.
+Scalar arguments are passed by value, however,
+.ix call~by value
+.ix call~by reference
+so the function cannot affect their values outside.
+Within a function, formal parameters are local variables
+.ix function arguments
+.ix formal parameters
+.ix local variables
+.ix global variables
+but
+.ul
+all other variables are global.
+(You can have any number of extra formal parameters
+that are used purely as local variables;
+because arrays are passed by reference, however,
+the local variables can only be scalars.)
+The
+.UL return
+statement is optional,
+but the returned value is undefined if execution falls off
+the end of the function.
+.ix [return] statement
+.ix [return] statement
+.NH 2
+Comments
+.ix comments
+.PP
+Comments may be placed in
+.IT awk
+programs:
+they begin with the character
+.UL #
+.ix [#]~comment
+and end at the end of the line,
+as in
+.P1
+print x, y	# this is a comment
+.P2
+.NH 1
+Output
+.ix Output
+.PP
+The
+.UL print
+and
+.UL printf
+statements
+are the two primary
+constructs that generate output.
+The
+.UL print
+statement is used to generate quick-and-dirty output;
+.UL printf
+is used for more carefully formatted output.
+.NH 2
+Print
+.ix [print] statement
+.PP
+The statement
+.P1
+print @expr sub 1@, @expr sub 2@, @. . .@ , @expr sub n@
+.P2
+prints the string value of each expression separated by the output
+field separator
+followed by the output record separator.
+The statement
+.P1
+print
+.P2
+is an abbreviation for
+.P1
+print $0
+.P2
+To print an empty line use
+.P1
+print ""
+.P2
+.NH 2
+Output Separators
+.ix Output Separators
+.PP
+The output field separator and record separator
+are held in the built-in variables
+.UL OFS
+and
+.UL ORS .
+.ix [ORS] variable
+.ix [OFS] variable
+Initially,
+.UL OFS
+is set to a single blank
+and
+.UL ORS
+to a single newline,
+but these values can be changed at any time.
+For example, the following
+program prints the first and second fields of each record
+with a colon between the fields and two newlines after the second field:
+.P1
+BEGIN	{ OFS = ":"; ORS = "\en\en" }
+	{ print $1, $2 }
+.sq
+.P2
+Notice that
+.P1
+	{ print $1 $2 }
+.sq
+.P2
+prints the first and second fields with no
+intervening output field separator,
+because
+.UL $1
+.UL $2
+is a string consisting of the concatenation
+of the first two fields.
+.NH 2
+Printf
+.ix [printf] statement
+.PP
+.IT Awk 's
+.UL printf
+statement is the same as that in C
+except that the
+.UL c
+and
+.UL *
+format specifiers are not supported.
+The
+.UL printf
+statement has the general form
+.P1
+printf @format@, @expr sub 1@, @expr sub 2@, @. . .@ , @expr sub n@
+.P2
+where
+.IT format
+is a string that contains both information to be printed
+and specifications on what conversions are to be performed
+on the expressions in the argument list, as in Table 6.
+Each specification begins with a
+.UL % ,
+ends with a letter that determines the conversion, and may include
+.P1
+-	\f1 left-justify expression in its field \fP
+\f2width\fP	\f1 pad field to this width as needed; leading \fP0\f1 pads with zeros \fP
+\&.\f2prec\fP	\f1 maximum string width or digits to right of decimal point \fP
+.P2
+.KF
+.sp 0.5
+.ps 9p
+.TS
+center;
+c s
+c|c
+cf8|l.
+T\s-2ABLE\s+2 6.  C\s-2ONVERSION\s+2 C\s-2HARACTERS\s+2
+.sp 0.5
+=
+C\s-2HARACTER\s+2	P\s-2RINT\s+2 E\s-2XPRESSION\s+2 A\s-2S\s+2
+_
+d	decimal number
+e	\f8[-]d.ddddddE[+-]dd\fP
+f	\f8[-]ddd.dddddd\fP
+g	\f8e\fP or \f8f\fP conversion, whichever is shorter, with
+	     nonsignificant zeros suppressed
+o	unsigned octal number
+s	string
+x	unsigned hexadecimal number
+%	print a \f8%\fP; no argument is converted
+_
+.TE
+.ix table~of [printf]~specifications
+.LP
+.KE
+.PP
+Here are some examples of
+.UL printf
+statements along with the corresponding output:
+.P1
+.ta 2.5i
+printf "%d", 99/2	49
+printf "%e", 99/2	4.950000e+01
+printf "%f", 99/2	49.500000
+printf "%6.2f", 99/2	49.50
+printf "%g", 99/2	49.5
+printf "%o", 99	143
+printf "%06o", 99	000143
+printf "%x", 99	63
+printf "|%s|", "January"	|January|
+printf "|%10s|", "January"	|   January|
+printf "|%-10s|", "January"	|January   |
+printf "|%.3s|", "January"	|Jan|
+printf "|%10.3s|", "January"	|       Jan|
+printf "|%-10.3s|", "January"	|Jan       |
+printf "%%"	%
+.P2
+.ix [printf] examples
+.LP
+The default output format of numbers is
+.UL %.6g ;
+this can be changed by assigning a new value to
+.UL OFMT .
+.ix [OFMT] variable
+.UL OFMT
+also controls the conversion of numeric values to strings
+for concatenation
+and creation of array subscripts.
+.NH 2
+Output into Files
+.ix Output~into~Files
+.PP
+It is possible to print output into files
+instead of to the standard output.
+The following program invoked on the file
+.UL countries
+will print all lines
+where the population
+(third field)
+is bigger than 100 into a file called
+.UL bigpop ,
+and all other lines into 
+.UL smallpop :
+.P1
+$3 > 100	{ print $1, $3 >"bigpop" }
+$3 <= 100	{ print $1, $3 >"smallpop" }
+.sq
+.P2
+Notice that the filenames have to be quoted;
+without quotes,
+.UL bigpop
+and
+.UL smallpop
+are merely uninitialized variables.
+It is important to note that
+the files are opened once;
+each successive
+.UL print
+or
+.UL printf
+statement adds more data to the corresponding file.
+If
+.UL >>
+.ix [>>] output redirection
+.ix [>] output redirection
+is used instead of
+.UL > ,
+output is appended to the file rather than overwriting its original contents.
+.NH 2
+Output into Pipes
+.ix output~into pipes
+.PP
+It is also possible to direct printing
+into a pipe with a command on the other end, instead of a file.
+ihe statement
+.P1
+print | "\f2command-line\fP"
+.P2
+causes the output of
+.UL print
+to be piped into
+the
+.IT command-line .
+.ix output pipe
+.ix [|] output redirection
+.PP
+Although we have shown them here as literal strings enclosed in quotes,
+the
+.IT command-line
+and filenames
+can come from variables, etc., as well.
+.PP
+Suppose we want to create a list of continent-population pairs,
+sorted alphabetically by continent.
+The
+.IT awk
+program below accumulates in an array
+.UL pop
+the population values
+in the third field for each of the distinct continent names
+in the fourth field,
+prints each continent and its population,
+and pipes this output into
+the
+.UL sort
+command.
+.P1
+BEGIN	{ FS = "\et" }
+	{ pop[$4] += $3 }
+END	{ for (c in pop)
+.sq
+		print c ":" pop[c] | "sort" }
+.P2
+Invoked on the file
+.UL countries
+.UL (P.\nP)
+yields
+.P1
+Africa:37
+Asia:1765
+Australia:14
+North America:243
+South America:142
+.P2
+.PP
+In all of these
+.UL print
+statements involving redirection of output,
+the files or pipes are identified by their names
+(that is, the pipe above is
+literally named
+.UL sort ),
+but they are created and opened only once in
+the entire run.
+.PP
+There is a limit of the number of files that can be open
+simultaneously.
+The statement
+.UL close(\f2file\fP)
+.ix [close] statement
+closes a file or pipe;
+.IT file
+is the string used to create it in the first place,
+as in
+.UL close("sort") .
+.NH 1
+Input
+.ix input
+.PP
+There are several ways of providing the input data to an
+.IT awk
+program
+.IT P .
+The most common arrangement is to put the data into a file, say
+.UL awkdata ,
+and then execute
+.P1
+awk '\f2P\fP' awkdata
+.P2
+.IT Awk
+reads its standard input if no filenames are given; thus,
+a second common arrangement is to have another program
+pipe its output into
+.IT awk .
+For example, the program
+.IT egrep
+selects input lines containing a specified regular expression,
+but it can do so faster than
+.IT awk
+since this is the only thing it does.
+We could therefore invoke the pipe
+.P1
+egrep 'Asia' countries | awk '\f2...\fP'
+.P2
+.IT Egrep
+will quickly find the lines containing
+.UL Asia
+and pass them on to the
+.IT awk
+program for subsequent processing.
+.NH 2
+Input Separators
+.ix Input Separators
+.PP
+With the default setting of the field separator
+.UL FS ,
+.ix [FS] variable
+.ix input field separator
+input fields are separated by blanks or tabs,
+and leading blanks are discarded,
+so each of these lines has the same first field:
+.P1
+    field1	field2
+  field1
+field1
+.P2
+When the field separator is a tab,
+however,
+leading blanks are 
+.IT not
+discarded.
+.PP
+The field separator can be set to any regular expression
+by assigning a value to
+the built-in variable
+.UL FS .
+For example,
+.P1
+awk 'BEGIN { FS = "(,[ \e\et]*)|([ \e\et]+)" } ...'
+.P2
+sets it to an optional comma followed by
+any number of blanks and tabs.
+.UL FS
+can also be set on the command line with the
+.UL -F
+argument:
+.ix [-F] option
+.P1
+awk -F'(,[ \et]*)|([ \et]+)' '...'
+.P2
+behaves the same as the previous example.
+Regular expressions used as field separators
+will not match null strings.
+.NH 2
+Multi-Line Records
+.ix Multi-line~Records
+.PP
+Records are normally separated by newlines,
+so that each line is a record,
+but this too can be changed, 
+though in a quite limited way.
+If the built-in record-separator variable
+.UL RS
+.ix [RS] variable
+is set to the empty string,
+as in
+.P1
+BEGIN	{ RS = "" }
+.P2
+then input records can be several lines long;
+a sequence of empty lines separates records.
+A common way to process multiple-line records is to use
+.P1
+BEGIN	{ RS = ""; FS = "\en" }
+.P2
+to set the record separator to an empty line and the field separator
+to a newline.
+There is a limit, however, on how long a record can be;
+it is usually about 2500 characters.
+Sections 5.3 and 6.2 show other examples of processing multi-line records.
+.NH 2
+The getline Function
+.ix [getline] function
+.PP
+.IT Awk 's
+limited facility for automatically breaking
+its input into records that are more than one line long
+is not adequate for some tasks.
+For example, if records are not separated by blank lines
+but by something more complicated,
+merely setting
+.UL RS
+to null doesn't work.
+In such cases, it is necessary to manage the splitting
+of each record into fields in the program.
+Here are some suggestions.
+.PP
+The function
+.UL getline
+can be used to read input either from the current input
+or from a file or pipe, by redirection analogous to
+.ix input pipe
+.UL printf .
+By itself,
+.UL getline
+fetches the next input record
+and performs the normal field-splitting operations
+on it.
+It sets
+.UL NF , 
+.UL NR ,
+and
+.UL FNR .
+.ix [NF] variable
+.ix [NR] variable
+.ix [FNR] variable
+.ix [getline]~error~return
+.UL getline
+returns 
+.UL 1
+if there was a record present,
+.UL 0
+if the end-of-file was encountered,
+and
+.UL -1
+if some error occurred (such as failure to open a file).
+.PP
+To illustrate, suppose we have input data consisting of multi-line records,
+each of which begins with a line beginning with
+.UL START
+and ends with a line beginning with
+.UL STOP .
+The following
+.IT awk
+program processes these multi-line records, a line at a time,
+putting the lines of the record into consecutive entries of an array
+.P1
+f[1] f[2] ... f[nf]
+.P2
+Once the line containing
+.UL STOP
+is encountered, the record can be processed
+from the data
+in the
+.UL f
+array:
+.P1
+/^START/ {
+	f[nf=1] = $0
+	while (getline && $0 !~ /^STOP/)
+		f[++nf] = $0
+	# now process the data in f[1]...f[nf]
+	...
+}
+.P2
+Notice that this code uses the fact that
+.UL &&
+.ix [&&]~AND operator
+evaluates its operands left to right and stops as soon
+as one is true.
+.PP
+The same job can also be done by the following
+program:
+.P1
+/^START/ && nf==0 { f[nf=1] = $0 }
+nf > 1 		  { f[++nf] = $0 }
+/^STOP/		  { # now process the data in f[1]...f[nf]
+		    ...
+		    nf = 0
+}
+.P2
+.PP
+The statement
+.UL getline
+.UL x
+reads the next record into the variable
+.UL x .
+No splitting is done;
+.UL NF
+is not set.
+The statement
+.P1
+getline <"file"
+.P2
+reads from
+.UL file
+instead of the current input.
+It has no effect on
+.UL NR
+or
+.UL FNR ,
+but field splitting is performed and
+.UL NF
+is set.
+The statement
+.P1
+getline x <"file"
+.P2
+gets the next record from
+.UL file
+into
+.UL x ;
+no splitting is done, and
+.UL NF ,
+.UL NR
+and
+.UL FNR
+are untouched.
+.PP
+It is also possible to pipe the output of another command directly
+.ix input pipe
+into
+.UL getline .
+For example, the statement
+.P1
+while ("who" | getline)
+	n++
+.P2
+executes
+.UL who
+and pipes its output into
+.UL getline .
+Each iteration of the
+.UL while
+loop reads one more line and increments the variable
+.UL n ,
+so after the
+.UL while
+loop terminates,
+.UL n
+contains a count of the number of users.
+Similarly, the statement
+.P1
+"date" | getline d
+.P2
+pipes the output of
+.UL date
+into the variable
+.UL d ,
+thus setting
+.UL d
+to the current date.
+.PP
+Table 7 summarizes the 
+.UL getline
+function.
+.KF
+.sp 0.5
+.ps 9p
+.TS
+center;
+c s
+c|c
+lf8|lf1.
+T\s-2ABLE\s+2 7.  G\s-2ETLINE\s+2 F\s-2UNCTION\s+2
+.sp 0.5
+=
+F\s-2ORM\s+2	S\s-2ETS\s+2
+_
+getline	\f8$0\fP, \f8NF\fP, \f8NR\fP, \f8FNR\fP
+getline \f2var\fP	\f2var\fP, \f8NR\fP, \f8FNR\fP
+getline <\f2file\fP	\f8$0\fP, \f8NF\fP
+getline \f2var\fP <\f2file\fP	\f2var\fP
+\f2cmd\fP | getline	\f8$0\fP, \f8NF\fP
+\f2cmd\fP | getline \f2var\fP	\f2var\fP
+_
+.TE
+.ix table~of [getline]~forms
+.KE
+.NH 2
+Command-line Arguments
+.ix command-line arguments
+.PP
+The command-line arguments
+are available to an
+.IT awk
+program:
+the array
+.UL ARGV
+.ix [ARGV] variable
+contains the elements
+.UL ARGV[0] ,
+\&...,
+.UL ARGV[ARGC-1] ;
+as in C,
+.UL ARGC
+is the count.
+.ix [ARGC] variable
+.UL ARGV[0]
+is the name of the program
+(generally
+.UL awk );
+the remaining arguments are whatever was provided
+(excluding the
+program and any optional arguments).
+The following command contains an
+.IT awk
+program that echoes the arguments that appear
+after the
+program name:
+.P1
+awk '
+BEGIN {
+	for (i = 1; i < ARGC; i++)
+		printf "%s ", ARGV[i]
+	printf "\en"
+	exit
+}' $*
+.P2
+The arguments may be modified or added to;
+.UL ARGC
+may be altered.
+As each input file ends,
+.IT awk
+treats the next non-null element of
+.UL ARGV
+(up to the current value of
+.UL ARGC-1 )
+as the name of the next input file.
+.ix current input file
+.PP
+There is one exception to the rule that an argument
+is a filename:
+if it is of the form
+.P1
+\f2var\fP=\f2value\fP
+.P2
+then the variable
+.IT var
+is set to the value
+.IT value
+as if by assignment.
+.ix command-line assignment
+Such an argument is not treated as a filename.
+If
+.IT value
+is a string, no quotes are needed.
+.ix quotes
+.NH 1
+Cooperation with the Rest of the World
+.PP
+.IT Awk
+gains its greatest power when it is used in conjunction
+with other programs.
+Here we describe some of the ways in which
+.IT awk
+programs cooperate with other
+commands.
+.NH 2
+The system Function
+.ix [system] function
+.PP
+The built-in function
+.UL system(\f2command-line\fP)
+executes the command
+.IT command-line ,
+which may well be a string computed by, for example,
+the
+built-in function
+.UL sprintf .
+The value returned by
+.UL system
+is the status return of the command executed.
+.PP
+For example, the program
+.P1
+$1 == "#include"  { gsub(/[<>"]/, "", $2); system("cat " $2) }
+.sq
+.P2
+calls the command
+.UL cat
+to print the file named in the second field
+of every input record whose first field is
+.UL #include ,
+after stripping any
+.UL < ,
+.UL >
+or
+.UL \&"
+that might be present.
+.NH 2
+Cooperation with the Shell
+.ix cooperation~with~the shell
+.PP
+In all the examples thus far, the
+.IT awk
+program was in a file
+and fetched from there using the
+.UL -f
+flag,
+.ix [-f] option
+or it appeared on the command line enclosed in single quotes, as in
+.ix quotes
+.P1
+awk '{ print $1 }' ...
+.P2
+Since
+.IT awk
+uses many of the same characters as the shell does,
+such as
+.UL $
+and
+.UL \&" ,
+surrounding the
+.IT awk
+program with single quotes ensures that the shell
+will pass the entire program unchanged to the
+.IT awk
+interpreter.
+.PP
+Now, consider writing a command
+.UL addr
+that will search a file
+.UL addresslist
+for name, address and telephone information.
+Suppose that
+.UL addresslist
+contains names and addresses in which a typical entry
+is a multi-line record such as
+.ix multi-line records
+.P1
+G. R. Emlin
+600 Mountain Avenue
+Murray Hill, NJ 07974
+201-555-1234
+.P2
+.ix Emlin,~G.~R.
+Records are separated by a single blank line.
+.PP
+We want to search the address list by issuing commands like
+.P1
+addr Emlin
+.P2
+That is easily done by a program of the form
+.P1
+awk '
+BEGIN	{ RS = "" }
+/Emlin/
+\&' addresslist
+.P2
+.ix [RS] variable
+The problem is how to
+get a different search pattern
+into the program
+each time it is run.
+.PP
+There are several ways to do this.
+One way is to create a file called
+.UL addr
+that contains
+.P1
+awk '
+BEGIN	{ RS = "" }
+/'$1'/
+\&' addresslist
+.P2
+.ix address-list program
+The quotes
+are critical here:
+the
+.IT awk
+program is only one argument,
+even though there are two sets of quotes,
+because quotes do not nest.
+.ix quotes
+The
+.UL $1
+is outside the quotes,
+visible to the shell,
+which therefore replaces it by the pattern
+.UL Emlin
+when the command
+.UL "addr Emlin"
+is invoked.\(dg
+.FS
+\(dg On a Unix system, 
+.UL addr
+can be made executable by
+changing its mode with the command:
+.UL chmod
+.UL +x
+.UL addr .
+.FE
+.PP
+A second way to implement
+.UL addr
+relies on the fact
+that the shell substitutes for
+.UL $
+parameters within double quotes:
+.P1
+awk "
+BEGIN	{ RS = \e"\e" }
+/$1/
+\&" addresslist
+.P2
+Here we must protect the quotes defining
+.UL RS
+with backslashes so that the shell passes them on to
+.IT awk ,
+uninterpreted by the shell.
+.UL $1
+is recognized as a parameter, however, so the shell replaces
+it
+by the pattern
+when the command
+.UL addr
+.IT pattern
+is invoked.
+.PP
+A third way to implement
+.UL addr
+is to use
+.UL ARGV
+.ix [ARGV] variable
+to pass the regular expression to an
+.IT awk
+program that explicitly reads through the address list with
+.UL getline :
+.P1
+awk '
+BEGIN	{ RS = ""
+	  while (getline < "addresslist")
+		if ($0 ~ ARGV[1])
+			print $0
+	  exit
+} '
+.P2
+All processing is done in the
+.UL BEGIN
+action.
+.PP
+Notice that any regular expression can be passed
+to
+.UL addr ;
+in particular, it is possible to retrieve by
+parts of an address or telephone number
+as well as by name.
+.NH 1
+Generating Reports
+.ix Generating~Reports
+.PP
+.IT Awk
+is especially useful for producing reports that summarize and format information.
+Suppose we wish to produce a report
+from the file
+.UL countries
+in which we list
+the continents alphabetically, and after each
+continent its countries in decreasing order of population:
+.P1
+Africa:
+	Sudan          19
+	Algeria        18
+
+Asia:
+	China         866
+	India         637
+	USSR          262
+
+Australia:
+	Australia      14
+
+North America:
+	USA           219
+	Canada         24
+
+South America:
+	Brazil        116
+	Argentina      26
+.P2
+.PP
+As with many data processing tasks, it is much easier
+to produce this report
+in several stages.
+First, we create a list of continent-country-population triples,
+in which each field is separated by a colon.
+This can be done with the following
+program
+.UL triples ,
+which uses an array
+.UL pop
+indexed by subscripts of the form
+``continent:country''
+to store the population of a given country.
+The print statement in the
+.UL END
+section creates the list of
+continent-country-population triples that are piped
+to the system sort routine.
+.P1
+BEGIN	{ FS = "\et" }
+	{ pop[$4 ":" $1] += $3 }
+END	{ for (cc in pop)
+.sq
+		print cc ":" pop[cc] | "sort -t: +0 -1 +2nr" }
+.P2
+.ix output pipe
+The arguments for the sort command deserve special mention.
+The
+.UL -t:
+argument
+tells
+.UL sort
+to use
+.ix [sort] command
+.UL :
+as its field separator.
+The
+.UL +0
+.UL -1
+arguments make the first field the primary sort key.
+In general,
+@+i@ @-j@
+makes fields
+@i+1@, @i+2@, ..., @j@ the sort key.
+If @-j@ is omitted, the fields from @i+1@ to the end of the record are used.
+The
+.UL +2nr
+argument makes the third field, numerically decreasing,
+the secondary sort key
+(\f8n\fR is for numeric,
+.UL r
+for reverse order).
+The
+Unix Programmer's Manual contains a complete description
+of the
+.UL sort
+command.
+Invoked on the file
+.UL countries ,
+.UL (P.\nP)
+produces as output
+.P1
+Africa:Sudan:19
+Africa:Algeria:18
+Asia:China:866
+Asia:India:637
+Asia:USSR:262
+Australia:Australia:14
+North America:USA:219
+North America:Canada:24
+South America:Brazil:116
+South America:Argentina:26
+.P2
+.PP
+This output is in the right order but the wrong format.
+To transform the output into the desired form
+we run it through a second
+.IT awk
+program
+.UL format :
+.P1
+BEGIN	{ FS = ":" }
+{	if ($1 != prev) {
+		print "\en" $1 ":"
+		prev = $1
+.sq
+	}
+	printf "\et%-10s %6d\en", $2, $3
+}
+.P2
+This is a ``control-break'' program
+.ix control-break program
+that prints only the first occurrence of a continent name
+and formats the country-population lines
+associated with that continent in the desired manner.
+The command
+.P1
+awk -f triples countries | awk -f format
+.P2
+gives us our desired report.
+As this example suggests,
+complex data transformation and formatting tasks can often be reduced
+to a few simple
+.IT awk 's
+and
+.IT sort 's.
+.PP
+As an exercise,
+add to the population report subtotals for each continent
+and a grand total.
+.NH
+Additional Examples
+.PP
+.IT Awk
+has been used in surprising ways.
+We have seen
+.IT awk
+programs that implement database systems and
+a variety of compilers and assemblers,
+in addition to the more traditional tasks of
+information retrieval, data manipulation, and report generation.
+Invariably, the
+.IT awk
+programs are significantly shorter
+than equivalent programs written in more conventional
+programming languages such as Pascal or C.
+In this section, we will present a few more examples
+to illustrate some additional
+.IT awk
+programs.
+.PP
+1.
+.IT "Word frequencies" .
+.ix word~frequency program
+Our first example illustrates associative arrays
+.ix associative array
+for counting.
+Suppose we want to count
+the number of times each word appears in the input,
+where a word is any contiguous sequence of non-blank, non-tab characters.
+The following program
+prints the word frequencies, sorted in decreasing order.
+.P1
+	{ for (w = 1; w <= NF; w++) count[$w]++ }
+.sq
+END	{ for (w in count) print count[w], w | "sort -nr" }
+.P2
+The first statement uses the array
+.UL count
+to accumulate the number of times
+each word is used.
+Once the input has been read, the
+second
+.UL for
+loop pipes the final count along with each word
+into the sort command.
+.PP
+2.
+.IT Accumulation .
+Suppose we have two files,
+.UL deposits
+and
+.UL withdrawals ,
+of records containing
+a name field and an amount field.
+For each name we want to print the net balance determined by
+subtracting the total withdrawals from the total deposits for each name.
+The net balance can be computed by the following program:
+.P1
+awk '
+FILENAME == "deposits"     { balance[$1] += $2 }
+FILENAME == "withdrawals"  { balance[$1] -= $2 }
+END                        { for (name in balance)
+                                 print name, balance[name]
+} ' deposits withdrawals
+.P2
+The first statement uses the array
+.UL balance
+.ix associative array
+to accumulate the total amount for each name in the file
+.UL deposits .
+The second statement subtracts associated withdrawals
+from each total.
+If there are only withdrawals associated with a name,
+an entry for that name will be created by the second statement.
+The
+.UL END
+action prints each name with its net balance.
+.PP
+3.
+.IT "Random choice.
+The following function prints (in order)
+.UL k
+random elements
+from the first
+.UL n
+elements of the array
+.UL A .
+In the program,
+.UL k
+is the number of entries that still need to be printed,
+and
+.UL n
+is the number of elements yet to be examined.
+The decision of whether to print the
+.IT i th
+element is determined by the test
+\f8rand() < k/n\fR.
+.ix [rand] function
+.P1
+func choose(A, k, n) {
+	for (i = 1; n > 0; i++)
+		if (rand() < k/n--) {
+			print A[i]
+			k--
+		}
+	}
+}
+.P2
+.ix random~choice program
+.PP
+4.
+.IT "Shell facility" .
+The following
+.IT awk
+program simulates (crudely) the
+history
+facility of the
+Unix system shell.
+A line containing only
+.UL =
+re-executes the last command executed.
+A line beginning with
+.UL =
+.IT cmd
+re-executes the last command whose invocation included the string
+.IT cmd .
+Otherwise, the current line is executed.
+.P1
+$1 == "=" { if (NF == 1)
+		system(x[NR] = x[NR-1])
+	    else
+		for (i = NR-1; i > 0; i--)
+.sq
+			if (x[i] ~ $2) {
+				system(x[NR] = x[i])
+				break
+			}
+	    next }
+
+/./	  { system(x[NR] = $0) }
+.P2
+.ix history program
+.PP
+5.
+.IT "Form-letter generation" .
+The following program generates form letters,
+using a template stored in a file called
+.UL form.letter :
+.P1
+This is a form letter.
+The first field is $1, the second $2, the third $3.
+The third is $3, second is $2, and first is $1.
+.P2
+and replacement text of this form:
+.P1
+field 1|field 2|field 3
+one|two|three
+a|b|c
+.P2
+The
+.UL BEGIN
+action stores the template in the array
+.UL template ;
+the remaining action cycles through
+the input data,
+using
+.UL gsub
+.ix [gsub] function
+to replace template fields of the form
+.UI $ n
+with the corresponding data fields.
+.P1
+BEGIN {	FS = "|"
+	while (getline <"form.letter")
+		line[++n] = $0
+}
+.P3
+{	for (i = 1; i <= n; i++) {
+		s = line[i]
+		for (j = 1; j <= NF; j++)
+			gsub("\e\e$"j, $j, s)
+		print s
+	}
+}
+.P2
+.ix form-letter program
+.PP
+6.
+.IT "Random sentences" .
+Our final problem is to generate random
+sentences, given a grammar.
+Given input like
+.P1
+S -> NP VP
+NP -> AL N
+NP -> N
+N -> John
+N -> Mary
+.P3
+AL -> A
+AL -> A AL
+A -> Wee
+A -> Little
+.P3
+VP -> V AvL
+V -> runs
+V -> walks
+.P3
+AvL -> Av
+AvL -> ML Av
+Av -> quickly
+Av -> slowly
+ML -> M
+ML -> ML M
+M -> very
+gen S
+.P2
+it will generate sentences like
+.P1
+John runs quickly
+Wee Little Mary runs quickly
+Mary runs very very slowly
+.P2
+The following program presents a fairly naive approach:
+each left-hand side is remembered in an associative array,
+along with the components of its right-hand side.
+When a
+.UL gen
+command occurs,
+a random instance of that left-hand side is expanded
+recursively.
+.ix recursion
+.P1
+{	if ($1 == "gen") {
+		gen($2)
+		print ""
+	} else if ($2 == "->") {
+		i = ++lhsct[$1]
+		rhsct[$1 "," i] = NF-2
+		for (j = 3; j <= NF; j++)
+			rhslist[$1 "," i "," j-2] = $j
+	} else
+		print "Unrecognized command: " $0
+} 
+.P3
+func gen(sym, i, j) {	# i and j are local variables
+	if (sym in lhsct) {
+		i = int(lhsct[sym] * rand()) + 1
+		for (j = 1; j <= rhsct[sym "," i]; j++)
+			gen(rhslist[sym "," i "," j])
+	} else
+		printf "%s ", sym
+}
+.P2
+.ix random~sentence program
+Notice the use of extra arguments in the list of parameters for
+.UL gen ;
+.ix local variables
+they serve as local variables for that specific instance of
+the function.
+.PP
+In all such examples, a prudent strategy is to start with
+a small version and expand it, trying out each aspect
+before moving on to the next.
+.P2
+.SH
+Further Reading
+.PP
+A technical discussion of
+the design of
+.IT awk
+may be found in
+.IT "Awk \(em a pattern scanning and processing language" ,
+by A. V. Aho, B. W. Kernighan and P. J. Weinberger,
+which appeared in 
+.IT "Software Practice and Experience" ,
+April 1979.
+.PP
+Much of the syntax of 
+.IT awk
+is derived from C, described in
+.IT "The C Programming Language" ,
+by B. W. Kernighan and D. M. Ritchie
+(Prentice-Hall, 1978).
+.PP
+The function
+.UL printf
+is described in the C book,
+and also in Section 2 of 
+.IT "The Unix Programmer's Manual" .
+The programs
+.IT ed ,
+.IT sed ,
+.IT egrep ,
+and
+.IT lex
+are also described there,
+with an explanation of regular expressions.
+.PP
+.IT "The Unix Programming Environment" ,
+by B. W. Kernighan and R. Pike
+(Prentice-Hall, 1984)
+contains a large number of
+.IT awk
+examples,
+including illustrations of cooperation with
+.IT sed
+and the shell.
+Jon Bentley's
+.IT Programming Pearls
+columns in the June and July 1985 issues of
+.IT CACM
+contain a wide variety of other 
+.IT awk
+examples.
+.SH
+Acknowledgements
+.PP
+We are indebted to
+Jon Bentley,
+Lorinda Cherry,
+Marion Harris,
+Teresa Alice Hommel,
+Rob Pike,
+Chris Van Wyk,
+and
+Vic Vyssotsky
+for valuable comments on drafts of this manual.
+.sp 100
+.SH
+Appendix A:  Awk Summary
+.nr PS -1
+.nr VS -1
+.nr PD 0
+.nr DV 2p
+.LP
+.SH
+Command-line
+.LP
+.DS
+.ta 1i
+\f8awk '\f2program\f8' \f2filenames\f1
+\f8awk -f \f2program-file\fP \f2filenames\f1
+\f8awk -F\f2s\f1	set field separator to string \f2s\f1; \f8-Ft\fP sets separator to tab
+.DE
+.SH
+Patterns
+.LP
+.DS
+.ft 8
+BEGIN
+END
+/\f2regular expression\fP/
+\f2relational expression\fP
+\f2pattern\fP && \f2pattern\fP
+\f2pattern\fP || \f2pattern\fP
+(\f2pattern\fP)
+!\f2pattern\fP
+\f2pattern\fP, \f2pattern\fP
+func \f2name\fP(\f2parameter list\fP) { \f2statement\fP }
+.DE
+.SH
+Control-flow statements
+.LP
+.DS
+.ft 8
+if (\f2expr\fP) \f2statement\fP \f1[\fPelse \f2statement\fP\f1]\fP
+if (\f2subscript\fP in \f2array\fP) \f2statement\fP \f1[\fPelse \f2statement\fP\f1]\fP
+while (\f2expr\fP) \f2statement\fP
+for (\f2expr\fP; \f2expr\fP; \f2expr\fP) \f2statement\fP
+for (\f2var\fP in \f2array\fP) \f2statement\fP
+break
+continue
+next
+exit \f1[\fP\f2expr\fP\f1]\fP
+\f2function-name\fP(\f2expr\fP, \f2expr\fP, \f2...\fP)
+return \f1[\fP\f2expr\fP\f1]\fP
+.DE
+.SH
+Input-output
+.LP
+.DS
+.TS
+lfCW l.
+close(\f2filename\fP)	close file
+getline	set \f8$0\fP from next input record; set \f8NF\fP, \f8NR\fP, \f8FNR\fP
+getline <\f2file\fP	set \f8$0\fP from next record of \f2file\fP; set \f8NF\fP
+getline \f2var\fP	set \f2var\fP from next input record; set \f8NR\fP, \f8FNR\fP
+getline \f2var\fP <\f2file\fP	set \f2var\fP from next record of \f2file\fP
+print	print current record
+print \f2expr-list\fP	print expressions
+print \f2expr-list\fP >\f2file\fP	print expressions on \f2file\fP
+printf \f2fmt, expr-list\fP	format and print	
+printf \f2fmt, expr-list\fP >\f2file\fP	format and print on \f2file\fP
+system(\f2cmd-line\fP)	execute command \f2cmd-line\fP, return status
+.TE
+.DE
+.LP
+In
+.UL print
+and
+.UL printf
+above,
+.UL >>\f2file\fP
+appends to the
+.IT file ,
+and
+.UL |
+.IT "command"
+writes on a pipe.
+Similarly,
+.IT "command"
+.UL |
+.UL getline
+pipes into
+.UL getline .
+.UL getline 
+returns 0 on end of file, and \-1 on error.
+.ne 10
+.SH
+String functions
+.LP
+.DS
+.TS
+lfCW l.
+gsub(\f2r\fP,\f2s\fP,\f2t\fP)	substitute string \f2s\fP for each substring matching regular expression \f2r\fP
+	   in string \f2t\fP, return number of substitutions;  if \f2t\fP omitted, use \f8$0\fP
+index(\f2s\fP,\f2t\fP)	return index of string \f2t\fP in string \f2s\fP, or 0 if not present
+length(\f2s\fP)	return length of string \f2s\fP
+split(\f2s\fP,\f2a\fP,\f2r\fP)	split string \f2s\fP into array \f2a\fP on regular expression \f2r\fP, return number of fields
+	   if \f2r\fP omitted, \f8FS\fP is used in its place
+sprintf(\f2fmt, expr-list\fP)	print \f2expr-list\fP according to \f2fmt\fP, return resulting string
+sub(\f2r\fP,\f2s\fP,\f2t\fP)	like \f8gsub\fP except only the first matching substring is replaced
+substr(\f2s\fP,\f2i\fP,\f2n\fP)	return \f2n\fP-char substring of \f2s\fP starting at \f2i\fP; if \f2n\fP omitted, use rest of \f2s\fP
+.TE
+.DE
+.SH
+Arithmetic functions
+.LP
+.DS
+.TS
+lfCW l.
+atan2(\f2y\fP,\f2x\fP)	arctangent of @y/^x@ in radians
+cos(\f2expr\fP)	cosine (angle in radians)
+exp(\f2expr\fP)	exponential
+int(\f2expr\fP)	truncate to integer
+log(\f2expr\fP)	natural logarithm
+rand()	random number between 0 and 1
+sin(\f2expr\fP)	sine (angle in radians)
+sqrt(\f2expr\fP)	square root
+srand(\f2expr\fP)	new seed for random number generator; use time of day if no \f2expr\fP
+.TE
+.DE
+.SH
+Operators (increasing precedence)
+.LP
+.DS
+.TS
+lfCW l.
+= += -= *= /= %= ^=	assignment
+||	logical OR
+&&	logical AND
+~ !~	regular expression match, negated match
+< <= > >= != ==	relationals
+\f2blank\fP	string concatenation
++ -	add, subtract
+* / %	multiply, divide, mod
++ - !	unary plus, unary minus, logical negation
+^	exponentiation (\f8**\fP is a synonym)
+++ --	increment, decrement (prefix and postfix)
+$	field
+.TE
+.DE
+.ne 12
+.SH
+Regular expressions (increasing precedence)
+.LP
+.DS
+.TS
+lfCW l.
+\f2c\fP	matches non-metacharacter \f2c\fP
+\e\f2c\fP	matches literal character \f2c\fP
+\&.	matches any character but newline
+^	matches beginning of line or string
+$	matches end of line or string
+[\f2abc...\fP]	character class matches any of \f2abc...\fP
+[^\f2abc...\fP]	negated class matches any but \f2abc...\fP and newline
+\f2r1\fP|\f2r2\fP	matches either \f2r1\fP or \f2r2\fP
+\f2r1r2\fP	concatenation: matches \f2r1\fP, then \f2r2\fP
+\f2r\fP+	matches one or more \f2r\fP's
+\f2r\fP*	matches zero or more \f2r\fP's
+\f2r\fP?	matches zero or one \f2r\fP's
+(\f2r\fP)	grouping: matches \f2r\fP
+.TE
+.DE
+.ne 10
+.SH
+Built-in variables
+.LP
+.DS
+.TS
+lfCW l.
+ARGC	number of command-line arguments
+ARGV	array of command-line arguments (0..\f(CWARGC-1\fP)
+FILENAME	name of current input file
+FNR	input record number in current file
+FS	input field separator (default blank)
+NF	number of fields in current input record
+NR	input record number since beginning
+OFMT	output format for numbers (default \f(CW%.6g\fP)
+OFS	output field separator (default blank)
+ORS	output record separator (default newline)
+RS	input record separator (default newline)
+.TE
+.DE
+.SH
+Limits
+.PP
+Any particular implementation of
+.IT awk
+enforces some limits.
+Here are typical values:
+.DS
+100 fields
+2500 characters per input record
+2500 characters per output record
+1024 characters per individual field
+1024 characters per \f8printf\fP string
+400 characters maximum quoted string
+400 characters in character class
+15 open files
+1 pipe
+numbers are limited to what can be represented on the local machine, e.g., 1e\-38..1e+38
+.DE
+.sp
+.nr PD 2p
+.nr DV 2p
+.SH
+Initialization, comparison, and type coercion
+.PP
+Each variable and field can potentially be a string
+or a number or both at any time.
+When a variable is set by the assignment
+.P1
+var = expr
+.P2
+its type is set to that of the expression.
+(``Assignment'' includes
+.UL += ,
+.UL -= ,
+etc.)
+An arithmetic expression is of type number, a
+concatenation is of type string, and so on.
+If the assignment is a simple copy, as in
+.P1
+v1 = v2
+.P2
+then the type of
+.UL v1
+becomes that of
+.UL v2 .
+.PP
+In comparisons, if both operands are numeric,
+the comparison is made numerically.  Otherwise,
+operands are coerced to string if necessary, and
+the comparison is made on strings.
+The type of any expression can be coerced to
+numeric by subterfuges such as
+.P1
+expr + 0
+.P2
+and to string by
+.P1
+expr ""
+.P2
+(i.e., concatenation with a null string).
+.PP
+Uninitialized variables have the numeric value
+.UL 0
+and the string value
+.UL \&"" .
+Accordingly, if
+.UL x
+is uninitialized,
+.P1
+if (x) ...
+.P2
+is false, and
+.P1
+if (!x) ...
+if (x == 0) ...
+if (x == "") ...
+.P2
+are all true.  But note that
+.P1
+if (x == "0") ...
+.P2
+is false.
+.PP
+The type of a field is determined by context
+when possible; for example,
+.P1
+$1++
+.P2
+clearly implies that
+.UL $1
+is to be numeric, and
+.P1
+$1 = $1 "," $2
+.P2
+implies that
+.UL $1
+and
+.UL $2
+are both to be strings.
+Coercion will be done as needed.
+.PP
+In contexts where types cannot be reliably determined, e.g.,
+.P1
+if ($1 == $2) ...
+.P2
+the type of each field is determined on input.
+All fields are strings; in addition,
+each field that contains only a number
+is also considered numeric.
+.PP
+Fields that are explicitly null have the string
+value
+.UL \&"" ;
+they are not numeric.
+Non-existent fields (i.e., fields past
+.UL NF )
+are treated this way too.
+.PP
+As it is for fields, so it is for array elements
+created by
+.UL split() .
+.PP
+Mentioning a variable in an expression causes it to exist,
+with the value
+.UL \&""
+as described above.
+Thus, if
+.UL arr[i]
+does not currently exist,
+.P1
+if (arr[i] == "") ...
+.P2
+causes it
+to exist with the value
+.UL \&""
+and thus the
+.UL if
+is satisfied.
+The special construction
+.P1
+if (i in arr) ...
+.P2
+determines if
+.UL arr[i]
+exists without the side effect of creating it if it does not.
+.sp100
+.SH
+Appendix B:  A Summary of New Features
+.PP
+This appendix summarizes the new features that have been added to
+.IT awk
+for the \*d release.
+.PP
+Regular expressions may be created dynamically
+and stored in variables.
+The field separator
+.UL FS
+may be a regular expression,
+as may the third argument of
+.UL split() .
+.PP
+Functions have been added.
+The declaration is
+.P1
+func \f2name\fP(\f2arglist\fP) { \f2body\fP }
+.P2
+Scalar arguments are passed by value,
+arrays by reference.
+Within the body, parameters are locals;
+all other variables are global.
+.P1
+return \f2expr\fP
+.P2
+returns a value to the caller;
+a plain
+.UL return
+returns without a value, as does falling off the end.
+.PP
+.UL getline
+for multiple input sources:
+.P1
+getline
+.P2
+sets 
+.UL $0 ,
+.UL NR ,
+.UL FNR ,
+.UL NF
+from the next input record.
+.P1
+getline x
+.P2
+sets
+.UL x
+from next input record, sets
+.UL NR
+and
+.UL FNR ,
+but
+.ul
+not
+.UL $0
+and
+.UL NF .
+.P1
+getline <"file"
+.P2
+sets
+.UL $0
+from
+.UL "file" ,
+sets
+.UL NF ,
+but not
+.UL NR
+or
+.UL FNR .
+.P1
+getline x <"file"
+.P2
+sets
+.UL x
+from
+.UL file ;
+it has no effect on
+.UL $0 ,
+.UL NR ,
+.UL NF ,
+etc.
+.P1
+"command" | getline
+.P2
+is like
+.UL getline
+.UL <"file" ,
+and
+.P1
+"command" | getline x
+.P2
+is like
+.UL getline
+.UL x
+.UL <"file" .
+.PP
+Command-line arguments are accessible,
+in 
+.UL ARGV[0]
+.IT ...
+.UL ARGV[ARGC-1] .
+These may be altered or augmented at will;
+the remaining non-null arguments are used as the
+normal filenames.
+.PP
+New built-in functions include
+.P1
+close(\f2filename\fP)
+rand()\f1,\fP srand(\f2expr\fP)
+sin(\f2expr\fP)\f1,\fP cos(\f2expr\fP)\f1,\fP atan2(\f2expr\fP,\f2expr\fP)
+sub(\f2reg\fP,\f2repl\fP,\f2target\fP)\f1,\fP gsub(\f2reg\fP,\f2repl\fP,\f2target\fP)
+system(\f2command-line\fP)
+.P2
+.PP
+The exponentiation operator
+.UL ^
+and the corresponding assignment operator
+.UL ^=
+have been added.
+.PP
+The condition
+.P1
+i in array
+.P2
+tests whether
+.UL array
+has a subscript of value
+.UL i
+without creating it.
+.PP
+The
+.UL delete
+statement deletes an array element.
+.PP
+The variable
+.UL FNR
+is the record number in the current input file;
+the test
+.UL FNR==1
+succeeds at the first record of each new file.
+.PP
+C string escapes like
+.UL \ef ,
+.UL \eb ,
+.UL \er ,
+and
+.UL \e123
+work as in C.
+.PP
+.UL BEGIN ,
+.UL END
+and
+.UL func
+declarations may be intermixed with other patterns
+in any order.
+.PP
+Source lines are now continued after commas,
+.UL ||
+and
+.UL && ;
+other contexts still require an explicit
+.UL \e .
+.ix line continuation
+.SH
+Limited Warranty
+.PP
+.ix warranty
+There is no warranty of merchantability nor any warranty
+of fitness for a particular purpose nor any other warranty,
+either express or implied, as to the accuracy of the
+enclosed materials or as to their suitability for any
+particular purpose.  Accordingly, the Awk Development
+Task Force assumes no responsibility for their use by the
+recipient.   Further, the Task Force assumes no obligation
+to furnish any assistance of any kind whatsoever, or to
+furnish any additional information or documentation.

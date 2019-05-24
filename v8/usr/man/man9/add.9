@@ -1,0 +1,146 @@
+.TH ADD 9.3
+.SH NAME
+add, sub, mul, div, eqpt, eqrect, inset, muldiv, ptinrect, raddp, rsubp, rectXrect, rectclip \- arithmetic on points and rectangles
+.SH SYNOPSIS
+.B #include <jerq.h>
+.PP
+.B Point add(p, q)
+.B Point p, q;
+.PP
+.B Point sub(p, q)
+.B  Point p, q;
+.PP
+.B Point mul(p, a)
+.B  Point p; int a;
+.PP
+.B Point div(p, a)
+.B  Point p; int a;
+.PP
+.B int eqpt(p, q)
+.B  Point p, q;
+.PP
+.B int eqrect(r, s)
+.B  Rectangle r, s;
+.PP
+.B Rectangle inset(r, n)
+.B  Rectangle r; int n;
+.PP
+.B int muldiv(a, b, c)
+.B  int a, b, c;
+.PP
+.B int ptinrect(p, r)
+.B  Point p; Rectangle r;
+.PP
+.B Rectangle raddp(r, p)
+.B  Rectangle r; Point p;
+.PP
+.B Rectangle rsubp(r, p)
+.B  Rectangle r; Point p;
+.PP
+.B int rectXrect(r, s)
+.B  Rectangle r, s;
+.PP
+.B int rectclip(rp, s)
+.B Rectangle *rp, s;
+.SH DESCRIPTION
+.I Add
+returns the Point sum of its arguments:
+.RI ( p.x + q.x ,
+.IR p.y + q.y ).
+.I Sub
+returns the Point difference of its arguments:
+.RI ( p.x \- q.x ,
+.IR p.y \- q.y ).
+.I Mul
+returns the Point
+.RI ( p.x * a ,
+.IR p.y * a ).
+.I Div
+returns the Point
+.RI ( p.x / a ,
+.IR p.y / a ).
+.PP
+.I Eqpt
+and
+.I eqrect
+return the equality of their arguments:
+0
+if unequal,
+1
+if equal.
+Two
+Points
+or
+Rectangles
+are equal if their corresponding coordinates are equal.
+.PP
+.I Inset
+returns the Rectangle
+.RI ( r.origin.x+n ,
+.IR r.origin.y+n ,
+.IR r.corner.x\-n ,
+.IR r.corner.y\-n ).
+The following code creates a clear rectangle
+.I r
+with a 2-dot wide border
+.ul
+inside
+.IR r :
+.nf
+.IP
+rectf(&display, r, F_OR);
+rectf(&display, inset(r, 2), F_CLR);
+.fi
+.PP
+.I Muldiv
+is a macro that returns the 16-bit result
+.RI ( a*b ) / c ,
+with
+.RI ( a*b )
+calculated to 32 bits, so
+no precision is lost.
+.I Muldiv
+is convenient for calculating transformations.
+.PP
+.I Ptinrect
+returns 1 if
+.I p
+is a point within
+.IR r ,
+and 0 otherwise.
+.PP
+.I Raddp
+returns the Rectangle
+.RI ( add ( r.origin ,
+.IR p ),
+.IR add ( r.corner ,
+.IR p ));
+.I rsubp
+returns the Rectangle
+.RI ( sub ( r.origin ,
+.IR p ),
+.IR sub ( r.corner ,
+.IR p )).
+.PP
+.I RectXrect
+returns 1 if
+.I r
+and
+.I s
+share any point; 0 otherwise.
+.PP
+.I Rectclip
+clips in place
+the Rectangle pointed to by
+.I rp
+so that it is completely contained within
+.IR s .
+The return value is 1 if any part of
+.RI * rp
+is within
+.IR s .
+Otherwise, the return value is 0 and
+.RI * rp
+is unchanged.
+.SH SEE ALSO
+types(9.5)

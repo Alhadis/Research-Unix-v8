@@ -1,0 +1,77 @@
+		/* ctrace() */
+		if (adrflg) {
+			frame=adrval;
+			word=sget((ADDR)adrval+6,CORF|DATASP);
+			if (word&0x2000) { /* 'calls', can figure out argp */
+				argp=adrval+20+((word>>14)&3);
+				word &= 0xFFF;
+				while (word) {
+					if (word&1)
+						argp+=4;
+					word>>=1;
+				}
+			} else { /* 'callg', can't tell where argp is */
+				argp=frame;
+			}
+			callpc=atow(aget(frame+16,CORF|DATASP));
+		} else {
+			argp= (ADDR)rtow(rget(AP));
+			frame= (ADDR)rtow(rget(FP));
+			callpc= (ADDR)rtow(rget(PC));
+		}
+		lastframe=0;
+		ntramp = 0;
+		while (cntval--) {
+			char *name;
+			chkerr();
+			if (callpc > 0x80000000 - 0x200 * UPAGES) {
+				name = "sigtramp";
+				ntramp++;
+			} else {
+				ntramp = 0;
+				findsym((WORD)callpc,ISYM);
+				if (cursym &&
+				    !strcmp(cursym->n_un.n_name, "start"))
+					break;
+				if (cursym)
+					name = cursym->n_un.n_name;
+				else
+					name = "?";
+			}
+			printf("%s(", name);
+			narg = cget(argp,CORF|DATASP);
+			if (narg&~0xFF)
+				narg=0;
+			for (;;) {
+				if (narg==0)
+					break;
+				printf("%R", lget(argp += 4, CORF|DATASP));
+				if (--narg!=0)
+					printc(',');
+			}
+			printf(") from %X\n",callpc);  /* jkf mod */
+
+			if (modif=='C') {
+				while (localsym(frame,argp)) {
+					word=lget(localval,CORF|DATASP);
+					printf("%8t%s:%10t", cursym->n_un.n_name);
+					if (errflg) {
+						prints("?\n");
+						errflg=0;
+					} else {
+						printf("%R\n",word);
+					}
+				}
+			}
+			if (ntramp == 1)
+				callpc=atow(aget(frame+64, CORF|DATASP));
+			else
+				callpc=atow(aget(frame+16, CORF|DATASP));
+			argp=atow(aget(frame+8, CORF|DATASP));
+			lastframe=frame;
+			frame=atow(aget(frame+12, CORF|DATASP))&EVEN;
+			if (frame==0 || (!adrflg && !INSTACK(frame)))
+				break;
+		}
+		break;
+

@@ -1,0 +1,103 @@
+.TH CPP 8
+.SH NAME
+cpp \- C language preprocessor
+.SH SYNOPSIS
+.B /lib/cpp [
+option ...
+.B ]
+.B [
+ifile
+.B [
+ofile
+.B ] ]
+.SH DESCRIPTION
+.I Cpp\^
+interprets control lines (marked with `#') for
+.IR cc (1)
+and other compilers.
+The input,
+.I ifile,
+and output,
+.I ofile,
+default to standard input and standard output respectively.
+.PP
+The options are:
+.TP
+.B \-P
+Do not place `#line' indications on the output.
+.TP
+.B \-C
+Do not remove comments.
+.TP
+.BI \-U name\^
+.PD 0
+.TP
+.BI \-D name\^
+.TP
+.BI \-D name=def\^
+.TP
+.BI \-I dir\^
+Same as in
+.IR cc (1).
+.B \-U 
+overrides
+.BR \-D .
+.PD
+.TP
+.B \-M
+Pass modification date with file names, in the form \fIfile@modtime\fP,
+where modtime is the integer number of seconds since the epoch.
+.TP
+.B \-T
+Truncate preprocessor symbols to eight characters.
+.PP
+The name
+`_\^\^_\s-1LINE\s+1_\^\^_'
+is the current line number in the input file,
+`_\^\^_\s-1FILE\s+1_\^\^_'
+is the file name.
+The line number and (optionally) the file name may be set by
+.IP
+.B #line
+.I integer-constant
+.BI """ filename """
+.LP
+These symbols are also predefined in various implementations:
+.PD 0
+.RS 
+.TP "\w'UNIX system: 'u"
+operating system:
+ibm, gcos, os, tss, unix
+.TP
+hardware:
+interdata, pdp11, u370, u3b, u3b5, vax
+.TP
+\s-1UNIX\s+1 system:
+.SM RES\*S,
+.SM RT
+.TP
+\fIlint\fR(1):
+lint
+.RE
+.PD
+.PP
+Any number of blanks and tabs are allowed between the
+initial `#' and the control directive.
+.PP
+A builtin function
+.RI `defined( name )'
+or
+.RI `defined " name" '
+may be used in constant expressions within a
+.B #if
+control lines to test whether
+.I name
+is defined.
+.PP
+Preprocessor formal parameters are recognized withing
+quoted strings in the replacement text.
+When comments are removed, they are replaced by null strings;
+this unofficial feature makes it possible to construct
+identifiers by concatenation.
+.SH FILES
+/usr/include	standard directory for include files

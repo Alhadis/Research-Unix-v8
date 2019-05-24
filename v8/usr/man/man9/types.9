@@ -1,0 +1,151 @@
+.TH TYPES 9.5
+.SH NAME
+Word, Point, Rectangle, Bitmap, Texture, Pt, Rect, Rpt, display, Drect, Jrect \- basic jerq graphics data types
+.SH SYNOPSIS
+.B #include <jerq.h>
+.PP
+.B typedef int Word;
+.br
+.B typedef struct Point Point;
+.br
+.B typedef struct Rectangle Rectangle;
+.br
+.B typedef struct Bitmap Bitmap;
+.br
+.B typedef struct Texture Texture;
+.PP
+.B extern Bitmap display;
+.br
+.B extern Rectangle Drect, Jrect;
+.PP
+.B Point Pt(x, y)
+.B int x, y;
+.PP
+.B Rectangle Rect(x0, y0, x1, y1)
+.B int x0, y0, x1, y1;
+.PP
+.B Rectangle Rpt()
+.B Point p0, p1;
+.SH DESCRIPTION
+A
+.I Word
+is a 32-bit integer, and is the unit of storage used in the graphics software.
+.PP
+A
+.I Point
+is a location in a
+.I Bitmap
+(see below),
+such as the display, and is defined as:
+.nf
+.IP
+typedef struct Point {
+	short x;
+	short y;
+} Point;
+.fi
+.PP
+The coordinate system has
+.I x
+increasing to the right and
+.I y
+increasing down.
+All objects and operators in the graphics live in the same coordinate space
+\(em that of the display bitmap.
+.PP
+A
+.I Rectangle
+is a rectangular area in a
+.IR Bitmap .
+.nf
+.IP
+typedef struct Rectangle {
+	Point origin;	/* upper left */
+	Point corner;	/* lower right */
+} Rectangle;
+.fi
+.PP
+By definition,
+.IR origin.x <= corner.x
+and
+.IR origin.y <= corner.y .
+By convention, the right (maximum x) and bottom (maximum y) edges are
+excluded from the represented rectangle, so abutting rectangles have no
+points in common.  Thus,
+.I corner
+is the coordinates of the first point beyond the rectangle.
+The image on the display is contained in the
+.I Rectangle
+.IR "{0, 0, XMAX, YMAX}" ,
+where
+.IR XMAX =800
+and
+.IR YMAX =1024.
+.PP
+A
+.I Bitmap
+holds a rectangular image, stored in contiguous memory starting at
+.IR base .
+.nf
+.IP
+typedef struct Bitmap {
+	Word	*base;		/* pointer to start of data */
+	unsigned width;		/* width in Words of total data area */
+	Rectangle rect;		/* rectangle in data area, screen coords */
+} Bitmap;
+.fi
+.PP
+Each
+.I width
+.IR Word s
+of memory form a scan-line of the image, and
+.I rect
+defines the coordinate system inside the
+.IR Bitmap :
+.I rect.origin
+is the location in the
+.I Bitmap
+of the upper-leftmost point in the image.
+The coordinate system is arranged so
+.I x
+positions equal to 0 mod 16
+are in the leftmost bit of a
+.IR Word .
+.PP
+A
+.I Texture
+is a 16\(mu16 dot bit pattern.
+.nf
+.IP
+typedef struct {
+	Word bits[16];
+} Texture;
+.fi
+.PP
+.IR Texture s
+are aligned to absolute display positions,
+so adjacent areas colored with the same
+.I Texture
+mesh smoothly.
+.PP
+The functions
+.IR Pt ,
+.I Rect
+and
+.I Rpt
+construct geometrical data types from their components.
+Since they are implemented as macros, they only work
+in function argument lists.
+.PP
+The global
+.I display
+is a
+.I Bitmap
+describing the display area of the process.
+.I Drect
+is a Rectangle defining, in screen coordinates,
+the display area available to the program (inside the layer's border).
+.I Jrect
+is the Rectangle
+.RI { 0 ,\  0 ,
+.IR XMAX ,\  YMAX }.

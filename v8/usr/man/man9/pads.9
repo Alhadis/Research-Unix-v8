@@ -1,0 +1,83 @@
+.TH PADS 9.5
+.SH NAME
+pads \- user interface package
+.SH DESCRIPTION
+.I Pads
+is a user interface package for browser-like applications.
+Interaction with its multiple windows is modeled after
+.IR jim (9.1).
+.PP
+.B Mouse
+.br
+The left button points.
+Pointing at a window makes it current, with a heavy border;
+pointing at a line makes it current, inverts its video,
+and moves it to the middle of the window.
+The scroll bar at the left of each window shows how
+much of the text of a window is visible;
+pointing into the scroll region controls what text is displayed.
+The middle button menu has operations that apply to the current line.
+Operations above the ~~~~~ separator are specific to each line;
+operations below the separator are generic line operations:
+.TP 0.75i
+.B cut
+removes the line.
+.TP
+.B sever
+removes the line and all lines above it.
+.TP
+.B fold 
+folds a line that is wider than its window, so all of it appears.
+.TP
+.B truncate
+truncates a wide line at the right, so it occupies only one physical line.
+.LP
+The right button menu has window-level operations, and is in three parts.
+Below the lower separator is a list of all the available windows;
+selecting one makes it current.
+They appear in front-to-back screen order, current at the top.
+Operations above the upper separator are specific to each window;
+operations between the separators are generic window operations:
+.TP 1.5i
+.B reshape, move, close
+the usual.
+.TP
+.B fold, truncate
+apply to all the lines in the window.
+.LP
+.PP
+.B Keyboard
+.br
+Keyboard characters accumulate at the bottom of the layer.
+If the current line accepts input, it flashes with each keystroke;
+otherwise, if the current window accepts input, its border flashes.
+Carriage return is ignored until a line or window
+accepts the text, whereupon
+the input line is sent to the line or window.
+The ESC key substitutes the
+.IR mux (9.1)
+global snarf buffer.
+If the first character of a line from the keyboard is <,
+the remainder is interpreted as a shell command;
+each line of its standard output is sent to the line or window.
+Each line or window that accepts keyboard input produces
+some help in response to ?.
+.PP
+.B Cursor Icons
+.TP 1.5i
+.B arrow-dot-dot-dot
+the host is completing an operation; the terminal is ready
+.I asynchronously.
+.TP
+.B exclamation mark
+confirm a dangerous menu selection by pressing that menu's button again.
+.PP
+.B The Hard Part
+.br
+Remember that the middle button operates on lines and the right button
+operates on windows.
+In many cases, both menus are useful, but you can see only one at a time.
+.SH SEE ALSO
+.PP
+.I Pads Programming Guide
+by T. A. Cargill

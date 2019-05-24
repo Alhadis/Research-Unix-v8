@@ -1,0 +1,36 @@
+.TH LAST 1 
+.SH NAME
+last \- report recent logins
+.SH SYNOPSIS
+.B last
+[ userid ... ] [ terminal ]
+.SH DESCRIPTION
+.I Last
+reports logins and logouts in reverse chronological order.
+Optional arguments restrict attention to selected userids or
+terminals.
+Terminals `tty0, tty1, ...' may be abbreviated `0, 1, ...'
+.PP
+.I Last
+reports userid, terminal,
+time on, and time off.
+A pseudo-user, `reboot',
+logs in at reboots of the system, thus
+.IP
+last reboot
+.LP
+reports recent reboots.
+.PP
+Upon interrupt,
+.I last
+tells how far back it has looked;
+upon quit (control-\e) it tells how far and keeps on looking.
+.SH FILES
+.DT
+/usr/adm/wtmp		login data base
+.SH SEE\ ALSO
+who(1), wtmp(5), ac(8)
+.SH BUGS
+Because the accounting file does not distinguish orderly shutdowns
+from crashes, neither does 
+.I last.

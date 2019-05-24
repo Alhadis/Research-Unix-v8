@@ -1,0 +1,88 @@
+.TH WRITE 1 
+.SH NAME
+write  \-  write to other users
+.SH SYNOPSIS
+.B write
+person ...
+.SH DESCRIPTION
+.I Write
+copies lines from your terminal to terminals of other 
+.I persons
+designated either by login name or
+(to circumvent occasional ambiguities) by terminal name
+as given by
+.IR who (1).
+It announces to each
+.I  person 
+your login name, your terminal,
+and the other
+.I persons.
+To respond, each recipient should execute a corresponding
+.I write
+to the
+.I  persons 
+he wants to talk to.
+.PP
+When you are writing to more than one person, your
+messages are identified to the recipients.
+Writing ends upon end of file or interrupt,
+and the message `EOF' is sent to the others.
+.PP
+.I Write
+recognizes certain commands during a conversation:
+.TP 10
+.BI ! cmd
+Execute a shell on the string
+.I cmd
+and then return to
+.IR write .
+.TP 10
+.BI :a " person"
+Add
+.I person
+to the list of people to whom you are talking,
+and send an appropriate announcement to all parties.
+They must do
+.B :a
+for themselves if they want to include the new person.
+.TP 10
+.BI :d " person"
+Drop
+.I person
+from your list and make appropriate announcements.
+.TP 10
+.B :l
+Print a list of people to whom you are talking.
+.PP
+The following protocol is suggested for using
+.IR write :
+when you first write to another user, wait for him to
+write back before starting to send.
+Each party should end each message with a distinctive
+signal\(em\fB(o)\fR
+for `over' is conventional\(emthat the other may reply.
+.B (oo)
+for `over and out' is suggested when conversation
+is about to be terminated.
+.PP
+Permission to write may be denied or granted by 
+.IR mesg (1).
+Normally writing is allowed.
+Certain commands, in particular
+.I nroff
+and
+.IR  pr (1)
+disallow
+messages in order to prevent messy output.
+.SH FILES
+/etc/utmp	to find user
+.br
+/bin/sh		to execute `!'
+.SH "SEE ALSO"
+mesg(1), who(1), mail(1)
+.SH BUGS
+Messages ought to be identified when the recipient is receiving from
+more than one writer, rather than when the writer is sending
+to more than one recipient,
+but that requires cooperating processes and isn't
+worth the effort.

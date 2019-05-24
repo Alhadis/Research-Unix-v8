@@ -1,0 +1,59 @@
+.TH PACK 1
+.SH NAME
+pack, pcat, unpack \- compress and expand files
+.SH SYNOPSIS
+.B pack
+[
+.B \-
+]
+file ...
+.PP
+.B pcat
+[ file ] ...
+.PP
+.B unpack
+file ...
+.SH DESCRIPTION
+.I Pack
+attempts to compress the
+.I files
+and places the results in
+corresponding files named
+.IB file .z 
+with the same access modes, dates, and owner as the originals.
+Successfully packed files are removed.
+.PP
+.I Unpack
+reverses the process.
+.PP
+.I Pcat
+unpacks files to the standard output by analogy with
+.IR cat (1).
+.PP
+The 
+.B .z
+suffix may be omitted from the name of the
+input file for
+.I unpack 
+or
+.I pcat.
+.PP
+.I Pack
+encodes individual characters in a Huffman code.
+Option
+.BR \- 
+causes statistics of the encoding to be printed.
+The option toggles on and off at each appearance among the
+list of
+.I files.
+.SH DIAGNOSTICS
+The return value of 
+.I pack,
+.I unpack,
+or
+.I pcat
+is the number of files it failed to process.
+No packing happens when the input can't be read
+or appears to be packed already,
+the output file name exists or is too long or can't be created,
+or the input has links or is a directory.

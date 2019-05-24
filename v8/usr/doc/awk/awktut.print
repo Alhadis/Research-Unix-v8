@@ -1,0 +1,4 @@
+tbl awktut | eqn | troff -ms >foo.tut 2>foo.index
+/usr/bwk/bin/index foo.index >foo.index1
+troff -ms awkindex foo.index1 >foo.tut1
+echo output in foo.tut and foo.tut1

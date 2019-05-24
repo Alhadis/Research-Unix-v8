@@ -1,0 +1,73 @@
+.TH MENUHIT 9.3
+.SH NAME
+menuhit \- present user with menu and get selection
+.SH SYNOPSIS
+.B #include <jerq.h>
+.PP
+.B int menuhit(m, n)
+.br
+.B Menu *m; int n;
+.SH DESCRIPTION
+.I Menuhit
+presents the user with a menu specified by the Menu pointer
+.I m
+and returns an integer indicating the selection made,
+or
+\-1
+for no selection.
+The integer
+.I n
+specifies which button to use for the interaction: 1, 2 or 3.
+.I Menuhit
+assumes that the button is already depressed when it is called.
+The user makes a selection by lifting the button when the cursor
+points at the desired selection;
+lifting the button outside the menu indicates no selection.
+.PP
+Menus can be built in two ways, either as an array of
+strings or with a generator function:
+.nf
+.IP
+char *menutext[]={"Item 0", "Item 1", "Item 2", 0};
+Menu stringsmenu={ menutext };
+.PP
+or
+.IP
+char *menugen();
+Menu genmenu={ (char **)0, menugen };
+.fi
+.PP
+The generator function is passed an integer parameter
+.IR n ,
+and must return the string for the
+.IR n 'th
+menu entry, or 0 if
+.I n
+is beyond the number of entries in the menu.
+.PP
+Regardless of the method of generation, characters with the 0200 bit
+set are regarded as fill characters.
+For example, the string "\e240X" will appear in the menu as a right-justified X.
+Menu strings without fill characters are drawn centered in the menu. 
+.PP
+Here is an example, using the list-of-strings
+.I menu
+defined above:
+.nf
+.IP
+switch(menuhit(&stringsmenu, 3)){	/* Use right button */
+	case 0:
+		item_0();
+		break;
+	case 1:
+		item_1();
+		break;
+	case 2:
+		item_2();
+		break;
+	case \-1:
+		noselection();
+		break;
+}
+.fi
+.PP

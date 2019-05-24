@@ -1,0 +1,16 @@
+PATH=/bin:/usr/bin
+case $1 in
+-T*)	t=$1
+	shift ;;
+*)	t=-T$TERM
+esac
+case $t in
+-Thp|-T2621) exec hpplot $* ;;
+-Tramtek) exec ramtek $* ;;
+-Ttroff) exec trplot $* ;;
+-Tpen) exec penplot $* ;;
+-Ttek|-T4010|-T4014|-T)	exec tek $* ;;
+-Tblit)	exec /usr/blit/bin/jplot $* ;;
+-T5620|-Tjerq) exec /usr/jerq/bin/jplot $*;;
+*)  echo plot: terminal type $t not known 1>&2; exit 1
+esac

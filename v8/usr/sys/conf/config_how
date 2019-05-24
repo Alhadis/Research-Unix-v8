@@ -1,0 +1,48 @@
+config makes the following files for each system:
+	conf.c
+	ioconf.c
+	ubglue.s
+	makefile
+	zillions of header files
+
+to build a system from scratch,
+	mkdir /usr/sys/sysname
+	cd /usr/sys/sysname
+	(create a machine description in `conf')
+	/etc/config
+	make
+
+to change a configuration, edit `conf,' run /etc/config, and make.
+
+to add a piece to the system:
+put the filename in conf/files, with appropriate annotations (device-driver,
+pseudo-device, optional, and all that).
+if it's a device driver, line discipline, or filesystem handler, add an
+entry to conf/devices as well.
+if you just want to test things, addenda to `files' and `devices' can be
+put in /usr/sys/sysname; they'll be treated as if appended to the ones in
+/usr/sys/conf.
+
+the fields in devices are
+	[standard] typeofthing
+		typeofthing is (character) device, block-device, stream-device,
+		file-system, line-discipline.
+	major device number (or filesystem number, or line discipline number)
+	driver name.  the one you use in the conf file, and in conf/files.
+	driver routine prefix.  see below.
+	entry points:
+		for a block device, some of open close strategy B_TAPE
+			(the last puts B_TAPE into d_flags in bdevsw)
+		for a character device, open close read write ioctl reset
+		for a stream device or a line discipline, info
+		for a filesystem, put get free updat read write trinc stat nami mount ioctl
+entry points are catenated with the prefix.  example:
+device 13		up	up	read write reset
+defines device up:
+major character device 13
+has entry points named upread upwrite upreset
+
+default entry points are generally `nodev'.
+exceptions: open close default to `nulldev,' except for stream devices.
+reset defaults to nulldev always.
+info (obviously) defaults to NULL.

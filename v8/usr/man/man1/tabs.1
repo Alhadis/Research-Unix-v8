@@ -1,0 +1,25 @@
+.TH TABS 1 
+.SH NAME
+tabs \- set terminal tabs
+.SH SYNOPSIS
+.B tabs
+[
+.BR +m num
+] [
+.BR \-T term
+]
+.SH DESCRIPTION
+.I Tabs
+sets the tabs on a variety of terminals.
+.I Term
+is a name given in
+.IR term (7).
+The name may also be supplied by the environment variable TERM.
+.PP
+The
+.BI + n
+option offsets the left margin
+.I n 
+positions.
+.SH SEE ALSO
+stty(1), term(7), tset(1)

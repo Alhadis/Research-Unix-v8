@@ -1,0 +1,27 @@
+./orig		originals of things that have changed
+./unused	junk we're not using
+./samples	examples of some of the data files
+./doc		administrators manual and other docn
+./man		manual pages
+./init		useful stuff for very first installation
+
+to install things, first read the manuals in ./doc, but take them with
+a grain of salt
+
+our convention is that user uucp group bin owns things.
+if you don't like that, change the makefile and the several shell scripts.
+
+to build the binaries: make.
+what's here is configured for acus (only).
+if you want datakit (or anything else), change parms.h and Makefile;
+the paper in ./doc should be accurate about that.
+
+to install things:
+su to root
+mkdir /usr/spool/uucp
+cd /usr/spool/uucp
+/usr/src/cmd/uucp/init/setspool
+if you have old uucp data files (L.sys &c) in /usr/lib/uucp,
+cd /usr/lib/uucp; /usr/src/cmd/uucp/init/setlib
+
+then make install (still as root so permissions come out right)

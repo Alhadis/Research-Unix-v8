@@ -1,0 +1,211 @@
+.TH PROC 4 
+.SH NAME
+/proc \- process file system
+.SH SYNOPSIS
+.B #include <sys/proc.h>
+.br
+.B #include <sys/pioctl.h>
+.SH DESCRIPTION
+.I Proc
+is a file-system mount point that provides access to the image of each
+running process in the system.
+The name of each entry in the
+.I /proc
+directory is a five-digit decimal number corresponding to the process
+id.
+The owner of each `file' is determined by the process's user-id;
+only the owner is granted access permissions (and only if the process'
+text file is readable).
+The size of a file is
+the total virtual memory size of the process.
+.PP
+The standard system-call interface is used to access
+.I proc.
+.IR Open (2)
+and
+.IR close (2)
+behave as usual.
+The object process is unaffected, except that setuid bits
+will be ignored if an opened process
+.IR exec "'s."
+(Setuid bits are also ignored if the
+.IR exec "'ing"
+process has traced signals, or stops on
+.IR exec ;
+see the description of PIOCSMASK and PIOCSEXEC below.)
+Data may be transferred
+from or to any locations in the object's address space through
+.IR lseek (2),
+.IR read (2),
+and
+.IR write (2).
+The
+.I text segment
+begins at virtual address 0; the
+.I data segment
+starts above the text.
+The
+.I user area
+extends downward below virtual address 0x80000000, and is
+UPAGES*NBPG bytes long; the
+.I stack segment
+grows downward below the user area.
+Between the end of the data and
+the beginning of the stack lies no-man's land.
+The text, data, and stack sizes
+may be determined from the process' proc structure (see below).
+There are two differences from reading and writing ordinary files:
+(1) no i/o transfer may span a segment boundary;
+(2) the user area is writable only in the locations of saved user registers.
+.PP
+Several process control actions are available through an
+.IR ioctl (2)
+of the form
+.IP "" "\w'PIOCSMASK  'u"
+union { struct proc p; long i; } buffer;
+.br
+retval = ioctl(fildes, code, &buffer);
+.LP
+The possible
+.I codes
+are as follows:
+.TP "\w'PIOCSMASK  'u"
+PIOCGETPR
+copies the object's proc structure from the kernel process table
+into
+.I buffer.p.
+Since this information resides in system space, it is not accessible
+via a normal read.
+.TP
+PIOCSTOP
+sends the signal SIGSTOP to the object, and waits for it to
+enter the stopped state.
+.TP
+PIOCWSTOP
+simply waits for the object to stop.
+.TP
+PIOCRUN
+makes the object runnable again after a stop.
+.TP
+PIOCSMASK
+defines (via the bit mask
+.IR buffer.i )
+a set of signals to be
+.IR traced "; i.e.,"
+the arrival of such a signal will cause the object to stop.
+(The signal numbered
+.I n
+is specified by the bit
+.RI "1<<(" n "\-1).)"
+A mask of zeroes turns off the trace.
+The traced state and mask bits are inherited by the child of a
+.IR fork (2).
+When the object is closed, the mask bits are lost, but
+the traced state is retained for side effects.
+.TP
+PIOCSEXEC
+causes the object to stop after
+.IR exec "'ing."
+This condition is inherited by children and is retained when the
+object is closed.
+.TP
+PIOCREXEC
+reverses the effect of PIOCSEXEC.
+.TP
+PIOCCSIG
+clears the object's currently pending signal (if any).
+.TP
+PIOCKILL
+sends a signal to the process.
+.TP
+PIOCOPENT
+provides, in
+.I retval,
+a read-only file descriptor
+for the object process' text file.
+This allows a debugger to find the
+symbol table without having to know any path names.
+.TP
+PIOCNICE
+increments the object's
+.IR nice (2)
+priority by the amount
+.I buffer.i.
+Only the super user may better a process' priority in this way, but any
+user may make the priority worse.
+.PP
+All system calls are interruptible by signals, so that, for example,
+an
+.IR alarm (2)
+may be set to avoid waiting forever for a process that may never stop.
+Any system call is guaranteed to be atomic with respect to the object,
+but, as with ordinary files, there is nothing to prevent more than one
+process from trying to control the same object.
+.PP
+The following header files are useful in analyzing
+.I proc
+files:
+.PP
+.ta \w'<sys/param.h>    'u
+<signal.h>	list of signal numbers
+.br
+<sys/param.h>	size parameters (e.g., UPAGES, NBPG)
+.br
+<sys/types.h>	special system types
+.br
+<sys/user.h>	user structure
+.br
+<sys/proc.h>	proc structure
+.br
+<sys/reg.h>	locations of saved user registers
+.br
+<sys/pioctl.h>	ioctl codes
+.PP
+As with any file system,
+.I /proc
+must be mounted in order to be used.
+The mount point should be an empty
+directory created with mode 0555; /etc/procmount should then be run
+at boot time.
+(The file system can be unmounted by `/etc/procmount \-u'.)
+.SH FILES
+.ta \w'/proc/\f2nnnn\f1\-\-'u
+/proc	directory (list of active processes)
+.br
+.RI "/proc/" nnnnn "	process image"
+.SH SEE ALSO
+ps(1), hang(1), signal(2), pi(9.1)
+.SH DIAGNOSTICS
+This is a list of errors which can occur in addition to the
+errors normally associated with the file system; see
+.IR intro (2):
+.TP "\w'ENOENT  'u"
+ENOENT
+is returned if the object process has exited after being opened.
+.TP
+EIO
+is returned if I/O is attempted at an illegal address in the object.
+.TP
+EBUSY
+is returned if the object is in the midst of changing virtual memory
+attributes, or has pages locked for physical I/O.
+.TP
+ENOSPC
+is returned if a write is attempted on a shared text segment, but there
+is no room on the swap space to make a copy.
+.TP
+EPERM
+is returned if someone other than the super user attempts to better
+a process' priority by issuing a PIOCNICE.
+.SH BUGS
+A process must be swapped in for reading and writing (but not ioctl);
+this consumes minimal system resources, but may involve a noticeable
+delay.
+.PP
+The spectrum of states which result in the EBUSY error is too
+conservative.
+.PP
+A process loaded from a text file with magic number 0407 does not have
+a read-only text segment; in this (presumably rare) case
+PIOCOPENT does not work, and the process is accessible even if the
+text file is read-only.

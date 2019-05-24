@@ -1,0 +1,60 @@
+.TH GETUID 1
+.SH NAME
+getuid, id \- get user identity
+.SH SYNOPSIS
+.B getuid
+[
+.B \-
+] [
+arguments
+]
+.PP
+.B id
+.SH DESCRIPTION
+.I Getuid
+prints on its standard output information about its invoker,
+based on the effective user id, as presented in the password file.
+With no arguments,
+.I getuid
+prints the login id of its invoker.
+Arguments select which information to print:
+.IP
+.ta \w'passwd  'u
+.nf
+user	login id
+group	group id
+passwd	encrypted password
+uid	numerical user id
+gid	numerical group id
+acct	GCOS account number
+bin	GCOS output bin
+home	home directory
+shell	default shell
+.fi
+.PP
+If the optional
+.B \-
+or more than one argument is present,
+the information is displayed in the form
+.IP
+user=name
+.LP
+as suitable for setting environment variables in the shell.
+.PP
+.I Id
+prints the effective userid and groupid numerically, and, if
+possible, textually
+.SH FILES
+/etc/passwd
+.br
+/etc/group
+.SH "SEE ALSO"
+who(1), getuid(2), passwd(5), sh(1)
+.SH BUGS
+.I Getuid
+reports the default group for the user,
+not the current effective group id.
+.br
+The login id reported is the first one in the password file with
+the correct numerical user id, not necessarily the login
+for the current session.

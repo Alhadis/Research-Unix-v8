@@ -1,0 +1,69 @@
+Read the manual first.  The manual is in /n/bowell/src/cmd/uucp/doc/*.
+
+1.  Copy the new lib directory (this) to a safe place (/usr/lib/nuucp).
+It's probably there already.
+
+2.  Copy any of the following files which should be preserved
+into /usr/lib/nuucp:
+	L.sys* (not L.sysequiv)
+	L.dialcodes
+	L.cmds
+Check them for any junk which can be removed.  In particular, look for
+garbage in L.cmds (pointers to commands which don't exist any more,
+like uusendda and fget), and for out-of-date (pre-1+ dialling) and
+unused L.dialcodes files.  If L.sys.general exists, rename it L.sys.gen. 
+(Systems.general is 15 characters, and namei doesn't like that anymore.)
+
+The next two steps (setlib and setspool) should be performed
+either as root (if uucp and bin are the correct user and group
+for uucp files -- the group will have write permissions), or
+as the appropriate user (in which event some specious `Not owner'
+messages will appear).
+
+3.  cd /usr/lib/nuucp; init/setlib
+This will change old L.* files into new ones: L.sys* -> Systems*;
+L.dialcodes -> Dialcodes; L.cmds (and other stuff) -> Permissions.
+Examine the resulting Permissions file; make sure it includes all
+the user-IDs it should, and that it otherwise satisfies you.
+
+4.  Decide on a temporary new spool directory (/usr/spool/nuucp).
+Create it.  Then
+	cd /usr/spool/nuucp; /usr/lib/nuucp/init/setspool
+This makes some necessary subdirectories, and sets modes and ownership
+on the spool directory and the subdirectories.
+
+Stop being root unless you never make mistakes.
+
+5.  cd /usr/lib/nuucp and browse through uudemon.*, hacking to
+suit.  Pay particular attention to `mailto' in uudemon.day, and
+to the argument to uudemon.cleanu.
+
+6.  You're now ready to install things.  Wait until things are
+quiescent, if that's possible.  (Make them so, or don't complain).
+
+7.  Save the old programs from /usr/bin if you're so inclined
+(convention: create /usr/lib/uucp/usrbin, and put them there).
+Suggestion:
+	mkdir /usr/lib/uucp/usrbin
+	ln /usr/bin/uu* /usr/lib/uucp/usrbin
+
+8.  The real installation:
+	cd /usr/lib; mv uucp ouucp; mv nuucp uucp
+	cd /usr/spool; mv uucp ouucp; mv nuucp uucp
+	cd /usr/bin; rm uucp uux uulog uustat uuname
+	cd /usr/lib/uucp/usrbin; ln * /usr/bin
+	cd /usr/bin; rm uuget uuclean
+
+At this point it might be sensible to run /usr/lib/uucp/uucheck -v,
+which will print out a sort of interpretation of the Permissions
+file, and complain if any important files or directories are missing.
+(It would be better to run it before installing things, but it insists
+on files being in their final places.)
+
+9.  If there's old work sitting around (J. files),
+	cd /usr/spool/ouucp; /usr/lib/uucp/init/cvtwork
+will attempt to move it to the new spool directory and mend its format.
+
+10. After you're sure the new stuff works (you might want to wait a
+day or two),
+	rm -rf /usr/spool/ouucp /usr/lib/ouucp

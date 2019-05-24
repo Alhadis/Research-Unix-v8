@@ -1,0 +1,110 @@
+.TH RAREPL 8
+.SH NAME
+rarepl, rarct \- replace bad blocks on MSCP disks
+.SH SYNOPSIS
+.B /etc/rarct
+[
+.B \-c
+] [
+.B \-h
+]
+special ...
+.br
+.B /etc/rarepl
+special
+lbn ...
+.SH DESCRIPTION
+.I Rarct
+prints status information
+about MSCP disk drives
+(drives such as the RA60 and RA81
+on controllers like the UDA50).
+Normally the replacement table (RCT)
+is listed,
+as lines of the form
+.IP
+rbn:\0flags:\0lbn
+.PP
+where
+.I rbn
+is the replacement block number,
+.I lbn
+is the logical block number
+replaced by
+.IR rbn ,
+and
+.I flags
+are constructed from the following bits:
+.TP
+.PD 0
+01
+alternate (not primary) replacement block
+.TP
+02
+normal, allocated replacement block
+.TP
+04
+this replacement block is bad
+.TP
+010
+this replacement block does not exist
+.PD
+.PP
+Entries whose
+.I flags
+are zero,
+indicating a good,
+unused replacement block,
+are not listed.
+.PP
+The
+.B \-h
+option
+prints some header data
+from the first block of the RCT.
+UNIX makes no use of this info.
+.B \-c
+prints geometry info for the drive.
+Either option
+suppresses
+the RCT listing.
+.PP
+.I Rarepl
+causes logical block
+.I lbn
+on device
+.I dev
+to be marked as bad
+and replaced.
+The nearest available replacement block
+is used.
+The contents of
+.I lbn
+are copied into the replacement block if possible;
+if
+.I lbn
+is unreadable,
+the replacement block
+is initialized with zeroes.
+.PP
+Both programs
+work only
+on the raw devices.
+.I Rarepl
+should be used only
+on a device
+which covers the entire drive
+(usually partition 7).
+.SH SEE ALSO
+ra(4)
+.SH BUGS
+On the UDA50,
+the RCT exists
+only so programs in the host can look at it;
+the controller ignores its contents.
+There is no way to read the controller's `real' forwarding data,
+only a way to set it for a particular block.
+Hence if the RCT is corrupted,
+the disk may still be used,
+but must be reformatted
+before additional bad blocks are remapped.

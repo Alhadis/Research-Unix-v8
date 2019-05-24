@@ -1,0 +1,34 @@
+.TH GETWD 3
+.SH NAME
+getwd, getcwd \- get current directory
+.SH SYNOPSIS
+.B char *getwd(buf)
+.br
+.B char *buf;
+.PP
+.B char *getcwd(buf, size)
+.br
+.B char *buf;
+.SH DESCRIPTION
+Both routines fill
+.I buf
+with a null-terminated string representing the current directory
+and return
+.IR buf .
+A null pointer is returned on an error and
+.I buf
+is filled with a diagnostic.
+.PP
+.I Getwd
+is in the style of 4.2 BSD and
+.I getcwd
+in that of System V.
+If
+.I buf
+is null, this entry will call
+.IR malloc (3)
+to allocate
+.I size
+bytes for the buffer.
+.SH "SEE ALSO
+pwd(1)

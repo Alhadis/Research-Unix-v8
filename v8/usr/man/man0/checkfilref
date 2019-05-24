@@ -1,0 +1,59 @@
+>filref
+>filnam
+for i in man[12345678]
+do
+cd $i
+for j in *
+do
+>junka
+>junkb
+sed -n '
+/FILES/,/SH/{
+	/^\./d
+	s/, */,/g
+	s/[ :(	].*//
+	s/\/\*$//
+	s/,/\
+/g
+	b x
+}
+/`\([a-z0-9.]*\/[a-z0-9./]*\)'"'"'/{
+	s//\1/
+	b x
+}
+/^\.I.* .*\/[^ ]*$/{
+	s/.* //
+	b x
+}
+d
+:x
+s/^</\/usr\/include\//
+s/>$//
+w junka
+s/$/ '"$j"'/
+w junkb
+' $j
+cat junka >>../filnam
+cat junkb >>../filref
+done
+cd ..
+done
+sort -u filnam -o filnam
+sort -u filref -o filref
+e - filnam 2>/dev/null <<!
+g/ /d
+g/./s/\$/ /
+1,\$-15g/./.,.15j
+\$;? .* ?1,.j
+g/^/s//ls -d /
+w junka
+!
+sh junka >junkb
+sed '
+/not found/!d
+s/ .*//
+' junkb >junka
+sed '
+/ .* /d
+/^ /d
+' filref | join - junka

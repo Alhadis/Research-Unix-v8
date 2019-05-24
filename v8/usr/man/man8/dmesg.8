@@ -1,0 +1,62 @@
+.TH DMESG 8
+.SH NAME
+dmesg \- system diagnostic messages
+.SH SYNOPSIS
+.B /etc/dmesg
+[
+.B \-
+]
+[
+.B \-i
+]
+[ core namelist ]
+.SH DESCRIPTION
+.I Dmesg
+looks in a system buffer for recent kernel diagnostic messages
+and reproduces them on the standard output.
+If the
+.B \-
+flag is given,
+.I dmesg
+produces only those messages printed by the system
+since the last time `\fIdmesg\fP\ \-'
+was run.
+This can be used with
+.IR cron (8)
+to produce the error log
+.I /usr/adm/messages
+by running the command
+.IP
+/etc/dmesg \- >> /usr/adm/messages
+.LP
+periodically.
+.PP
+If
+.B \-i
+is given,
+messages produced since the last
+.I "dmesg \-"
+are printed;
+the memory of which messages have been recorded
+is not changed.
+.PP
+If
+.I core
+and
+.I namelist
+are specified,
+they are used in place of
+.I /dev/kmem
+and
+.IR /unix .
+.SH FILES
+.ta 2i
+/usr/adm/messages	error log
+.br
+/usr/adm/msgbuf	scratch file for memory of \- option
+.SH BUGS
+Since the system error message buffer is of small finite size,
+not all error messages
+are guaranteed to be logged.
+.PP
+Error diagnostics generated immediately before a system crash cannot be logged.

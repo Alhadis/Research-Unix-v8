@@ -1,0 +1,44 @@
+.TH STRIP 1 
+.SH NAME
+strip \- remove symbols and relocation bits
+.SH SYNOPSIS
+.B strip
+[
+.B \-s
+] [
+.B \-g
+] [
+.B \-v
+] name ...
+.SH DESCRIPTION
+.I Strip
+removes the symbol
+table and relocation bits ordinarily attached to the output
+of the assembler and loader.
+This is useful to save space after a program has been
+debugged.
+.PP
+If
+.B \-s
+is specified, the symbol table is compressed by removing duplicate structure
+definitions and symbol table entries; no information is lost.
+If
+.B \-g
+is specified, all line-number information is deleted, thus inverting the
+effect of `cc \-g';
+.B \-s
+compression is performed as well. The
+.B \-v
+flag prints out size information.
+If no flags are given,
+.I strip
+removes the symbol table entirely; this
+is the same as use of the
+.B \-s
+option
+of
+.IR ld (1).
+.SH FILES
+shrink?	temporary file
+.SH "SEE ALSO"
+cc(1), ld(1)

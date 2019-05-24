@@ -1,0 +1,64 @@
+.TH DICT 7 bowell
+.SH NAME
+dict \- look up words in English dictionaries
+.SH SYNOPSIS
+.B dict
+[
+.B \-p
+] [ dictionary [ word ] ]
+.SH DESCRIPTION
+.I Dict 
+looks up words in the specified
+.I dictionary.
+Words are read, one per line from the standard input, and
+entries are written on the standard output.
+Characters other than letters, digits, and space are ignored.
+If just one word is to be looked up, it may be given as
+an argument.
+.I Dictionary 
+is one of
+.IP webster "\w'webster  'u"
+Merriam-Webster Collegiate Dictionary, Seventh Edition,
+full text (default)
+.IP web7
+same, words only
+.IP etym[ology]
+inverted index to `webster' by root words
+.IP web2
+Merriam-Webster New International Dictionary, Second Edition,
+unabridged, words only
+.IP oxford
+The Oxford Advanced Learner's Dictionary of Contemporary English,
+full text
+.IP spell
+word list of
+.IR spell (1)
+.IP acro[nym]
+17000 AT&T acronyms
+.PP
+Option
+.B \-p
+finds all entries of which the specified `word' is a prefix.
+This option is ignored for full-text dictionaries.
+.PP
+The dictionaries for
+.I webster, oxford, web7
+and
+.I etymology
+are copyrighted and should not be copied without permission.
+.SH FILES
+.nf
+.ta \w'/usr1/dict/oaldce/*  'u
+/usr1/dict/w7full/*
+/usr1/dict/w7etym
+/usr1/dict/web2
+/usr1/dict/oaldce/*
+/usr/dict/words	spell or web7, depending on machine
+/usr1/dict/acro
+.fi
+.SH SEE ALSO
+look(1)
+.SH BUGS
+In some of the dictionaries, diacriticals are done right \-
+by overstrikes,
+with which few screen terminals can cope.

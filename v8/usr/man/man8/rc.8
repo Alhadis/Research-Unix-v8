@@ -1,0 +1,43 @@
+.TH RC 8
+.SH NAME
+rc \- boot script
+.SH SYNOPSIS
+.B /etc/rc
+.SH DESCRIPTION
+.I Rc
+is the command script
+invoked by
+.IR init (8)
+to control reboots.
+During an automatic reboot,
+.I rc
+is invoked with the argument
+.IR autoboot ;
+typically this invokes
+.I /etc/fsck \-p
+to repair minor filesystem inconsistencies.
+If
+.I rc
+exits with an unsuccessful status,
+.I init
+stops in single-user mode;
+otherwise it proceeds to multi-user.
+.PP
+When the system enters multi-user mode,
+either during an auto-reboot
+or after the single-user shell terminates,
+.I rc
+is invoked without arguments.
+This usually causes it to
+mount filesystems,
+start daemons,
+clear
+.IR /tmp ,
+and perform other housekeeping.
+If this call to
+.I rc
+exits unsuccessfully,
+.I init
+reverts to single-user mode.
+.SH SEE ALSO
+init(8), reboot(8)

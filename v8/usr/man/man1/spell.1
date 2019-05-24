@@ -1,0 +1,76 @@
+.TH SPELL 1 
+.SH NAME
+spell \- find spelling errors
+.SH SYNOPSIS
+.B spell
+[ option ] ...
+[ file ] ...
+.SH DESCRIPTION
+.I Spell
+looks up words from the named
+.I files
+(standard input default)
+in a public spelling list and in a private list.
+Words that occur in neither and are not plausibly derivable
+from words in the public list
+are placed on the standard output.
+.PP
+.I Spell
+ignores most
+.I troff,
+.I tbl,
+.I pic,
+and
+.IR  eqn (1)
+constructions.
+It understands these options:
+.TP
+.B \-b
+check British spelling
+.TP
+.B \-v
+print all words not literally in the spelling list, with
+derivations
+.TP
+.B \-x
+print, marked with `=',
+every stem tried in both stop list and spelling list
+.PP
+The private list, by default $HOME/lib/spelldict, is arranged
+one word per line.
+.PP
+Pertinent auxiliary files may be specified by
+environment variables, indicated below with their
+default settings.
+Copies of all output
+are accumulated in the history file, if it is writable.
+The stop list filters out misspellings (e.g. thier=thy\-y+ier)
+that would otherwise pass.
+.SH FILES
+D_SPELL=/usr/dict/hlist[ab]: hashed public lists, American & British
+.br
+S_SPELL=/usr/dict/hstop: hashed stop list
+.br
+H_SPELL=/usr/dict/spellhist: history file
+.br
+A_SPELL=$HOME/lib/spelldict: private list
+.br
+P_SPELL=/usr/lib/spell: the main routine
+.br
+deroff(1), sort(1), tee(1), comm(1)
+.SH SEE ALSO
+dict(7)
+.SH BUGS
+A malicious opponent can defeat
+.I spell's
+heuristics for word derivation,
+but this rarely happens in practice.
+.br
+The spelling list's coverage is uneven;
+in particular biology, medicine, and chemistry are
+covered very lightly.
+New installations will probably wish to 
+monitor the output for several months to gather
+local additions.
+.br
+British spelling was done by an American.

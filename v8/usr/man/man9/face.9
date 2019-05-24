@@ -1,0 +1,24 @@
+.TH FACE 9.1
+.SH NAME
+face \- show faces on jerq
+.SH SYNOPSIS
+.B face
+machine!user
+file ...
+.SH DESCRIPTION
+.I Face
+displays the 48\(mu48 bit icons specified by its arguments.
+If an argument contains an exclamation mark,
+it is assumed to be a machine and user pair
+and is looked up in the face file system (see
+.IR faced (9.5));
+otherwise it is taken to be a file name.
+If the file does not exist and contains no slashes,
+it is looked up in
+.IR /n/face/48x48x1 .
+.PP
+When
+.IR face 's
+layer is full, it waits for a character to be typed before continuing.
+.SH SEE ALSO
+faced(9.5), icon(9.1), vismon(9.1)

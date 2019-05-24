@@ -1,0 +1,144 @@
+.TH D202 1 
+.SH NAME
+d202, daps, dcan, tc \- phototypesetter filters
+.SH SYNOPSIS
+.B d202
+[ option ] ... [ file ] ...
+.PP
+.B e202
+[ option ] ... [ file ] ...
+.PP
+.B daps
+[ option ] ... [ file ] ...
+.PP
+.B dcan
+[ option ] ... [ file ] ...
+.PP
+.B tc
+[ option ] ... [ file ] ...
+.SH DESCRIPTION
+.I D202
+and its companions print files
+created by
+.IR troff (1)
+on various devices:
+.TP
+.I d202
+Mergenthaler Linotron 202
+.PD0
+.TP
+.I e202
+same,
+with half-tone and extra graphics capability
+.PD0
+.TP
+.I daps
+Autologic APS-5 phototypesetter
+.TP
+.I dcan
+Imagen Canon LBP-10 laser printer,
+.TP
+.I tc
+Tektronix 4014 display
+.PD
+.PP
+If no
+.I file
+is mentioned, the standard input is printed.
+The following options are understood.
+.TP
+.B \-b
+Report whether the typesetter is busy; do not print.
+.TP
+.BI \-o list
+Print pages whose numbers are given in the comma-separated
+.IR list .
+The list contains comma-separated numbers
+.I N
+and ranges
+.IB N1 \- N2.
+A missing 
+.I N1
+means the lowest-numbered page, a missing
+.I N2
+means the highest.
+.TP
+.BI \-s n
+Stop after every 
+.I n
+pages of output.
+(Default 1 on 4014).
+Proceed when the RUN button is pushed on the typesetter,
+(for
+.IR d202 )
+or newline on the terminal (for
+.IR 4014 ).
+.TP
+.B \-t
+Direct output to the standard output instead of the typesetter.
+Don't wait between pages in 
+.I tc.
+.TP
+.B \-w
+Wait for typesetter to become free, then print.
+.TP
+.BI \-f " dir"
+Take font information from
+directory
+.I dir
+instead of the default.
+.TP
+.BI \-p "n"
+Change default precision of dots to
+.IR n 
+to use less precious memory.
+.I Dcan
+only.
+.TP
+.BI \-a "r"
+Set the aspect ratio to
+.I r
+(default
+.IR r =1.5).
+.I Tc
+only.
+.PP
+The
+.I files
+for
+.I daps
+should be prepared under the
+.B \-Taps
+option of
+.IR troff ;
+.I dcan
+and
+.I tc
+are intended as typesetter simulators, and can cope with anything.
+.PP
+While waiting between pages
+.I tc
+accepts
+.BI ! command
+to insert a shell command;
+.BI + n
+to skip forward
+.I n
+pages;
+.BI \- n
+to skip backwards 
+.I n 
+pages;
+.BI a r
+to set the aspect ratio;
+and
+.B ?
+to print the list of available actions.
+.SH FILES
+.nf
+/usr/lib/font/dev202/*	202 description files
+/usr/lib/font/devAPS/*	aps-5 description files
+/usr/lib/font/devcan/*	Canon description and raster character files
+.fi
+.SH SEE ALSO
+troff(1), can(1), proof(9.1), apsend(1)

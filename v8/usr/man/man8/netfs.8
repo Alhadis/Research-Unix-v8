@@ -1,0 +1,90 @@
+.TH NETFS 8
+.SH NAME
+netfs \- network file system
+.SH SYNOPSIS
+.B /usr/net/share.go
+.PP
+.B /usr/net/share
+.PP
+.B /usr/net/fshare
+.PP
+.B /usr/net/pscript
+.SH DESCRIPTION
+The network file system is conventionally a set of directories
+contained in
+.IR /n ,
+and a set of files and programs contained in
+.IR /usr/net .
+.PP
+The connections in the network file system are asymmetric, connecting
+a
+.I client
+and a
+.IR server .
+When the client is connected to the server, the server's file system
+appears in one of the directories in
+.IR /n .
+The client establishes and maintains connections to servers using
+.IR /usr/net/setup ,
+which is started by invoking the shell script
+.I /usr/net/setup.go
+in
+.IR rc (8).
+This program uses the file
+.I /usr/net/friends
+to control the connections to servers.
+Each line in
+.I /usr/net/friends
+contains four fields:
+service name, mount point, unique identifier, and debugging flag.
+The service name is the network name for the server, for instance,
+.I mh/astro/aliceF
+for the server on alice.
+The mount point is the name of the directory on which the remote file
+system is to be mounted, for instance
+.IR /n/alice .
+The unique identifiers can be any integers bigger than the maximum major device number
+of a device in the system, and smaller than 255.
+The simplest practice is to number the lines consecutively starting at 64.
+The debugging flag is usually 0, but can be set to 3 before the connection
+is established to
+cause the server to store copious debugging information in a buffer,
+called
+.IR debugbuf ,
+which can
+be examined using
+.IR pi (9.1).
+.I Setup
+reads the file and attempts to connect to all the servers it is not
+already connected to.
+If the file is changed it will be re-read within 30 seconds.
+Connections are tried every 20 minutes.
+If the connection exists it is tested every 30 seconds, and shut down
+if there is no response to several consecutive probes.
+.PP
+The server program is
+.IR /usr/net/fshare,
+invoked in
+.I /usr/rc
+by
+.IR /usr/net/share.go .
+It runs as super-user.
+It uses a table
+.I /usr/net/people
+to translate permissions between the server and its clients.
+The front of the file explains its format.
+The permission table is maintained by running
+.I pscript
+in the directory
+.IR /usr/net .
+This produces a table by matching login names from the client and
+server password files.
+.SH FILES
+.ta \w'/usr/net/friends  'u
+/n/*	mount points for remote file systems
+.br
+/usr/net/people	userid translation table
+.br
+/usr/net/friends	connection list
+.SH BUGS
+Group permissions are not well mapped.

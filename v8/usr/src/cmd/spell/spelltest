@@ -1,0 +1,29 @@
+P_SPELL=./spellprog
+S_SPELL=./hstop
+D_SPELL=./hlista
+H_SPELL=./spellhist
+export P_SPELL D_SPELL S_SPELL H_SPELL
+trap "rm -f spellhist testdata; exit" 0 1 2 13 15
+rm -f spellhist
+cat >testdata <<!
+Colden
+center
+centre
+underhanded
+!
+echo output should be \"centre\" \"Colden\"
+./spell.sh  <testdata
+echo output should be empty
+A_APELL=testdata ./spell.sh <testdata
+cat spellhist 2>/dev/null
+>spellhist
+echo output should be \"centre\" \"Colden\" \"+under+ed underhanded\"
+./spell.sh -v <testdata
+echo output should be \"centre\" \"Colden\"
+cat spellhist
+echo output should be \"center\" \"Colden\"
+D_SPELL=hlistb ./spell.sh -b <testdata
+echo output should be \"=infer\" \"=infe\" \"=inf\" \"=infer\"
+./spell.sh -x <<!
+infer
+!

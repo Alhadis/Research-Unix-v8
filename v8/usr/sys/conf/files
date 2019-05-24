@@ -1,0 +1,152 @@
+sys/acct.c		standard
+sys/alloc.c		standard
+sys/calloc.c		standard
+sys/clock.c		standard
+sys/fio.c		standard
+sys/iget.c		standard
+sys/ioctl.c		standard
+sys/machdep.c		standard
+sys/main.c		standard
+sys/mp.c		standard
+sys/nami.c		standard
+sys/neta.c		standard
+sys/partab.c		standard
+sys/pipe.c		standard
+sys/prf.c		standard
+sys/proca.c		standard
+sys/rdwri.c		standard
+sys/rmap.c		standard
+sys/sig.c		standard
+sys/slp.c		standard
+sys/streamio.c		standard
+sys/subr.c		standard
+sys/sys1.c		standard
+sys/sys2.c		standard
+sys/sys3.c		standard
+sys/sys4.c		standard
+sys/sysent.c		standard
+sys/text.c		standard
+sys/trap.c		standard
+sys/udiv.s		standard
+sys/urem.s		standard
+sys/vaxtrap.c		standard
+sys/vmdrum.c		standard
+sys/vmmem.c		standard
+sys/vmmon.c		standard
+sys/vmpage.c		standard
+sys/vmproc.c		standard
+sys/vmpt.c		standard
+sys/vmsched.c		standard
+sys/vmsubr.c		standard
+sys/vmswap.c		standard
+sys/vmsys.c		standard
+dev/bio.c		standard
+dev/streamconf.c	standard
+dev/cons.c		standard
+dev/dkbad.c		standard
+dev/dkleave.c		standard
+dev/dsort.c		standard
+dev/flp.c		standard
+dev/mem.c		standard
+dev/stream.c		standard
+dev/sw.c		standard
+dev/vaxcpu.c		standard
+dev/autoconf.c		standard device-driver
+dev/uba.c		standard device-driver
+dev/an.c		optional an device-driver
+dev/bpd.c		optional bpd device-driver
+dev/cv.c		optional cv device-driver
+dev/dh.c		optional dh device-driver
+dev/dk.c		optional dk device-driver
+dev/dn.c		optional dn device-driver
+dev/dr.c		optional dr device-driver
+dev/dz.c		optional dz device-driver
+dev/ec.c		optional ec device-driver
+dev/eikonix.c		optional ekx device-driver
+dev/hp.c		optional hp device-driver
+dev/ht.c		optional tu device-driver
+dev/ju.c		optional ju device-driver
+dev/kdi.c		optional kdi device-driver
+dev/kmc.c		optional kmc device-driver
+dev/lex.c		optional lex device-driver
+dev/lp.c		optional lp device-driver
+dev/mba.c		optional mba device-driver
+dev/mg.c		optional mg device-driver
+dev/mt.c		optional mu device-driver
+dev/om.c		optional om device-driver
+dev/ramtek.c		optional rtk device-driver
+dev/sn.c		optional sn device-driver
+dev/rk.c		optional rk device-driver
+dev/tm.c		optional te device-driver
+dev/tri.c		optional tri device-driver
+dev/ts.c		optional ts device-driver
+dev/uda.c		optional ra device-driver
+dev/up.c		optional up device-driver
+dev/va.c		optional va device-driver
+dev/vp.c		optional vp device-driver
+chncp/chch11.c		optional chch device-driver
+chncp/chdr11c.c		optional chdr device-driver
+chncp/chil.c		optional chil device-driver
+dev/bufld.c		optional bf pseudo-device
+dev/cmcld.c		optional cm pseudo-device
+dev/dkp.c		optional dkp pseudo-device
+dev/mesg.c		optional mesg pseudo-device
+dev/nttyld.c		optional ntty pseudo-device
+dev/pk.c		optional pk pseudo-device
+dev/spipe.c		optional sp pseudo-device
+dev/trc.c		optional trc pseudo-device
+dev/ttyld.c		optional tty pseudo-device
+chncp/chclock.c		optional chaos pseudo-device
+chncp/chrcv.c		optional chaos pseudo-device
+chncp/chsend.c		optional chaos pseudo-device
+chncp/chstream.c	optional chaos pseudo-device
+chncp/chuser.c		optional chaos pseudo-device
+chncp/chutil.c		optional chaos pseudo-device
+chunix/challoc.c	optional chaos pseudo-device
+chunix/chaos.c		optional chaos pseudo-device
+chunix/chconf.c		optional chaos pseudo-device
+chunix/chtime.c		optional chaos pseudo-device
+chunix/chtty.c		optional cht pseudo-device
+net/arpld.c		optional arp pseudo-device
+net/order.c		optional arp pseudo-device
+net/netutil.c		optional arp pseudo-device
+inet/ip_arp.c		optional uarp pseudo-device
+inet/goo.s		optional inet pseudo-device
+inet/ip_device.c	optional inet pseudo-device
+inet/ip_input.c		optional inet pseudo-device
+inet/ip_ld.c		optional inet pseudo-device
+inet/ip_output.c	optional inet pseudo-device
+inet/ip_subr.c		optional inet pseudo-device
+inet/socket.c		optional tcp pseudo-device
+inet/tcp_device.c	optional tcp pseudo-device
+inet/tcp_input.c	optional tcp pseudo-device
+inet/tcp_ld.c		optional tcp pseudo-device
+inet/tcp_output.c	optional tcp pseudo-device
+inet/tcp_subr.c		optional tcp pseudo-device
+inet/tcp_timer.c	optional tcp pseudo-device
+inet/udp_device.c	optional udp pseudo-device
+inet/udp_input.c	optional udp pseudo-device
+inet/udp_ld.c		optional udp pseudo-device
+inet/udp_output.c	optional udp pseudo-device
+dev/ill.c		optional il device-driver
+dev/ds.c		optional ds device-driver
+dev/scn.c		optional scn device-driver
+chaosld/chrouteld.c	optional chroute pseudo-device
+chaosld/chutil.c	optional chroute pseudo-device
+chaosld/chaos_device.c	optional ch pseudo-device
+chaosld/chaosld.c	optional ch pseudo-device
+chaosld/chsend.c	optional ch pseudo-device
+chaosld/chrcv.c		optional ch pseudo-device
+chaosld/chset.c		optional ch pseudo-device
+chaosld/chservice.c	optional ch pseudo-device
+chaosld/chconn.c	optional ch pseudo-device
+chaosld/chpacket.c	optional ch pseudo-device
+chaosld/challoc.c	optional ch pseudo-device
+chaosld/chtime.c	optional ch pseudo-device
+dev/delimfilter.c	optional filter pseudo-device
+dev/dumpld.c		optional dumpld pseudo-device
+dev/connld.c		optional connld pseudo-device
+dev/iti.c		optional iti device-driver
+dev/ctu.c		optional ctu device-driver
+dev/ut.c		optional tj device-driver
+dev/de.c		optional de device-driver

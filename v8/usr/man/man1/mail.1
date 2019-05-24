@@ -1,0 +1,218 @@
+.TH MAIL 1 
+.SH NAME
+mail  \-  send or receive mail 
+.SH SYNOPSIS
+.B mail
+[
+.B \-r
+] [
+.B \-p
+] [
+.B \-m
+] [
+.B \-f
+file
+]
+.br
+.B mail
+person ...
+.br
+.B mail \-n
+.SH DESCRIPTION
+.I Mail
+with no argument prints a user's mail, message-by-message,
+in last-in, first-out order,
+prompting between messages.
+The options are:
+.TP
+.B \-r
+Print mail in first-in, first-out order.
+.PD 0
+.TP
+.B \-p
+Print entire mailbox without pause between messages.
+.TP
+.B \-m
+Only print messages explicitly
+requested by the user.
+.TP
+.BI \-f " file"
+Use
+.IR file ,
+e.g. `mbox',
+as if it were the mailbox.
+.PD
+.PP
+After printing a prompt
+.I mail
+reads a line from the standard input
+to direct disposition of the message.
+Commands are of the form `[range] command [arguments]'.
+The command is applied to each message in the specified range.
+The optional range can be:
+.PD 0
+.TP
+.B .
+current message
+.TP
+.B +
+next message
+.TP
+.B \-
+previous message
+.TP
+a number
+the correspondingly numbered message
+.TP
+number1,number2
+the range of messages between number1 and number2 inclusive
+.PD
+.PP
+The commands are:
+.PD 0
+.TP
+.B d
+Mark message for deletion on exiting mail.
+.TP
+.B u
+remove mark for deletion.
+.TP
+.B h
+Print the disposition, size in characters, and header line for
+each message in the mailbox.
+.TP
+.B p
+Print message.
+.TP
+.BI "s [" " file " "] ..."
+Save the message in the named
+.I files
+(`mbox' default, in HOME directory if known, see
+.IR environ (5)).
+.TP
+.BI "m [" " person " "] ..."
+Mail the message to the named
+.I persons
+(yourself by default).
+.TP
+.B r
+Reply to the sender of the last message printed.
+.TP
+.B EOT (control-D)
+Put unexamined mail back in the mailbox and stop.
+.TP
+.B q
+Same as EOT.
+.TP
+.B x
+Exit, without changing the mailbox file.
+.TP
+.BI ! command
+Escape to the Shell to do command.
+.TP
+.B ?
+Print a command summary.
+.TP
+.B \&=
+Print the number of the current message.
+.PD
+.PP
+An interrupt stops the printing of the current letter.
+.PP
+When
+.I persons
+are named,
+.I mail
+takes the standard input up to an end-of-file,
+or to a line consisting of a single
+.RB ` . '.
+and adds it to each
+.I person's
+mailbox.
+The message is automatically postmarked with the
+sender's name and date.
+Lines that look like postmarks are
+prefixed with `>'.
+.PP
+.I Person
+is usually a login name.
+To denote a recipient on a remote system, a
+network name must be used instead of a simple 
+login name; see 
+.IR uucp (1),
+.IR mail (7).
+.PP
+If a
+.I  person's 
+mailbox contains the sole line
+.IP
+Forward to
+.I name
+.LP
+the mail is sent to
+.I name
+instead
+of
+.I person.
+.I Name
+may be a list of names.
+.PP
+If a
+.I  person's 
+mailbox contains the sole line
+.IP
+Pipe to
+.I command
+.LP
+the mail is piped to
+.I command
+instead
+of being appended to
+.I person's
+mailbox.
+The command is run with the user and
+group id of the mailbox's owner.
+.PP
+Each user owns his own mailbox, which is by default generally
+readable but not writable.
+.I Mail
+does not delete an empty mailbox nor change its mode,
+so a user may make it unreadable if desired.
+.PP
+Option
+.B \-n
+causes notice to be given on your terminal whenever mail
+is delivered to your mail box.
+The option is reversed at each occurrence.
+See also
+.IR sysmon (9.1)
+and the MAIL variable of
+.IR sh (1).
+.PP
+When a user logs in he is informed of the presence
+of mail.
+.SH FILES
+.ta \w'/usr/spool/mail/mail.log 'u
+/usr/spool/mail/mail.log	mail log file
+.br
+/usr/spool/mail/*	mailboxes
+.br
+/etc/passwd	to identify sender and locate persons
+.br
+mbox	saved mail
+.br
+/tmp/ma*	temp file
+.br
+$HOME/dead.letter	unmailable text
+.br
+/usr/lib/upas/printmail	the program to peruse the mail
+.br
+uux(1)
+.SH "SEE ALSO"
+xsend(1), write(1), sysmon(9.1), uucp(1), mail(7), upas(8)
+.SH BUGS
+Option
+.B \-n
+doesn't work in a
+.IR mux (9.1)
+layer.

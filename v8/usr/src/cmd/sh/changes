@@ -1,0 +1,44 @@
+this is derived from the V.2 shell.
+	all in the interests of compatibility, etc.
+differences between this and V.2 shell:
+	restricted shell and readonly are gone
+	hash and all its implications are gone
+	^ is no longer pipe char
+	MAILCHECK and MAILPATH are gone. (see below)
+	* matches all files but . and ..
+	<<-word is not special
+	echo, pwd and test are not built in
+	sys Visms such as /etc/profile and ulimit and login are gone
+	type is now called whatis, and has different semantics
+	whenever a name is printed with set or whatis, it is printed
+		in a form that can be re-evaluated to recover original definition
+	new builtin 'builtin' always executes builtin version of its first arg
+		e.g.
+			builtin cd
+		does a chdir regardless of any function cd() defined
+	[^a-z] matches any character except a through z
+		the original syntax is [!a-z].
+	functions can be exported.
+	"$@" turns to nothing (rather than a null string) if there are no arguments
+	{} are syntactically the same as (), rather than words that are only
+		recognized at the beginnings of lines
+	
+
+differences between this and current shell not listed above:
+	functions:
+		f(){
+			foo
+		}
+	defines f as a function that calls foo.
+	unset removes function or parameter definitions
+	$MAIL is checked once every three minutes, as it prints prompt
+	you can redirect built-ins
+	cd always cd's; there is no question asked if it corrects spelling.
+the manual is /n/ikeya/usr/rob/hack/sh/sh.1
+
+dec 1984:
+	any char except = or ( may be in a function name
+	; means the null statement always
+	set -a exports functions
+	f()date>x	works
+		(was a syntax error)

@@ -1,0 +1,73 @@
+.TH INTRO 9
+.SH NAME
+intro \- introduction to jerq-related software
+.SH DESCRIPTION
+Section 9 of this manual lists software for running or supporting
+Teletype DMD-5620 terminals,
+the current implementation of the `jerq' graphics terminals.
+Subsections 9.1-9.7 mirror the purposes of the preceding sections 1-7,
+with 9.1 being commands, 9.6 being games, etc.
+.PP
+The only `real' 5620 commands are
+.I 32ld,
+which loads programs into the terminal, and
+.IR mux ,
+which starts the characteristic `layer' or window system.
+The other commands in section 9 either run on Unix or within
+.I mux
+layers.
+.PP
+A layer is technically a virtual terminal,
+but is almost indistinguishable in software from a real terminal;
+in particular, the interface described in
+.IR ttyld (4)
+applies to layers, except for the additional editing capabilities discussed in
+.IR mux (9.1).
+.PP
+The commands in sections 9.1 and 9.6 run on Unix,
+but most also call
+.I 32ld
+to `down-load' a program that replaces the
+default terminal process running in the layer, that is,
+the command's controlling teletype.
+To Unix the interface is still that of
+a terminal; in particular
+.I /dev/tty
+is always connected to the layer.
+The default
+.I mux
+terminal program implements the teletype function itself, but
+when a program is down-loaded a teletype line discipline is pushed on the
+stream
+(see
+.IR stream (4)
+and
+.IR ttyld (4)).
+Some commands may simply
+emulate other terminals by down-loading
+a terminal program (see
+.IR term (9.1);
+others, such as the text editor
+.IR jim (9.1),
+are really two programs \(em one on Unix and one in the layer \(em
+communicating using standard input/output on Unix
+and
+.I sendchar/rcvchar
+in the terminal; see
+.IR request (9.2).
+.PP
+There is an identity between bitmaps and layers
+in the graphics software.
+The objects of jerq graphics are bitmaps.
+The primitives that operate on layers are aliased to the bitmap
+primitives, and the data structures are isomorphic.
+When running under
+.IR mux ,
+a programmer need not consider layers as graphical objects
+at all; the operating system checks the arguments to the graphics
+primitives and dispatches the appropriate operator depending
+on the type of the argument.
+Except in stand-alone software, layers are an invisible
+implementation detail.
+.SH SEE ALSO
+32ld(9.1), mux(9.1), stream(4), pt(4)

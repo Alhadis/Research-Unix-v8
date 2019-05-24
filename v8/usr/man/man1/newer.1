@@ -1,0 +1,22 @@
+.TH NEWER 1
+.SH NAME
+newer \- test file modification dates
+.SH SYNOPSIS
+.B newer
+file1 file2
+.SH DESCRIPTION
+.I Newer
+yields a zero return code if
+.I file1
+exists and
+.I file2
+does not, or if
+.I file1
+and
+.I file2
+both exist and
+.IR file1 's
+modification time is at least as recent
+as that of
+.IR file2 .
+It yields a non-zero return code otherwise.

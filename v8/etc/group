@@ -1,0 +1,4 @@
+other::1
+sys:*:2:root
+man:*:3:root
+bin:*:4:root

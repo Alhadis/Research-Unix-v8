@@ -1,0 +1,127 @@
+.TH TCP 3 
+.SH NAME
+tcp_sock, tcp_conn, tcp_listen, tcp_accept, tcp_rcmd \- tcp operations
+.SH SYNOPSIS
+.nf
+.B #include <sys/inet/tcp_user.h>
+.PP
+.B tcp_sock();
+.PP
+.B tcp_connect(fd, lport, faddr, fport)
+.B int fd;
+.B tcp_port lport, fport;
+.B in_addr faddr;
+.PP
+.B tcp_listen(fd, lport, faddr, fport)
+.B int fd;
+.B tcp_port lport, fport;
+.B in_addr faddr;
+.PP
+.B tcp_accept(fd, faddrp, fportp, devp)
+.B int fd, *devp;
+.B in_addr *faddrp;
+.B tcp_port *fportp;
+.PP
+.B tcp_rcmd(host, port, locuser, remuser, cmd, fd2p)
+.B char *host, *port, *locuser, *remuser, *cmd;
+.B int *fd2p;
+.PP
+.SH DESCRIPTION
+These routines are loaded by the 
+.B \-lin
+option of
+.IR ld (1).
+.PP
+TCP is one of the many protocols which are layered
+upon IP (internet protocol).
+It provides full duplex byte stream connections between
+end points called sockets.
+The address of a socket is composed of the internet address
+of its host and the port number to which
+the socket is bound.
+.PP
+.I Tcp_sock
+returns the file descriptor of an unbound socket.
+Once opened, a socket may be bound to a port number within the
+host and set up as the active or passive end of a connection.
+.I Tcp_sock
+returns -1 if no sockets are available.
+.PP
+.I Tcp_connect
+binds socket
+.I fd
+to port
+.I lport
+and attempts to set up a connection to
+the socket bound to port
+.I fport
+on host
+.I faddr.
+.I Tcp_connect
+returns 0 if the connection is established, -1 otherwise.
+Communications proceeds by performing 
+.IR read (2)
+and 
+.IR write (2)
+on
+.I fd.
+.PP
+.I Tcp_listen
+binds socket
+.I fd
+to port
+.I lport
+and configures the socket to listen for connection requests to that port.
+If 
+.I faddr
+and
+.I fport
+are non-zero, only connections coming from sockets on machine
+.I faddr
+and bound to port
+.I fport
+are listened for.
+.I Tcp_listen
+returns 0 on success, -1 otherwise.
+.IR Select (2)
+can be used with a listening socket to provide asynchronous polling of
+connection requests.
+.PP
+.I Tcp_accept
+waits for and accepts a connection request sent to the listening socket
+.I fd.
+When a connection arrives, tcp_accept fills in 
+.I faddr
+and
+.I fport
+with the identity of the connector and returns a new fd
+over which communications can proceed.
+.I Fd
+is left open and continues listening for connections.
+.PP
+.I Tcp_rcmd
+remotely executes a 
+.I cmd
+on 
+.I host
+as user
+.I remuser.
+Standard input is attached to
+.I cmd's 
+standard input and
+.I cmd's
+standard output is attached to standard output.
+If 
+.I fd2p
+is non-zero, it is filled with the fd of a new TCP connection attached
+to 
+.I cmd's
+standard error.
+Otherwise,
+.I cmd's
+standard error is attached to its standard output.
+.SH FILES
+.nf
+/dev/tcp*	the socket devices
+.SH SEE ALSO
+internet(3), udp(3)

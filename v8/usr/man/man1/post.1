@@ -1,0 +1,102 @@
+.TH POST 1 
+.SH NAME
+post \- send mail to users by name
+.SH SYNOPSIS
+.B post
+[
+.B \-w
+]
+person ...
+.PP
+.B post
+.SH DESCRIPTION
+.I Post
+translates people's real names to addresses
+and sends mail.
+If used with
+.I person
+arguments, it collects the standard input up to EOT or a line
+containing only a single `.' character.
+It expects
+each
+.I person
+argument to be either a form recognized by
+.IR mail (1)
+or
+.IP
+[firstname.[middlename.]]lastname[:location][:department]
+.LP
+where every part except
+.I lastname
+may be abbreviated to a prefix.
+If the person identified is known to have a computer address,
+the collected input is sent there; otherwise paper mail is printed
+and routed to a clerk for forwarding.
+.PP
+From most computers
+.I post
+routes mail through a central post office; diagnostic
+messages will be returned by mail.
+.PP
+If the
+.I person
+argument is ambiguous, a list of possibilities is printed
+and you are asked to choose the desired person.
+The
+.B \-w
+option gives the address, but sends nothing.
+.PP
+To maintain mailing lists or avoid typing long addresses,
+you may keep an address book in $HOME/lib/post.addr.
+Each line in the file begins with an alias or mailing list name which
+is followed by one or more
+.I person
+arguments.
+.PP
+.I Post
+with no
+.I person
+arguments invokes
+.I mail
+to read your mail.
+The environment parameter
+.I MAILP
+may be used to specify the
+.I mail
+invoked;
+otherwise it is
+.I /bin/mail.
+To update 
+.I post's
+directory with a new or secondary address mail the following
+statement to alice!mailroom.
+.PP
+UPDATE:	computer!uid	cmd	first.init.last:loc:dept
+.PP
+.I cmd
+may be IS, ANOTHER or WAS.
+IS makes the computer id the home address,
+ANOTHER, a secondary address, and WAS deletes it.
+It expects the name to be identical to that in the BTL phone book.
+.SH FILES
+.ta \w'/usr/lib/post/post.test\ \ 'u
+/usr/spool/mail/*	mailboxes
+.br
+/tmp/ma*	temp file
+.br
+dead.letter	unmailable text
+.br
+$HOME/lib/post.addr	user address book
+.br
+/crp/post/tmail.?	address lists
+.br
+/crp/post/tuid.?	userid lists
+.br
+/usr/lib/post/genpost	general postoffice
+.br
+/usr/lib/post/post.test	test "no run" program
+.SH "SEE ALSO"
+mail(1)
+.br
+`Electronic Mail Without Aliases,' by R. J. Elliott and
+M. E. Lesk

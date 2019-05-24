@@ -1,0 +1,31 @@
+.TH SERVER 1
+.SH NAME
+server \- run anonymous command on another machine
+.SH SYNOPSIS
+.B server
+machine command
+.SH DESCRIPTION
+.I Server
+uses Datakit to run
+.I command
+on the named
+.I machine.
+If it has set-uid mode,
+the owner of
+.I server
+will log in on the remote machine.
+In this way, a user can execute commands on the
+remote machine without having a login there.
+.PP
+.I Server
+typically accepts only a small set of commands, such as
+.I who, ps, cat,
+and
+.I date;
+the list is at the discretion of the remote machine.
+.I Server
+also checks for suspicious argument characters.
+.SH FILES
+/etc/server	list of legal commands
+.SH "SEE ALSO"
+dcon(1), push(1), rx(1)

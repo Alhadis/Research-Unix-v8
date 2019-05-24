@@ -1,0 +1,51 @@
+.TH REBOOT 2
+.SH NAME
+reboot \- reboot system or halt processor
+.SH SYNOPSIS
+.nf
+.B #include <sys/reboot.h>
+.PP
+.B reboot(how)
+.B int how;
+.fi
+.SH DESCRIPTION
+.I Reboot
+reboots or halts the system.
+Various options are specified in
+.IR how :
+.TP 1i
+RB_PANIC
+Cause a crash dump to be written.
+.TP
+RB_NOSYNC
+Don't finish pending disk writes
+(a la
+.IR sync (2)).
+.TP
+RB_HALT
+Don't reboot;
+leave the processor in a tight loop
+with interrupts disabled.
+.TP
+RB_SINGLE
+Reboot single-user.
+.TP
+RB_ASKNAME
+Arrange for the boot program
+to ask the name of the system
+to be booted.
+.PP
+By default,
+disk writes are finished,
+and the system is rebooted
+multi-user
+from
+.I /unix
+on unit 0
+of the root device.
+.SH "SEE ALSO"
+crash(8), init(8), reboot(8)
+.SH BUGS
+Of dubious utility;
+it's better just to use the console.
+Most of the flags are silly.

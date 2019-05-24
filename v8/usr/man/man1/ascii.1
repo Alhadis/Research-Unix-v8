@@ -1,0 +1,63 @@
+.TH ASCII 1 
+.SH NAME
+ascii \- interpret ASCII characters
+.SH SYNOPSIS
+ascii [
+.B "\-oxd | \-b\f2n\fP
+] [
+.B \-nct
+] [
+.B \-e
+] [
+.I text
+]
+.SH DESCRIPTION
+.I Ascii
+prints the ASCII values corresponding to characters and
+.I vice
+.IR versa .
+The values are interpreted in a settable numeric base;
+.B \-o
+specifies octal (the default),
+.B \-d
+decimal,
+.B \-x
+hexadecimal, and
+.B \-b\f2n\fP
+base
+.I n .
+.PP
+With no arguments,
+.I ascii
+reproduces /usr/pub/ascii in the specified base.
+Any given characters of
+.I text
+are converted to their ASCII values, one per line.
+If, however, the first argument of
+.I text
+is a valid number in the specified base, it is printed as plain text
+(control characters are printed as they appear in /usr/pub/ascii).
+The option
+.B \-n
+forces the output to numeric form and
+.B \-c
+forces the output to printable characters.
+The option
+.B \-t
+converts, without interpretation, from numbers to text.
+Finally,
+.B \-e
+forces the following arguments to be interpreted as
+.I text .
+.SH EXAMPLES
+.TP
+ascii \-d
+Print the ASCII table base 10.
+.TP
+ascii p
+Print the octal value of `p'.
+.TP
+ascii 160
+Show which character is octal 160.
+.SH "SEE ALSO
+ascii(7)

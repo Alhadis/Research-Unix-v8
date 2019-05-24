@@ -1,0 +1,59 @@
+.TH NETSTAT 8 research
+.SH NAME
+netstat \- show network status for ARPA internet
+.SH SYNOPSIS
+.B /usr/inet/bin/netstat
+[ 
+.B \-acCirs
+] [
+system
+] [
+core
+]
+.SH DESCRIPTION
+.I Netstat 
+displays internet traffic and configuration
+data.
+The options are:
+.TP
+.B \-a
+show the known mappings between internet names and
+ethernet addresses.
+.TP
+.B \-c
+show all socket assignments.
+.TP
+.B \-C
+show only sockets with active connections.
+.TP
+.B \-i
+show the state of interfaces.
+.TP
+.B \-s
+show protocol statistics.
+.TP
+.B \-r
+show the routing tables.
+.PP
+The arguments 
+.I system
+and
+.I core
+are substitutes for the defaults `/unix' and `/dev/kmem'.
+.SH FILES
+/usr/inet/bin/netstat
+.br
+/usr/inet/lib/hosts
+.br
+/usr/inet/lib/networks
+.br
+/usr/inet/lib/services
+.br
+/unix
+.SH DIAGNOSTICS
+`nlist /unix failed' \- 
+.I Netstat
+could not find pertinent kernel information.
+This message occurs on machines that can not handle internet traffic.
+.SH SEE ALSO
+vmstat(8)

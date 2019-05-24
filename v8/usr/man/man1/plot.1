@@ -1,0 +1,71 @@
+.TH PLOT 1 
+.SH NAME
+plot \- graphics filters
+.SH SYNOPSIS
+.B plot
+[
+.BR \-T terminal
+]
+.SH DESCRIPTION
+These commands read plotting instructions (see
+.IR  plot (5))
+from the standard input,
+and in general
+produce plotting instructions suitable for
+a particular
+.I terminal
+on the standard output.
+.PP
+If no
+.I terminal
+type is specified, the environment parameter $TERM
+(see
+.IR environ (5))
+is used.
+Known
+.I terminals
+are:
+.TP
+2621
+.PD 0
+hp
+Hewlett-Packard screen.
+.PD 
+.IP 4014
+.PD 0
+.IP tek
+Tektronix 4014 storage scope.
+.PD
+.TP
+ramtek
+.IP 202
+.PD 0
+.IP troff
+Mergenthaler typesetter.
+.PD
+.IP 5620
+.PD 0
+.IP jerq
+Teletype DMD display.
+.PD
+.IP 750
+.PD 0
+.IP pen
+Hewlett-Packard pen plotter.
+.PD
+.SH FILES
+/usr/bin/hpplot
+.br
+/usr/bin/ramtek
+.br
+/usr/bin/trplot
+.br
+/usr/bin/penplot
+.br
+/usr/bin/tek
+.br
+/usr/jerq/bin/jplot
+.SH "SEE ALSO"
+plot(3), plot(5)
+.SH BUGS
+Which plotters are known depends on which computer you are on.

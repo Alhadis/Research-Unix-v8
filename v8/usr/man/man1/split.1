@@ -1,0 +1,100 @@
+.TH SPLIT 1 
+.SH NAME
+split, fsplit \- split a file into pieces
+.SH SYNOPSIS
+.B split
+[
+.B \-\fIn
+|
+.B \-e
+expression
+]
+[
+.B \-f
+fileroot
+] [
+.B \-x
+] [
+.B \-y
+] [
+.B \-s
+suffix
+]
+[ file ]
+.PP
+.B fsplit
+[ option ] ...
+[ file ] ...
+.SH DESCRIPTION
+.I Split
+reads
+.I file
+(standard input by default)
+and writes
+it in
+.IR n -line
+pieces
+(default 1000), as many as necessary,
+onto
+a set of output files.
+The name of the first output
+file is
+.I fileroot
+(default
+.BR x )
+with
+.B aa
+appended, and so on
+lexicographically.
+.PP
+If one or more
+.I expressions
+are specified,
+the file divisions occur at each line of
+.I file
+which matches an
+.IR expression ;
+line counts are irrelevant.
+The
+.I expressions
+are identical to those of
+.IR grep (1).
+If a subexpression of
+.I expression
+is contained in escaped parentheses \e(...\e),
+the file name for the output file is the portion of the
+line which matches the subexpression, optionally suffixed
+by a string specified with the
+.B \-s
+option.
+.PP
+The first line of each output file is the matching input line,
+but it may be excluded from the output file by setting the
+.B \-x
+flag.
+The
+.B \-y
+flag causes lower case letters in
+.I expression
+to match either case of letter in the input,
+but any output file names (excluding the suffix)
+will be forced to lower case.
+.PP
+.I Fsplit
+splits a collection of Fortran subprograms in one 
+.I file
+into separate files.
+Options
+.BR \-f ,
+.BR \-e ,
+and
+.BR \-r
+set the file suffix: procedure `proc' will go into
+file `proc.f' (default), `proc.e', or `proc.r' accordingly.
+Block data subprograms will go into files named `BLOCKDATA1.f', etc.
+.PP
+Option 
+.B \-s
+strips off data beyond column 72 together with any resulting trailing blanks.
+.SH SEE ALSO
+sed(1), awk(1)

@@ -1,0 +1,16 @@
+# magic machine
+if test $# != 1
+then
+	echo magic machine-name
+	exit
+fi
+x=a$$
+trap "rm *$$" 0 1 2 15
+rx $1 cat /etc/passwd > a$$
+awk -F: '{print $1, $3} ' a$$ > b$$
+awk -F: '{print $1, $3, $4}' /etc/passwd > c$$
+sort -o b$$ b$$
+sort -o c$$ c$$
+join b$$ c$$ | egrep -v '^root|uucp' > d$$
+awk '$3 != 0 {print "((" $2, "1) (" $3, $4 ")) #", $1}' d$$ > magic-done
+echo -n lines for $1; wc -l magic-done

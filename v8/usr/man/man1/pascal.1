@@ -1,0 +1,144 @@
+.TH PASCAL 1
+.SH NAME
+pascal \- language interpreter
+.SH SYNOPSIS
+.B pascal
+[ options ] [
+.B \-i
+name ... ] [
+.RB name .p
+] [ obj [ argument ... ] ]
+.PP
+.B pmerge
+.RB name .p
+\&...
+.SH DESCRIPTION
+.I Pascal
+translates Pascal source programs
+to interpretable form, executes them,
+or both.
+Under option
+.B \-c
+the programs are translated
+but not executed.
+The translated code appears in file `obj'.
+Under option
+.B \-x
+.I pascal
+interprets the previously translated code in file
+.I obj
+(default `obj').
+.I Arguments
+are made available through the built-ins
+`argc' and `argv'.
+.PP
+.I Options
+is a string chosen from the following letters:
+.TP
+.B c
+Translate only.
+This option must be first if it appears at all.
+It is inconsistent with
+.BR \-x.
+.TP
+.B b
+Buffer the runtime
+file `output'.
+.TP
+.B l
+Make a program listing during translation.
+.TP
+.B n
+List each included
+file on a new page with a banner line.
+.TP
+.B p
+Suppress the post-mortem control flow backtrace
+if an error occurs;
+override execution limit of 500,000 statements.
+.TP
+.B s
+Accept standard Pascal only;
+non-standard constructs cause warning diagnostics.
+.TP
+.B t
+Suppress runtime tests of subrange variables and treat
+assert statements as comments.
+.TP
+.B u
+Card image mode;
+only the first 72 characters of input lines are used.
+.TP
+.B w
+Suppress warning diagnostics.
+.TP
+.B x
+Execute only.
+If this option appears, it must be first.
+It is inconsistent with the
+.B \-c
+option.
+.TP
+.B z
+Cause the interpreter to gather profiling data for
+later analysis by
+.IR pxp (1).
+.PP
+Option
+.B \-i
+causes the named procedures and include files to be listed.
+.PP
+.I Pmerge
+combines the named source files into a singlesource files  on the
+standard output.
+.SH FILES
+.ta \w'/usr/lib/pi2.0strings  'u
+*.p	input file
+.br
+*.i	include file(s)
+.br
+/usr/lib/pi2.0strings	error messages
+.br
+/usr/lib/how_pi*	basic usage explanation
+.br
+/usr/lib/pascal/*	interpreter passes
+.br
+obj	interpreter code output
+.br
+/tmp/pix*	obj file used by pix
+.br
+pmon.out	profile data file
+.SH "SEE ALSO"
+.I Berkeley Pascal User's Manual
+(there
+.I pascal
+is called
+.I pi, px,
+and
+.IR pix )
+.br
+pc(1),
+pxp(1)
+.SH DIAGNOSTICS
+The first character of an
+error message indicates its class:
+.LP
+.DT
+.nf
+	E	Fatal error; no code will be generated.
+	e	Non-fatal error.
+	w	Warning \- a potential problem.
+	s	Warning \- nonstandard Pascal construct.
+.fi
+.SH BUGS
+The keyword `packed'
+is recognized but has no effect.
+.br
+Diagnostics relating to the last procedure in an included file may appear after the
+beginning of the listing of the next.
+.br
+If both source files and
+.I arguments
+are specified,
+.I obj 
+is a dummy.

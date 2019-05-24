@@ -1,0 +1,118 @@
+.TH REGEXP 3
+.SH NAME
+regcomp, regexec, regsub, regerror \- regular expression handler
+.SH SYNOPSIS
+.nf
+.B #include <regexp.h>
+.PP
+.B regexp *regcomp(exp)
+.B char *exp;
+.PP
+.B int regexec(prog, string)
+.B struct regexp *prog;
+.B char *string;
+.PP
+.B regsub(prog, source, dest)
+.B struct regexp *prog;
+.B char *source;
+.B char *dest;
+.PP
+.B regerror(msg)
+.B char *msg;
+.fi
+.SH DESCRIPTION
+.I Regcomp
+compiles an
+.IR egrep (1)-style regular expression and returns
+a pointer to an object with the following structure.
+The object is allocated by
+.IR malloc (2)
+and may be released by
+.I free.
+.IP
+.nf
+.so /usr/include/regexp.h
+.fi
+.PP
+.IR Startp [ n ]
+points to the first character of the substring of
+.I string
+that matches the
+.IR n th
+parenthesized subexpression (the subexpression
+introduced by the
+.IR n th
+left parenthesis).
+.IR Endp [ n ]
+points to the first character following that substring.
+The character array
+.I program
+contains the compiled form of the regular expression.
+.PP
+.I Regexec 
+matches a null-terminated
+.I string
+against the compiled regular expression in
+.I prog.
+If it matches,
+.I regexec
+returns a non-zero value and fills in the
+.I startp
+and
+.I endp
+fields to describe the match, in which `*', `+', and `?' matches
+are extended as far as possible.
+By convention,
+.IR startp [ 0 ]
+and
+.IR endp [ 0 ]
+refer to the substring that matches the
+complete regular expression.
+.LP
+.I Regsub
+places in
+.I dest
+a substitution instance of
+.I source
+in the context of the last
+.I regexec
+performed using
+.I prog.
+Each instance of 
+.RI `\e n ',
+where
+.I n
+is a digit, is replaced by the
+string delimited by
+.IR startp [ n ]
+and
+.IR endp [ n ].
+Each instance of `&' is replaced by the string delimited by
+.I startp [0]
+and
+.I endp [0].
+The result is placed in the area pointed to by 
+.I dest .
+.LP
+.I Regerror,
+called whenever an error is detected in
+.I regcomp,
+.I regexec,
+or
+.I regsub,
+writes the string
+.I msg
+on the standard error file and exits.
+.I Regerror
+can be replaced to perform
+special error processing.
+.SH DIAGNOSTICS
+.I Regcomp
+returns 0 for an illegal expression
+or other failure.
+.I Regexec
+returns 0 if
+.I string 
+is not accepted.
+.SH "SEE ALSO"
+egrep(1), expr(1)

@@ -1,0 +1,52 @@
+.TL
+PREFACE
+.LP
+This Eighth Edition manual describes the lineal descendant
+of the original operating system pioneered by
+Ken Thompson and Dennis Ritchie
+in the Computing Science Research Center at
+AT&T Bell Laboratories.
+It is an experimental system, not a commercial prototype,
+which incorporates facilities from the Seventh Edition, 
+System V, and Berkeley BSD 4.1.
+The distinctive theme of the Eighth Edition is distributed computing:
+Ritchie's coroutine-based stream IO system 
+and the Datakit\u\fH\s-2TM\s0\fP\d
+virtual circuit switch
+realization by Lee McMahon and Bill Marshall
+provide the basis for networking, Peter Weinberger's
+remote file systems make it painless, and Rob Pike's
+software for the Teletype 5620 moves system action right out
+to the terminal.
+These facilities have spurred a host of programs for remote
+information services, interactive
+graphics, debugging, and simple fun.
+Many other people have contributed significantly, including, but not limited to
+L. Cardelli,
+T. A. Cargill,
+L. L. Cherry,
+R. J. Elliot,
+S. I. Feldman,
+F. T. Grampp,
+A. G. Hume,
+B. W. Kernighan,
+T. Killian,
+A. R. Koenig,
+M. E. Lesk,
+J. P. Linderman,
+B. N. Locanthi,
+M. S. Manasse,
+R. T. Morris,
+T. Pavlidis,
+D. L. Presotto,
+J. D. Reiser,
+M. J. Shannon,
+B. Stroustrup,
+and
+N. Wilson.
+.sp 2
+.in 4i
+M. D. McIlroy
+.br
+February, 1985
+.in 0

@@ -1,0 +1,6 @@
+kasb -d /dev/kmc0 <<!
+.reset
+.load "${1-/etc/dkk.kdi}"
+.reset
+.run 3
+!

@@ -1,0 +1,77 @@
+.TH BLITBLT 9.1
+.SH NAME
+blitblt \- make hard copy of screen image
+.SH SYNOPSIS
+.BR blitblt " [ " \-p
+.IR command " ]"
+.SH DESCRIPTION
+.I Blitblt
+copies part or all of a jerq screen into a file
+or down a pipe to a printer daemon.
+The program is menu driven off button 3 as follows:
+.nr xx \w'\f3sweep rectangle\f1'u+2n/1n
+.TP \n(xx
+.B choose layer
+A bull's eye cursor appears.
+Clicking button 3 with the cursor inside a layer
+.RI "(cf. " 3pi (9.1))
+selects it for subsequent manipulation.
+.TP
+.B layer interior
+As above, but the border surrounding the layer is not included.
+.TP
+.B flip border
+The border is changed from narrow to wide (or
+.IR vice\ versa )
+in the selected layer or rectangle.
+.TP
+.B reverse video
+The video is inverted in the selected layer or rectangle.
+.TP
+.B run/halt
+The terminal
+process in the selected layer is continued or halted.
+This menu entry changes with the layer's status.
+.TP
+.B sweep rectangle
+A rectangle cursor appears.  The rectangle swept out on button 3
+becomes the selected area.
+.TP
+.B whole screen
+The entire screen, including border areas, but excluding the
+.I blitblt
+layer itself, is selected.
+.TP
+.B write file
+The portion of the screen previously selected and prepared is written
+into a file or pipe. The filename is typed in answer to a prompt appearing
+at the bottom of the
+.I blitblt
+layer.
+Hitting return selects the (default) name in parentheses.
+If the first character typed is a `|' (pipe symbol), the remainder of
+the line is taken as a shell command which will read the bitmap
+on its standard input.
+.TP
+.BI | " command"
+The selected portion of the screen is sent to the
+.I command
+specified by the
+.B \-p
+option (default
+.IR bcan .)
+.TP
+.B exit
+Must be confirmed by clicking button 3 in response to the skull cursor.
+.SH FILES
+/usr/jerq/mbin/blitblt.m \- terminal program
+.SH SEE ALSO
+can(1), bitfile(9.5)
+.SH BUGS
+Moving layers (e.g. clocks) result in broken images.  Use the
+.B halt
+function.
+.br
+If a pipe request fails, the
+.I blitblt
+layer becomes unusable.

@@ -1,0 +1,107 @@
+E=0
+I="/usr/include/CC"
+ISUF=".i"
+for A do
+	case $A in
+	+V)	I="/usr/include"
+		O="$O $A"
+		;;
+	+*)	O="$O $A"
+		;;
+	-E)	PON=1
+		;;
+	-F)	FON=1
+		;;
+	-Fc)	FON=1
+		O="$O +L"
+		;;
+	-C)	Y="$Y $A"
+		O="$O +C"
+		;;
+	-I*)	Y="$Y $A"
+		;;
+	-D*)	Y="$Y $A"
+		;;
+	-U*)	Y="$Y $A"
+		;;
+	-I*)	Y="$Y $A"
+		;;
+	-.c)	echo "bad suffix option: -.c"
+		;;
+	-.*)	SUF=`expr "$A" : '-\(.*\)'`
+		;;
+	*.c)	if	test -f $A
+		then
+			B=`basename $A .c`
+			if	test $PON
+			then
+				if test $SUF
+				then
+					echo "cpp $O < $A > $B$SUF:"
+					/lib/cpp -I$I $Y < $A >$B$SUF
+					E=$?
+				else
+					/lib/cpp -I$I $Y < $A
+					E=$?
+					case $E in
+					0)	;;
+					*)	break
+						;;
+					esac
+				fi
+			elif	test $FON
+			then
+				if test $SUF
+				then
+					echo "cfront $O < $A > $B$SUF:"
+					/lib/cpp -C -I$I $Y < $A | cfront +f$A $O > $B$SUF
+					E=$?
+				else	
+					/lib/cpp -C -I$I $Y < $A | cfront +f$A $O
+					E=$?
+					case $E in
+					0)	;;
+					*)	break
+						;;
+					esac
+				fi
+			else
+				echo "VCC $O $A:"
+				/lib/cpp -C -I$I $Y < $A | cfront +f$A $O > $B$ISUF
+				E=$?
+				R=1
+				C="$C $B$ISUF"
+				case $E in
+				0)	X="$X $B$ISUF"
+					G=1
+					;;
+				1)	echo "1 error"
+					;;
+				*)	echo "$E errors"
+					;;
+				esac
+			fi
+		else
+			echo "$A not found"
+		fi
+		;;
+	*)	X="$X $A"
+		G=1
+		;;
+	esac
+done
+
+if	test $G
+then
+	echo "vcc -w $X"
+	vcc -w $X
+fi
+
+if	test $R
+then
+	rm $C
+fi
+
+exit $E
+
+

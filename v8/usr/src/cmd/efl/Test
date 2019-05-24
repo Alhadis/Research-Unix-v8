@@ -1,0 +1,4 @@
+echo "Hard:"; a.out "system=gcos" ../test/Hard.e >z1.Hard 2>z2; diff z1.Hard ../test/Hard.out
+echo "Band:"; a.out "system=gcos" ../test/Band.e >z1.Band 2>z2; diff z1.Band ../test/Band.out
+echo "Buram:"; a.out "system=gcos" ../test/Buram.e >z1.Buram 2>z2; diff z1.Buram ../test/Buram.out
+echo "Dgl:"; a.out "system=gcos" ../test/Dgl.e >z1.Dgl 2>z2; diff z1.Dgl ../test/Dgl.out

@@ -1,0 +1,33 @@
+cpu		"VAX750"
+ident		research
+options		DISKMON
+timezone	5 dst
+maxusers	32
+config		ra	unix
+
+controller	mba0	at nexus ?
+controller	uba0	at nexus ?
+controller	uda0	at uba? csr 0172150 vector udintr
+disk		ra0	at uda0 drive 0
+disk		ra1	at uda0 drive 1
+device		dz0	at uba? csr 0160100 vector dzrint dztint
+device		dz1	at uba? csr 0160110 flags 0x40 vector dzrint dztint
+device		kmc0	at uba? csr 0160200 vector kmcrint kmcxint
+device		dn0	at uba? csr 0175200 vector dnint
+device		dr0	at uba? csr 0167570 vector drrint drxint
+device		il0	at uba0 csr 0164000 vector ilrint ilcint
+device		il1	at uba0 csr 0165000 vector ilrint ilcint
+
+pseudo-device	sp
+pseudo-device	mesg	64
+pseudo-device	tty	64
+pseudo-device	ntty	32
+pseudo-device	cm
+pseudo-device	bf	16
+pseudo-device	kdi	64
+pseudo-device	inet	6
+pseudo-device	uarp	1
+pseudo-device	tcp	32
+pseudo-device	udp	32
+pseudo-device	dkp	128
+pseudo-device	connld

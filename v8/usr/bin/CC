@@ -1,0 +1,157 @@
+#!/bin/sh
+PATH=/bin:/usr/bin
+C= EE=0 FON= O= PON= R= SUF= X= Y=
+Z=
+E=0
+CF=
+P=
+OO="a.out"
+I="/usr/include/CC"
+ISUF=".i"
+ccC=${ccC-cc}
+cfrontC=${cfrontC-cfront}
+cppC=${cppC-/lib/cpp}
+G=0
+for A do
+	case $A in
+	+V)	I="/usr/include"
+		O="$O $A"
+		;;
+	+*)	O="$O $A"
+		;;
+	-E)	PON=1
+		;;
+	-F)	FON=1
+		;;
+	-Fc)	FON=1
+		O="$O +L"
+		;;
+	-C)	Y="$Y $A"
+		O="$O +C"
+		;;
+	-I*)	Y="$Y $A"
+		;;
+	-D*)	Y="$Y $A"
+		;;
+	-U*)	Y="$Y $A"
+		;;
+	-I*)	Y="$Y $A"
+		;;
+	-p)	$P="-p"
+		;;
+	-c)	CF="-c"
+		;;
+	-o)	X="$X $A"
+		Z="$Z $A"
+		OX=1
+		;;
+	-.c)	echo "bad suffix option: -.c" 1>&2
+		;;
+	-.*)	SUF=`expr "$A" : '-\(.*\)'`
+		;;
+	*.c)	if	test -f $A
+		then
+			B=`basename $A .c`
+			if	test $PON
+			then
+				if test $SUF
+				then
+					echo "$cppC $O < $A > $B$SUF:" 1>&2
+					$cppC $Y -I$I < $A >$B$SUF
+					E=$?
+				else
+					$cppC $Y -I$I < $A
+					E=$?
+					case $E in
+					0)	;;
+					*)	break
+						;;
+					esac
+				fi
+			elif	test $FON
+			then
+				if test $SUF
+				then
+					echo "$cfrontC $O < $A > $B$SUF:" 1>&2
+					$cppC -C $Y -I$I < $A | $cfrontC +f$A $O > $B$SUF
+					E=$?
+				else	
+					$cppC -C $Y -I$I < $A | $cfrontC +f$A $O
+					E=$?
+					case $E in
+					0)	;;
+					*)	break
+						;;
+					esac
+				fi
+			else
+				echo "CC $O $A:" 1>&2
+				$cppC -C -I$I $Y < $A | $cfrontC +f$A $O > $B$ISUF
+				E=$?
+				R=1
+				C="$C $B$ISUF"
+				case $E in
+				0)	X="$X $B$ISUF"
+					Z="$Z $B.o"
+					G=1
+					;;
+				1)	echo "1 error" 1>&2
+					;;
+				*)	echo "$E errors" 1>&2
+					;;
+				esac
+			fi
+		else
+			echo "$A not found" 1>&2
+		fi
+		;;
+	*)	X="$X $A"
+		Z="$Z $A"
+		if test $OX
+		then
+			OO=$A
+			OX=""
+		else
+			G=1
+		fi
+		;;
+	esac
+done
+
+case $G in
+0)	;;
+*)	echo "$ccC $P $CF $X -lC" 1>&2
+	$ccC $P $CF $X -lC >__err			# generate code
+	EE=$?
+	if test -n "$CF"
+	then						# -c: skip link edit
+		dummy=""
+	elif test -s __err
+	then						# error: skip link edit
+		cat __err
+	else
+		case $EE in
+		0)	nm -gp $OO | munch $P >__ctdt.c	# find ctors/dtors
+			case $? in
+			1)	$ccC -c __ctdt.c >/dev/null
+				$ccC $X __ctdt.o -lC	# in essense: cc *.o
+				rm __ctdt.o
+				EE=$?
+			esac
+			rm __ctdt.c
+		esac
+	fi
+	rm __err
+esac
+
+if	test $R
+then
+	rm $C
+fi
+
+case $E in
+0)	exit $EE
+	;;
+*)	exit $E
+esac
+

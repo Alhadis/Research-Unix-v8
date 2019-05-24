@@ -1,0 +1,83 @@
+.TH VMSTAT 8 
+.SH NAME
+vmstat \- report virtual memory statistics
+.SH SYNOPSIS
+.B vmstat
+[
+.B \-fs
+]
+[ interval [ count ] ]
+.SH DESCRIPTION
+.I Vmstat
+normally reports certain statistics kept about
+process, virtual memory, disk, trap and cpu activity.
+Option
+.B \-f
+reports on 
+.I forks
+since system startup and the number of pages of virtual memory involved.
+Option
+.B \-s
+reports on paging
+events since boot.
+.PP
+In the absence of other options, the optional
+.I interval
+argument causes
+.I vmstat
+to report once each
+.I interval
+seconds, repeated
+.I count
+times or forever.
+.PP
+The default format fields are:
+.PP
+Procs: information about numbers of processes in various states.
+.nf
+R	in run queue
+B	blocked for resources (i/o, paging, etc.)
+W	runnable or short sleeper (< 20 secs) but swapped
+.fi
+.PP
+Memory: usage of virtual and real memory.
+`Active' virtual pages belong ot o processes that
+have run in the last 20 seconds.
+.nf
+AVM	active virtual pages
+FRE	size of the free list
+.fi
+.PP
+Page: paging activity,
+averaged each five seconds, and given in units per second.
+.nf
+RE	page reclaims (simulating reference bits)
+PI	page-in events
+PO	page-out events
+FR	pages freed per second
+DE	anticipated short term memory shortfall
+SR	scan rate: pageout daemon rpm
+.fi
+.PP
+Disk: operations per second.
+Typically paging is split across several drives.
+The drive names are ephemeral: ask a guru.
+.nf
+.fi
+.PP
+Faults: trap/interrupt rate averages per second over last 5 seconds.
+.nf
+IN	(non clock) device interrupts per second
+SY	system calls per second
+PD	pseudo-dma interrupts on DZ
+CS	cpu context switch rate (switches/sec)
+.fi
+.PP
+Cpu: breakdown of percentage usage of CPU time
+.nf
+US	user time for normal and low priority processes
+SY	system time
+ID	cpu idle
+.fi
+.SH FILES
+/dev/kmem, /unix

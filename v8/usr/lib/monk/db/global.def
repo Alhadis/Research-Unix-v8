@@ -1,0 +1,880 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+|associate(:document_newline_whitespace;;;
+
+[$white;
+white.text $white;])
+
+|environment(:document_blankline;
+nl.paragraph;)
+
+
+
+|associate(style;;;
+
+[one_column;
+two.columns off;]
+[two_column;
+two.columns on;]
+[page width $;;
+set W $, line.length]
+[page length $;;
+set L $, page.length]
+[font size $;;
+set S $, font.size])
+|comment<summary: style one_column (full page output)>
+|comment<summary: style two_column (two columns per page)>
+|comment<summary: style page width (width of the physical page)>
+|comment<summary: style page length (length of the physical page)>
+|comment<summary: style font size (default font size)>
+
+
+
+|environment(chapter;
+new.page, blank.lines 4, center on, font.size +1, font bold,
+incr CH,
+clear S0 S1 S2
+S3,
+text "Chapter ", concatenate, number CH, new.line;
+
+blank.lines 4, paragraph,
+store string.from.number RS CH)
+|comment<summary: chapter (numbered chapter; IT)>
+
+|environment(section;
+blank.lines 2, protect, font bold, incr S0,
+clear S1 S2 S3,
+number S0, text ". ";
+
+paragraph,
+store string.from.number RS S0)
+|comment<summary: section (numbered section; IT)>
+
+|environment(subsection;
+blank.lines, protect, font bold, incr S1,
+clear S2 S3,
+number S0, text ".",
+number S1, text " ";
+
+paragraph,
+store string.from.number RS S0,
+add string RS ".",
+add string.from.number RS S1)
+|comment<summary: subsection (numbered subsection; IT)>
+
+|environment(subsubsection;
+blank.lines, protect, font italics, incr S2,
+clear S3,
+number S0, text ".",
+number S1, text ".",
+number S2, text " ";
+
+store string.from.number RS S0,
+add string RS ".",
+add string.from.number RS S1,
+add string RS ".",
+add string.from.number RS S2)
+|comment<summary: subsubsection (numbered subsubsection; IT)>
+
+|associate(paragraph;
+blank.lines, clear string TS;
+
+if begin "!@\*(TS@@",
+temporary.font italics, string TS, temporary.font,
+if end;
+
+[numbered;
+incr S3, number format S3 i,
+store string.from.number TS S3,
+add string TS ") ";]
+[n;
+incr S3, number format S3 i,
+store string.from.number TS S3,
+add string TS ") ";]
+[indented;
+indent.line 3;]
+[i;
+indent.line 3;])
+|comment<summary: paragraph (paragraph n, i, numbered or indented)>
+
+|associate(p;
+blank.lines, clear string TS;
+
+if begin "!@\*(TS@@",
+temporary.font italics, string TS, temporary.font,
+if end;
+
+[numbered;
+incr S3, number format S3 i,
+store string.from.number TS S3,
+add string TS ") ";]
+[n;
+incr S3, number format S3 i,
+store string.from.number TS S3,
+add string TS ") ";]
+[indented;
+indent.line 3;]
+[i;
+indent.line 3;])
+|comment<summary: p (alias for paragraph)>
+
+|environment(appendix;
+new.page, blank.lines 4, center on, font.size +1, font bold,
+incr AC,
+clear S0 S1 S2,
+text "Appendix ", concatenate, number AC A, new.line;
+
+blank.lines 4, paragraph,
+store string.from.number RS AC)
+|comment<summary: appendix (numbered appendix; IT)>
+
+|environment(unnumbered_chapter;
+new.page, blank.lines 4, center on, font.size +1, font bold;
+
+blank.lines 4, paragraph)
+|comment<summary: unnumbered_chapter (unnumbered chapter)>
+
+|environment(unnumbered_section;
+blank.lines 2, protect, font bold;
+
+paragraph)
+|comment<summary: unnumbered_section (unnumbered section)>
+
+|environment(unnumbered_subsection;
+blank.lines, protect, font bold;
+
+paragraph)
+|comment<summary: unnumbered_subsection (unnumbered subsection)>
+
+|environment(unnumbered_subsubsection;
+blank.lines, protect, font italics;)
+|comment<summary: unnumbered_subsubsection (unnumbered subsubsection)>
+
+|environment(unnumbered_appendix;
+new.page, blank.lines 4, center on, font.size +1, font bold;
+
+blank.lines 4, paragraph)
+|comment<summary: unnumbered_appendix (unnumbered appendix)>
+
+
+
+|environment(bold;
+temporary.font bold; temporary.font)
+|comment<summary: bold (alias for b)>
+
+|environment(b;
+temporary.font bold; temporary.font)
+|comment<summary: b (bold)>
+
+|environment(italics;
+temporary.font italics; temporary.font)
+|comment<summary: italics (alias for i)>
+
+|environment(i;
+temporary.font italics; temporary.font)
+|comment<summary: i (italics)>
+
+|environment(roman;
+temporary.font roman; temporary.font)
+|comment<summary: roman (alias for r)>
+
+|environment(r;
+temporary.font roman; temporary.font)
+|comment<summary: r (roman)>
+
+|environment(constant_width;
+temporary.font cw; temporary.font)
+|comment<summary: constant_width (alias for cw)>
+
+|environment(cw;
+temporary.font cw; temporary.font)
+|comment<summary: cw (constant width)>
+
+|environment(here;
+here on, fill off;)
+|comment<summary: here (keep a block together on this page or start a new page)>
+
+|environment(around;
+around on, fill off;)
+|comment<summary: around (keep a block together here or move it to the next page)>
+
+|environment(around_placement;;
+around_placement)
+|comment<summary: around_placement (output all arounds here)>
+
+|environment(full;
+width full;)
+|comment<summary: full (use the whole page)>
+
+|environment(narrow;
+width narrow;)
+|comment<summary: narrow (use the just this column)>
+
+|associate(blank_space;;;
+
+[$; spacing on, blank.lines $;])
+|comment<summary: blank_space (leave this much blank space)>
+
+|environment(indent;
+indent +5;)
+|comment<summary: indent (indent by standard amount)>
+
+|environment(center;
+center on;)
+|comment<summary: center (center each line)>
+
+|environment(center_block;
+fill off, center.block on;)
+|comment<summary: center_block (center all lines as a block)>
+
+|environment(small;
+size -1;)
+|comment<summary: small (reduce the point size)>
+
+|environment(s;
+size -1;)
+|comment<summary: s (alias for small)>
+
+|environment(big;
+size +1;)
+|comment<summary: big (increase point size)>
+
+|environment(u;
+underline on;)
+|comment<summary: u (underline)>
+
+|environment(underline;
+underline on;)
+|comment<summary: underline (alias for u)>
+
+|environment(text;
+fill off;)
+|comment<summary: text (fill the text)>
+
+|environment(left_adjust;
+adjust left;)
+|comment<summary: left_adjust (left adjust the text)>
+
+|environment(footnote;
+incr FN,
+size -2, vertical.motion -.4m, temporary.font roman,
+number FN, temporary.font, vertical.motion +.4m,
+footnote on, indent 0.2i, indent.line -0.2i,
+number FN, text ".", horizontal.motion "|0.2i";)
+|comment<summary: footnote (numbered footnote)>
+
+|environment(dagnote;
+size -2, vertical.motion -.4m, temporary.font roman,
+text "\(dg", temporary.font, vertical.motion +.4m,
+footnote on, indent 0.2i, indent.line -0.2i,
+text "\(dg", horizontal.motion "|0.2i";)
+|comment<summary: dagnote (footnote marked with a dagger)>
+
+|environment(comment;
+divert.input on RS;)
+|comment<summary: comment (kludge for sharon to comment out user text)>
+
+|environment(notation;
+blank.lines, fill off;
+blank.lines)
+|comment<summary: notation (notation)>
+
+
+
+
+
+
+|environment(reference;
+verbatim on, reference on;)
+|comment<summary: reference (a reference in refer)>
+
+|environment(picture;
+verbatim on, file.information, blank.lines 1, picture on;
+
+blank.lines 1)
+|comment<summary: picture (a picture in pic)>
+
+|environment(picture_caption;
+incr FG,
+blank.lines 1, fill on, center on, temporary.font bold,
+text "Figure ", number FG, text ". ", temporary.font;
+
+blank.lines 1, store string.from.number RS FG)
+|comment<summary: picture_caption (the picture's caption; IT)>
+
+|environment(table;
+verbatim on, file.information, blank.lines 1, table on;
+
+blank.lines 1)
+|comment<summary: table (a table in tbl)>
+
+|environment(table_caption;
+incr TB,
+blank.lines 1, fill on, center on, temporary.font bold,
+text "Table ", number TB, text ". ", temporary.font;
+
+blank.lines 1, store string.from.number RS TB)
+|comment<summary: table_caption (the table's caption; IT)>
+
+|environment(equation;
+verbatim on, file.information, blank.lines 1, equation on;
+
+blank.lines 1)
+|comment<summary: equation (an equation in eqn)>
+
+|environment(equation_caption;
+incr FG,
+blank.lines 1, fill on, center on, temporary.font bold,
+text "Figure ", number FG, text ". ", temporary.font;
+
+blank.lines 1, store string.from.number RS FG)
+|comment<summary: equation_caption (the equation's caption; IT)>
+
+|associate(graph;
+verbatim on, file.information, blank.lines 1, graph on PA;
+
+blank.lines 1, clear string PA;
+
+[width $; set string PA $;])
+|comment<summary: graph (a graph in grap)>
+
+|environment(graph_caption;
+incr FG,
+blank.lines 1, fill on, center on, temporary.font bold,
+text "Figure ", number FG, text ". ", temporary.font;
+
+blank.lines 1, store string.from.number RS FG)
+|comment<summary: graph_caption (the graph's caption; IT)>
+
+|environment(bargraph;
+verbatim on, file.information, blank.lines 1, bargraph on;
+
+blank.lines 1)
+|comment<summary: bargraph (a bar graph in bar)>
+
+|environment(bargraph_caption;
+incr FG,
+blank.lines 1, fill on, center on, temporary.font bold,
+text "Figure ", number FG, text ". ", temporary.font;
+
+blank.lines 1, store string.from.number RS FG)
+|comment<summary: bargraph_caption (the bar graph's caption; IT)>
+
+|environment(figure;
+verbatim on, file.information, blank.lines 1, fill off;
+
+blank.lines 1)
+|comment<summary: figure (a figure)>
+
+|environment(figure_caption;
+incr FG,
+blank.lines 1, fill on, center on, temporary.font bold,
+text "Figure ", number FG, text ". ", temporary.font;
+
+blank.lines 1, store string.from.number RS FG)
+|comment<summary: figure_caption (the figures caption; IT)>
+
+|environment(computeroutput;
+verbatim on, file.information, blank.lines 1, fill off, font cw;
+
+blank.lines 1)
+|comment<summary: computeroutput (computeroutput example using constant width)>
+
+|environment(computeroutput_caption;
+incr FG,
+blank.lines 1, fill on, center on, temporary.font bold,
+text "Figure ", number FG, text ". ", temporary.font;
+
+blank.lines 1, store string.from.number RS FG)
+|comment<summary: computeroutput_caption (computeroutput example's caption)>
+
+|environment(save;
+verbatim on, citation save;
+
+citation save end RS)
+|comment<summary: save (save last important thing, shown as IT, in this label)>
+
+|environment(savepage;
+verbatim on, citation save;
+
+citation savepage end)
+|comment<summary: savepage (save last page number in this label)>
+
+|environment(remember;
+verbatim on, citation remember;
+
+citation remember end)
+|comment<summary: remember (remember the important thing or page number saved in this label)>
+
+
+
+|environment(bullet_list;
+blank.lines 1, list.tags bullet;
+
+indent, blank.lines 1)
+|comment<summary: bullet_list (bulletted list using \(bu \- \s-1\(bu\s+1 \s-1\-\s+1 \s-2\(bu\s+2 \s-2\-\s+2 \s-3\(bu\s+3)>
+
+|environment(dash_list;
+blank.lines 1, list.tags dash;
+
+indent, blank.lines 1)
+|comment<summary: dash_list (dasheded list using \- \(bu \s-1\-\s+1 \s-1\(bu\s+1 \s-2\-\s+2 \s-2\(bu\s+2 \s-3\-\s+3)>
+
+|environment(number_list;
+clear l1 l2 l3 l4 l5 l6 l7,
+number format l1 l2 l3 l4 l5 l6 l7 1,
+blank.lines 1, list.tags number;
+
+indent, blank.lines 1)
+|comment<summary: number_list (numbered list using 1 1.1 1.1.1 1.1.1.1 1.1.1.1.1 1.1.1.1.1.1 1.1.1.1.1.1.1)>
+
+|environment(outline_list;
+clear l1 l2 l3 l4 l5 l6 l7,
+number format l1 I,
+number format l2 A,
+number format l3 l5  1,
+number format l4 l6  a,
+number format l7 i,
+blank.lines 1, list.tags outline;
+
+indent, blank.lines 1)
+|comment<summary: outline_list (outline list using I A 1 a (1) (a) i))>
+
+|environment(level1;
+if begin "@\*(l0@number@",
+clear l2 l3 l4 l5 l6 l7,
+incr l1,
+store string.from.number RS l1,
+if end,
+if begin "@\*(l0@bullet@",
+set string RS \(bu,
+if end,
+if begin "@\*(l0@dash@",
+set string RS \-,
+if end,
+if begin "@\*(l0@outline@",
+clear l2 l3 l4 l5 l6 l7,
+incr l1,
+store string.from.number RS l1,
+if end;
+indent 0.2i, indent.line -0.2i, string RS,
+horizontal.motion "|0.2i")
+|comment<summary: level1 (a list item at level 1; IT)>
+
+|environment(level2;
+if begin "@\*(l0@number@",
+clear l3 l4 l5 l6 l7,
+incr l2,
+store string.from.number RS l1,
+add string RS ".",
+add string.from.number RS l2,
+if end,
+if begin "@\*(l0@bullet@",
+set string RS \-,
+if end,
+if begin "@\*(l0@dash@",
+set string RS \(bu,
+if end,
+if begin "@\*(l0@outline@",
+clear l3 l4 l5 l6 l7,
+incr l2,
+store string.from.number RS l2,
+if end;
+indent 0.4i, indent.line -0.2i, string RS,
+horizontal.motion "|0.2i")
+|comment<summary: level2 (a list item at level 2; IT)>
+
+|environment(level3;
+if begin "@\*(l0@number@",
+clear l4 l5 l6 l7,
+incr l3,
+store string.from.number RS l1,
+add string RS ".",
+add string.from.number RS l2,
+add string RS ".",
+add string.from.number RS l3,
+if end,
+if begin "@\*(l0@bullet@",
+set string RS \s-1\(bu\s+1,
+if end,
+if begin "@\*(l0@dash@",
+set string RS \s-1\-\s+1,
+if end,
+if begin "@\*(l0@outline@",
+clear l4 l5 l6 l7,
+incr l3,
+store string.from.number RS l3,
+if end;
+indent 0.6i, indent.line -0.2i, string RS,
+horizontal.motion "|0.2i")
+|comment<summary: level3 (a list item at level 3; IT)>
+
+|environment(level4;
+if begin "@\*(l0@number@",
+clear l5 l6 l7,
+incr l4,
+store string.from.number RS l1,
+add string RS ".",
+add string.from.number RS l2,
+add string RS ".",
+add string.from.number RS l3,
+add string RS ".",
+add string.from.number RS l4,
+if end,
+if begin "@\*(l0@bullet@",
+set string RS \s-1\-\s+1,
+if end,
+if begin "@\*(l0@dash@",
+set string RS \s-1\(bu\s+1,
+if end,
+if begin "@\*(l0@outline@",
+clear l5 l6 l7,
+incr l4,
+store string.from.number RS l4,
+if end;
+indent 0.8i, indent.line -0.2i, string RS,
+horizontal.motion "|0.2i")
+|comment<summary: level4 (a list item at level 4; IT)>
+
+|environment(level5;
+if begin "@\*(l0@number@",
+clear l6 l7,
+incr l5,
+store string.from.number RS l1,
+add string RS ".",
+add string.from.number RS l2,
+add string RS ".",
+add string.from.number RS l3,
+add string RS ".",
+add string.from.number RS l4,
+add string RS ".",
+add string.from.number RS l5,
+if end,
+if begin "@\*(l0@bullet@",
+set string RS \s-2\(bu\s+2,
+if end,
+if begin "@\*(l0@dash@",
+set string RS \s-2\-\s+2,
+if end,
+if begin "@\*(l0@outline@",
+clear l6 l7,
+incr l5,
+set string RS "(",
+add string.from.number RS l5,
+add string RS ")",
+if end;
+indent 1.0i, indent.line -0.2i, string RS,
+horizontal.motion "|0.2i")
+|comment<summary: level5 (a list item at level 5; IT)>
+
+|environment(level6;
+if begin "@\*(l0@number@",
+clear l7,
+incr l6,
+store string.from.number RS l1,
+add string RS ".",
+add string.from.number RS l2,
+add string RS ".",
+add string.from.number RS l3,
+add string RS ".",
+add string.from.number RS l4,
+add string RS ".",
+add string.from.number RS l5,
+add string RS ".",
+add string.from.number RS l6,
+if end,
+if begin "@\*(l0@bullet@",
+set string RS \s-2\-\s+2,
+if end,
+if begin "@\*(l0@dash@",
+set string RS \s-2\(bu\s+2,
+if end,
+if begin "@\*(l0@outline@",
+clear l7,
+incr l6,
+set string RS "(",
+add string.from.number RS l6,
+add string RS ")",
+if end;
+indent 1.2i, indent.line -0.2i, string RS,
+horizontal.motion "|0.2i")
+|comment<summary: level6 (a list item at level 6; IT)>
+
+|environment(level7;
+if begin "@\*(l0@number@",
+incr l7,
+store string.from.number RS l1,
+add string RS ".",
+add string.from.number RS l2,
+add string RS ".",
+add string.from.number RS l3,
+add string RS ".",
+add string.from.number RS l4,
+add string RS ".",
+add string.from.number RS l5,
+add string RS ".",
+add string.from.number RS l6,
+add string RS ".",
+add string.from.number RS l7,
+if end,
+if begin "@\*(l0@bullet@",
+set string RS \s-3\(bu\s+3,
+if end,
+if begin "@\*(l0@dash@",
+set string RS \s-3\-\s+3,
+if end,
+if begin "@\*(l0@outline@",
+incr l7,
+store string.from.number RS l7,
+add string RS ")",
+if end;
+indent 1.4i, indent.line -0.2i, string RS,
+horizontal.motion "|0.2i")
+|comment<summary: level7 (a list item at level 7; IT)>
+
+
+
+
+
+
+
+|environment(reference_placement;
+verbatim on,
+ref_ieee_begin,
+ref_ieee_end,
+ref_ieee_init,
+
+ref_ieee_other,
+ref_ieee_journal,
+ref_ieee_book,
+ref_ieee_article,
+ref_ieee_report,
+ref_ieee_tm,
+
+reference placement;)
+|comment<summary: reference_placement (produce references here)>
+
+|environment(ref_ieee_begin;
+divert.input on R+,
+blank.lines, incr RF,
+indent 0.3i, indent.line -0.3i,
+text "[", string RF, text "]",
+horizontal.motion "|0.3i", concatenate,
+if else "\$1=0",
+macro r0,
+if else,
+if else "\$1=1",
+macro r1,
+if else,
+if else "\$1=2",
+macro r2,
+if else,
+if else "\$1=3",
+macro r3,
+if else,
+if else "\$1=4",
+macro r4,
+if else,
+if else "\$1=5",
+macro r5,
+if else,
+error "Bad argument passed to R+",
+new.line;)
+
+|environment(ref_ieee_end;
+divert.input on R-,
+clear string RA RB RC
+RD RE RG
+RI RJ RK RM
+RN RO RP RR
+RT RV,
+clear RA RO RP RT;)
+
+|environment(ref_ieee_init;
+new.page, blank.lines 4, center on, font.size +1, font bold,
+text "REFERENCES", blank.lines 4,
+macro R-,
+blank.lines;)
+
+|environment(ref_ieee_other;
+divert.input on r0,
+if begin "!@\*(RA@@",
+string RA, text ",",
+if end,
+set PS ".",
+if "!@\*(RO@@",
+set string PS ",",
+if begin "!@\*(RT@@",
+text "\& ", temporary.font italics, string RT,
+temporary.font, string PS,
+if end,
+if begin "!@\*(RO@@",
+text "\& ", string RO,
+if end,
+if begin "!@\*(RD@@",
+text "\& (", string RD, text ").",
+if end,
+new.line;)
+
+|environment(ref_ieee_journal;
+divert.input on r1,
+string RA, text ",",
+if begin "!@\*(RT@@",
+string D+, string RT, text ",",
+string D-,
+if end,
+clear string PS,
+if "@\*(RV@@",
+set string PS ",",
+text "\& ", temporary.font italics, string RJ,
+temporary.font, string PS,
+if begin "!@\*(RV@@",
+temporary.font bold, string RV,
+temporary.font,
+if end,
+if begin "!@\*(RN@@",
+string PS,
+text "(", string RN, text ")",
+if end,
+if begin "!@\*(RP@@",
+if else begin "\n(RP>0",
+text "\& pp. ",
+if end,
+if else begin,
+text "\& p. ",
+if end,
+string RP,
+if end,
+if "!@\*(RI@@",
+if begin "@\*(RR@@",
+text "\& ", string RI, text ",",
+if end,
+text "\& (", string RD, text ").",
+if "!@\*(RO@@",
+string RO,
+new.line;)
+
+|environment(ref_ieee_book;
+divert.input on r2,
+string RA, text ", ",
+temporary.font italics, string RT, temporary.font, text ",",
+if begin "!@\*(RV@@",
+string RV, text ",",
+if end,
+clear string PS,
+if "!@\*(RC@@",
+set string PS ",",
+text "\& ", string RI, string PS,
+if begin "!@\*(RC@@",
+string RC,
+if end,
+text "\& (", string RD, text ").",
+if begin "!@\*(RG@@",
+text "\& Gov't. ordering no. ", string RG,
+if end,
+if "!@\*(RO@@",
+string RO,
+new.line;)
+
+|environment(ref_ieee_article;
+divert.input on r3,
+string RA, text ", ",
+string D+, string RT, text ",",
+string D-,
+if begin "!@\*(RP@@",
+if else begin "\n(RP>0",
+text "\& pp. ",
+if end,
+if else begin,
+text "\& p. ",
+if end,
+string RP,
+if end,
+text "\& in ", temporary.font italics, string RB,
+temporary.font, text ",",
+if begin "!@\*(RE@@",
+text "\& ed. ", string RE, text ",",
+if end,
+clear string PS,
+if "!@\*(RC@@",
+set string PS ",",
+if begin "!@\*(RI@@",
+text "\& ", string RI, string PS,
+if end,
+if begin "!@\*(RC@@",
+text "\& ", string RC,
+if end,
+text "\& (", string RD, text ").",
+if "!@\*(RO@@",
+string RO,
+new.line;)
+
+|environment(ref_ieee_report;
+divert.input on r4,
+string RA, text ", ",
+string D+, string RT, text ",",
+string D-,
+clear string PS,
+if "!@\*(RI@@",
+set string PS ",",
+if "!@\*(RC@@",
+set string PS ",",
+string RR, string RG,
+string PS,
+if begin "!@\*(RI@@",
+clear string PS,
+if "!@\*(RC@@",
+set string PS ",",
+string RI, string PS,
+if end,
+if begin "!@\*(RC@@",
+string RC,
+if end,
+text "\& (", string RD, text ").",
+if "!@\*(RO@@",
+string RO,
+new.line;)
+
+|environment(ref_ieee_tm;
+divert.input on r5,
+string RA, text ", ",
+temporary.font italics, string RT,
+temporary.font, text ", ",
+string RM, text ".",
+new.line;)
+
+
+|environment(:common;
+file.information,
+clear AC S0 S1
+S2 FN TB
+FG RF,
+set string r+ "\s-2\v'-.4m'\f1",
+set string r- "\v'.4m'\s+2\fP",
+set string D+ "``",
+set string D- "''",
+set string P+ ".",
+set string c+ ",";)

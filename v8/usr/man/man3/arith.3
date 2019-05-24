@@ -1,0 +1,66 @@
+.TH ARITH 3
+.SH NAME
+abs, sgn,
+gcd, lcm, min, max \- integer arithmetic functions:
+absolute value, sign,
+greatest common divisor, least common multiple, minimum, maximum
+.SH SYNOPSIS
+.B abs(a)
+.PP
+.B sgn(a)
+.PP
+.B gcd(a, b)
+.PP
+.B long lcm(a, b)
+.PP
+.B min(a, b)
+.PP
+.B max(a, b)
+.SH DESCRIPTION
+.I Abs
+returns
+the absolute value of 
+.I a.
+.PP
+.I Sgn
+returns \-1, 0, 1, according as
+.IR a <0,
+.IR a =0,
+.IR a >0.
+.PP
+.I Gcd
+returns the largest positive integer that divides both
+.I a
+and
+.I b,
+except that gcd(0, 0) = 0.
+.PP
+.I Lcm
+satisfies
+.IP
+lcm(\fIa, b\fR) = abs(\fIab\fR/gcd(\fIa, b\fR))
+.LP
+except that lcm(0, 0) = 0.
+.PP
+.I Min
+.RI ( max )
+returns the minimum (maximum) of
+.I a
+and
+.I b.
+.SH SEE ALSO
+floor(3) for
+.I fabs
+.SH DIAGNOSTICS
+.I Abs
+and
+.I gcd
+return
+.I \-X,
+the most negative integer, when the true result is the unrepresentable value
+.I X.
+.SH BUGS
+The result of
+.I lcm
+is undefined when it doesn't fit in a long.
+

@@ -1,0 +1,16 @@
+This is both nroff and troff;  "make" makes
+troff, and "make nroff" makes (guess what) nroff.
+Be sure the remove *.o between these two.
+The results are called a.out and na.out, just to
+confuse the issue.
+
+This nroff does away with the nonsensical organization
+of terminal tables of the previous version.  Terminals
+are described with the same language as before but the
+files are ascii.  Working examples are in ./term;  the
+named parameters at the beginning MUST be present in
+the order given.  Character sets can be anything you
+want;  see tab.think for a biggish example.
+
+Terminal tables belong in /usr/lib/term;  the names
+("tab.xxx") don't collide with the old names ("tabxxx").

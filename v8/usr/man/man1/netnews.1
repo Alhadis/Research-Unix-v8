@@ -1,0 +1,170 @@
+.TH NETNEWS 1  "not alice"
+.SH NAME
+netnews \- send or receive news articles
+.SH SYNOPSIS
+.B netnews
+[
+.B \-a
+[
+date ]]
+[
+.B \-n
+newsgroups ]
+[
+.B \-t
+titles ]
+[
+.B \-lpr
+]
+.PP
+.B netnews
+.B \-s
+[
+newsgroups ]
+.PP
+.B netnews
+.B \-i
+title
+[
+.B \-n
+newsgroups ]
+.SH DESCRIPTION
+.I Netnews
+is an intercomputer news service.
+Without argument it prints recent articles.
+After each article
+a command is read from the standard input.
+.TP 10
+newline
+Go on to next article.
+.TP 10
+p
+Print article again.
+.TP 10
+\-
+Go back to previous article.
+.TP 10
+c
+Cancel (restricted to contributor and superuser).
+.TP
+.RI "w " file
+Append a copy of the article to the named
+.I file.
+.TP
+r
+Reply to author (via mail).
+.TP
+q
+Exit.
+.TP
+x
+Exit without update.
+.PP
+Option
+.B \-p
+prints with no questions asked.
+Option
+.B \-r
+prints in reverse time order.
+Option
+.B \-l
+prints titles only.
+.PP
+Normally, printed articles must
+.IP (1)
+be more recent than your last use of
+.IR netnews ;
+option
+.B \-a
+adjusts the time threshold (no date means the beginning of time)
+.IP (2)
+be in one of the user's newsgroups.
+Option
+.B \-n
+specifies different newsgroups.
+.IP (3)
+have no particular title.
+Option
+.B \-t
+restricts titles to contain one of the specified strings.
+.PP
+Option
+.B \-s
+prints
+the list of newsgroups to which
+the user subscribes,
+or, if
+.I newsgroups
+are given,
+specifies a new subscription list.
+Newsgroup
+.SM `ALL'
+receives all articles.
+.SM `NET.ALL'
+receives all newsgroups that begin with
+.RB `NET . '.
+All users subscribe to the newsgroup `general'.
+.PP
+.I Netnews
+.B \-i
+inserts an article
+(read from standard input)
+with title
+.I title
+to the newsgroups specified by
+.B \-n
+(default `general').
+.SH EXAMPLES
+.HP
+netnews \-a last tues \-n
+.SM ALL
+.br
+Read all news since Tuesday.
+.TP
+netnews \-alr
+Print titles of all news articles of interest,
+most recent first.
+.HP
+netnews \-s
+.SM
+.RB "ALL !NET" . ALL
+.br
+Subscribe to all local articles,
+and no NET articles
+(obscure feature).
+.SH FILES
+.PD 0
+.TP "\w'/usr/spool/news/history   'u"
+/usr/spool/news/sys.nnn
+news articles
+.TP
+/usr/spool/news/.bitfile
+bit map of users with news
+.TP
+/usr/spool/news/.ngfile
+list of newsgroups to which it is
+legal to subscribe or submit news
+.TP
+/usr/spool/news/.uindex
+index of netnews users
+.TP
+/usr/spool/news/.nindex
+index of news articles
+.TP
+/usr/spool/news/.seq
+sequence number of last article
+.TP
+/usr/spool/news/.history
+list of all articles ever seen
+.TP
+/usr/spool/news/.sys
+system subscription list
+.PD
+.SH SEE ALSO
+mail(1), news(1),
+uucp(1)
+.SH BUGS
+.I Netnews
+and
+.IR readnews (1)
+use the same text in different churches.

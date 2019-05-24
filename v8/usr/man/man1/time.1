@@ -1,0 +1,60 @@
+.TH TIME 1 
+.SH NAME
+time \- time a command
+.SH SYNOPSIS
+.B time
+[
+.B \-usrtdmfio
+] [
+.B \-v
+]
+command
+.SH DESCRIPTION
+The
+given command is executed; after it is complete,
+.I time
+reports statistics about the program on its standard error output.
+The statistics printed are controlled by the options;
+the default is
+.B \-usr
+and
+.B \-v
+reports everything.  The statistics are:
+.TP
+.B u
+User cpu time consumed by the command
+.TP
+.B s
+System cpu time attributed to the command
+.TP
+.B r
+Real (clock) time taken by the command
+.TP
+.B t
+Average resident text size, in Kb.
+.TP
+.B d
+Average resident data size, in Kb.
+.TP
+.B m
+Maximum total resident size, in Kb.
+.TP
+.B f
+Number of page faults resulting in disk i/o.
+.TP
+.B i
+Number of disk blocks read.
+.TP
+.B o
+Number of disk blocks written.
+.PP
+After the statistics,
+.I time
+prints a tab and the command, up to the fifth argument.
+Times are reported in seconds.
+.SH BUGS
+Elapsed time is accurate to the second,
+while the CPU times are measured
+to the 60th second.
+Thus the sum of the CPU times can be up to a second larger
+than the elapsed time.

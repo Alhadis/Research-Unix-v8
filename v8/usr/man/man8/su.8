@@ -1,0 +1,30 @@
+.TH SU 8 
+.SH NAME
+su \- substitute user id temporarily
+.SH SYNOPSIS
+.B /etc/su
+[ user ]
+.SH DESCRIPTION
+.I Su
+demands the password for the login name
+.I user,
+and if it is given,
+changes to that userid
+and invokes the Shell
+.IR sh (1)
+without changing the current directory.
+The user environment
+is unchanged except for HOME and SHELL,
+which are taken from the password file
+for the user being substituted
+(see
+.IR environ (5)).
+The new userid stays in force until the Shell exits.
+.PP
+If no 
+.I user
+is specified, `root' is assumed.
+To remind the super-user of his responsibilities,
+the Shell substitutes `#' for its usual prompt.
+.SH "SEE ALSO"
+sh(1)

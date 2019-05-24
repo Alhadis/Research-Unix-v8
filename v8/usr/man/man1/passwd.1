@@ -1,0 +1,74 @@
+.TH PASSWD 1 
+.SH NAME
+passwd \- change login password
+.SH SYNOPSIS
+.B passwd
+[ \-\fBan\fP ]
+[ name ]
+.SH DESCRIPTION
+This command changes (or installs) a password
+associated with the user
+.IR name
+(your own name by default).
+.PP
+The program prompts for the old password and then for the new one.
+The caller must supply both.
+The new password must be typed twice, to forestall mistakes.
+.PP
+New passwords must be at least four characters long if they use
+a sufficiently rich alphabet and at least six characters long
+if monocase.
+These rules are relaxed if you are insistent enough.
+.PP
+Only the owner of the name or the super-user may change a password;
+the owner must prove he knows the old password.
+.PP
+If the
+.B \-a
+option is given,
+.I passwd
+prompts for new values of certain fields of the
+password file entry.
+.PP
+The super-user may use the
+.B \-n
+option to install new users.
+The prompts are self-explanatory,
+and most of the defaults obvious.
+A null response to the ``UID:'' prompt
+assigns a numeric userid one greater than the
+largest one previously in
+.IR /etc/passwd .
+A null response to the ``Directory:'' prompt
+assigns the user a home directory in
+.IR /usr .
+If the first character of the response to this
+prompt is an asterisk, the remaining characters
+are taken as the name of the new user's home
+directory, and a symbolic link to this directory
+is placed in
+.IR /usr .
+A user can be assigned a directory with a name of the form
+\fB/\fP\fIdir\fP\fB/\fP\fIusername\fP by replying \(**\fIdir\fP.
+.PP
+A new user's home directory starts with a file named
+.IR .profile .
+This file is a copy of
+.I /etc/stdprofile
+with
+.B \eN
+replaced by the user's name, and
+.B \eD
+replaced by the name of the user's home directory.
+.SH FILES
+/etc/passwd
+.br
+/etc/stdprofile
+.SH "SEE ALSO"
+passwd(5), crypt(3)
+.br
+Robert Morris and Ken Thompson,
+.I UNIX password security
+.SH BUGS
+The password file information should be kept in a different data structure
+allowing indexed access.

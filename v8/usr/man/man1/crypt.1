@@ -1,0 +1,60 @@
+.TH CRYPT 1 
+.SH NAME
+crypt, encrypt, decrypt \- encode/decode
+.SH SYNOPSIS
+.B crypt
+[ password ]
+.PP
+.B encrypt
+[ password ]
+.br
+.B decrypt
+[ password ]
+.SH DESCRIPTION
+These commands read from the standard input and write
+on the standard output.
+The
+.I password
+is an enciphering key.
+If no password
+is given,
+one is demanded from the terminal;
+echoing is turned off while it is being typed in.
+.I Crypt
+uses a relatively simple, fast method (rotor machine) for both
+enciphering and deciphering.
+.I Encrypt
+and
+.I decrypt
+use a more robust, slower method (Data Encryption Standard).
+Files enciphered by
+.I crypt
+are compatible with those treated by the editor
+.I ed
+in encryption mode.
+Files enciphered by
+.I crypt
+are not intelligible to
+.I decrypt,
+and vice versa.
+.PP
+It is prudent to supply the key from the terminal,
+not from the command line, and to pick a reasonably long
+(6 letters) and unobvious key.
+Remember, too, that encipherment cannot frustrate
+adversaries with super-user privileges.
+.SH FILES
+/dev/tty for typed key
+.SH "SEE ALSO"
+ed(1),
+makekey(8)
+.SH BUGS
+There is no warranty of merchantability nor any warranty
+of fitness for a particular purpose nor any other warranty,
+either express or implied, as to the accuracy of the
+enclosed materials or as to their suitability for any
+particular purpose.  Accordingly, Bell Telephone
+Laboratories assumes no responsibility for their use by the
+recipient.   Further, Bell Laboratories assumes no obligation
+to furnish any assistance of any kind whatsoever, or to
+furnish any additional information or documentation.

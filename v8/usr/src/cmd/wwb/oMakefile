@@ -1,0 +1,176 @@
+# NOTICE-NOT TO BE DISCLOSED OUTSIDE BELL SYS EXCEPT UNDER WRITTEN AGRMT 
+# Writer's Workbench version 2.x, February 1982  llc's version
+#	        make file for THE WRITER'S WORKBENCH
+#
+#	This package includes programs that suggest improvements to
+#	written documents.  Many of the programs are built on Style
+#	and Diction - this make file assumes deroff, style, and diction
+#	are normal commands on the system & doesn't include them
+#
+#
+#	LIB is the directory for storing the object code
+#		for all programs run by shell files. 
+#	BIN is the directory used for storing the shell files that run
+#		the programs and the object code for deroff.
+#
+LIB = /usr/lib/style
+# BIN = /usr/bin
+BIN = /usr/llc/wwb/commands/bin
+LDFLAGS = -ll
+CFLAGS = -Od2
+LCFLAGS = -O
+
+wwb:	proofr prose chunk org syl mkstand
+
+proofr:	punct double gram
+
+punct: punct.l
+	lex punct.l
+	$(CC) $(LCFLAGS)  lex.yy.c $(LDFLAGS) -o punlx
+	strip punlx
+
+dictadd:	dictadd.c
+		$(CC) $(CFLAGS)  dictadd.c -o dictadd
+		strip dictadd
+
+double: double.c cbtype.c cbtype.h
+	cc $(CFLAGS) double.c cbtype.c -o double
+	strip double
+
+gram:	gram.l
+	lex gram.l
+	$(CC) $(CFLAGS)  lex.yy.c $(LDFLAGS) -o gramlx
+	strip gramlx
+
+prose:	prose.c
+	$(CC) $(CFLAGS)  -DLIB=\"$(LIB) prose.c -o prose
+	strip prose
+
+chunk:	chunk.c
+	$(CC) $(CFLAGS)  chunk.c -o chunk
+	strip chunk
+
+org:	org.l
+	lex org.l
+	$(CC) $(CFLAGS)  lex.yy.c $(LDFLAGS) -o orglx
+	strip orglx
+
+mkstand:	mkstand.c
+	$(CC) $(LCFLAGS)  mkstand.c -lm -o mkstand
+	strip mkstand
+
+
+
+syl:	syl.c
+	$(CC) $(CFLAGS)  syl.c -o syl
+	strip syl
+
+install:
+	: PROOFR
+		cp dictadd.sh $(BIN)/dictadd
+		cp dictplus.sh $(BIN)/dictplus
+		cp script.sed $(LIB)/script.sed
+		chmod 644 $(LIB)/script.sed
+		cp double $(BIN)/double
+		cp proofr.sh $(BIN)/proofr
+		cp spelladd.sh $(BIN)/spelladd
+		cp spellwwb.sh $(BIN)/spellwwb
+		cp gram.sh $(BIN)/gram
+		mv gramlx $(LIB)/gramlx
+		cp splitrules.sh $(BIN)/splitrules
+		chmod 755 $(BIN)/dictadd $(BIN)/dictplus $(BIN)/double 
+		chmod 755 $(BIN)/proofr $(BIN)/spelladd $(BIN)/spellwwb
+		chmod 755 $(BIN)/gram $(BIN)/splitrules
+		chmod 755 $(LIB)/gramlx
+		rm -f $(BIN)/proofer
+		ln $(BIN)/proofr $(BIN)/proofer
+		mv dictadd $(LIB)
+		chmod 755 $(LIB)/dictadd $(BIN)/double
+		cp punctrules.sh $(BIN)/punctrules
+		cp punct.sh $(BIN)/punct
+		mv punlx $(LIB)/punlx
+		chmod 755 $(LIB)/punlx
+		chmod 755 $(BIN)/punctrules $(BIN)/punct
+		cp seddiff $(LIB)
+		chmod 644 $(LIB)/seddiff
+
+	: PROSE
+		cp prose.sh $(BIN)/prose
+		chmod 755 $(BIN)/prose
+		cp crft.st exp.t fur.t nom.t pass.t poptt.t popttm.t $(LIB)
+		cp tm.st train.st type.t rd2.t $(LIB)
+		cp type2.t var.t var4.t var5.t var6.t $(LIB)
+		chmod 644 $(LIB)/crft.st $(LIB)/exp.t $(LIB)/fur.t
+		chmod 644 $(LIB)/nom.t $(LIB)/pass.t $(LIB)/poptt.t
+		chmod 644 $(LIB)/popttm.t
+		chmod 644 $(LIB)/rd2.t $(LIB)/tm.st $(LIB)/train.st
+		chmod 644 $(LIB)/type.t $(LIB)/type2.t
+		chmod 644 $(LIB)/var.t $(LIB)/var4.t $(LIB)/var5.t $(LIB)/var6.t
+		mv prose $(LIB)
+		chmod 755 $(LIB)/prose
+	: CHUNK
+		cp chunk.sh $(BIN)/chunk
+		chmod 755 $(BIN)/chunk
+		mv chunk $(LIB)
+		cp chkin.sed chkout.sed $(LIB)
+		chmod 755 $(LIB)/chunk
+		chmod 644 $(LIB)/chkin.sed $(LIB)/chkout.sed
+	: ORG
+		cp org.sh $(BIN)/org
+		chmod 755 $(BIN)/org
+		mv orglx $(LIB)
+		chmod 755 $(LIB)/orglx
+	: SYL
+		cp syl.sh $(BIN)/syl
+		mv syl $(LIB)
+		chmod 755 $(BIN)/syl $(LIB)/syl
+	: MATCH
+		cp match.sh $(BIN)/match
+		chmod 755 $(BIN)/match
+	: WWB
+		cp wwb.sh $(BIN)/wwb
+		cp wwbinfo.sh $(BIN)/wwbinfo
+		chmod 755 $(BIN)/wwb $(BIN)/wwbinfo
+
+	: SEXIST
+		cp sexist.sh $(BIN)/sexist
+		chmod 755 $(BIN)/sexist
+		cp  sexist.sg sexist.d  $(LIB)
+		chmod 644 $(LIB)/sexist.sg $(LIB)/sexist.d 
+	: ACRO
+		cp acro.sh $(BIN)/acro
+		chmod 755 $(BIN)/acro
+		cp  acro.sed $(LIB)
+		chmod 644 $(LIB)/acro.sed
+
+	: MKSTAND
+		cp mkstand.sh $(BIN)/mkstand
+		chmod 755 $(BIN)/mkstand
+		mv mkstand  $(LIB)
+		chmod 755 $(LIB)/mkstand
+	: WORDUSE
+		cp worduse.sh $(BIN)/worduse
+		chmod 755 $(BIN)/worduse
+		cp wordlist.d  $(LIB)
+		chmod 644 $(LIB)/wordlist.d
+	: SPELLTELL
+		cp spelltell.sh $(BIN)/spelltell
+		chmod 755 $(BIN)/spelltell
+		cp spelllist.d  $(LIB)
+		chmod 644 $(LIB)/spelllist.d
+	: WWBHELP
+		cp wwbhelp.sh $(BIN)/wwbhelp
+		chmod 755 $(BIN)/wwbhelp
+		cp helplist.d  $(LIB)
+		chmod 644 $(LIB)/helplist.d
+	: WWBMAIL
+		cp wwbmail.sh $(BIN)/wwbmail
+		chmod 755 $(BIN)/wwbmail
+	: WWBSTAND
+		cp wwbstand.sh $(BIN)/wwbstand
+		chmod 755 $(BIN)/wwbstand
+		cp standlkup.sh  $(LIB)/standlkup
+		chmod 755 $(LIB)/standlkup
+clean:
+	rm -f lex.yy.c
+	rm -f *.o

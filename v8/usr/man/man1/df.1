@@ -1,0 +1,41 @@
+.TH DF 1
+.SH NAME
+df \- disk free
+.SH SYNOPSIS
+.B df
+[
+.B \-i
+] [
+.B \-l
+] [ filesystem ... ] [ directory ... ]
+.SH DESCRIPTION
+.I Df
+prints out the amount of free space on
+.I filesystem,
+e.g. ``/dev/rp0a'',
+or on the filesystem in which the specified
+.I directory,
+e.g. ``$HOME'',
+is contained.
+If no file system is specified,
+the free space on all of
+the normally mounted file systems
+is printed.
+.PP
+The reported numbers are in kilobytes,
+independent of the blocksize actually used on the filesystem.
+.PP
+Other options are:
+.TP
+.B \-i
+Report also the number of inodes which are used and free.
+.TP
+.B \-l
+examines also the free list, double checking that the
+summary number in the filesystem superblock is correct.
+.SH FILES
+/etc/fstab	list of normally mounted filesystems
+.br
+/etc/mtab	list of currently mounted filesystems
+.SH "SEE ALSO"
+fstab(5), mtab(5), icheck(8), quot(8)

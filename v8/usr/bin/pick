@@ -1,0 +1,30 @@
+# pick: version 4: standard input or arguments
+
+set -p
+IFS="
+"
+PATH=/bin:/usr/bin
+
+case $# in
+0)
+	for i in `cat`; do
+		echo -n "$i? " >/dev/tty
+		{
+			read response
+			case $response in
+			[Yy]*)	echo $i ;;
+			[Qq]*)	exit 0
+			esac
+		} </dev/tty
+	done
+	;;
+*)
+	for i do
+		echo -n "$i? " >/dev/tty;
+		read response
+		case $response in
+		[Yy]*)	echo $i ;;
+		[Qq]*)	exit 0
+		esac
+	done </dev/tty
+esac

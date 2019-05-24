@@ -1,0 +1,20 @@
+.TH NAP 2
+.SH NAME
+nap \- suspend execution for a short interval
+.SH SYNOPSIS
+.B nap(ticks)
+.SH DESCRIPTION
+.I Nap
+suspends execution of
+the current process
+for
+.RI ticks /HZ
+seconds,
+where HZ
+is 50
+or 60
+depending on your locality.
+The time may be at most two seconds.
+.SH SEE ALSO
+alarm(2),
+sleep(3)

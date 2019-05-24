@@ -1,0 +1,29 @@
+.TH DBCP 1
+.SH NAME
+DBcp \- database copy
+.SH SYNOPSIS
+DBcp
+.I source
+.I dest
+.SH DESCRIPTION
+.I DBcp
+copies a database created with either
+.IR DB (1)
+or the
+.IR DB (3)
+routines.
+.I DBcp
+performs the copy by iterating through the keys using the routines
+.I DBkey0
+and
+.IR DBkeyn ,
+found in the
+.I DB
+library.
+.PP
+This is a separate command because of the high probability of empty blocks
+in the database; these blocks are not copied.
+.SH SEE ALSO
+.IR DB (1),
+.IR DB (3),
+.IR DBcvt (1).

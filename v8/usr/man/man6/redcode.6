@@ -1,0 +1,118 @@
+.TH REDCODE 6 5/20/84
+.CM 3
+.SH NAME
+redcode \- assembler for mars game
+.SH SYNOPSIS
+redcode
+.I 
+file1 file2 ...
+.SH DESCRIPTION
+.PP
+.I Redcode
+is an assembler for the 
+.I Redcode
+assembly language specified by Dr. Kee Dewdney in the
+"Computer Recreations" column in the May 1984 issue of
+.I Scientific American. 
+The command line contains a list of source file names (including
+the extension ".red") to be assembled.  The result is a corresponding
+number of object files with extension ".obj".
+For example, the following command:
+.sp
+	redcode dwarf.red gemini.red imp.red
+.sp
+would assemble these three programs and create files
+.I
+dwarf.obj gemini.obj imp.obj.
+.SH SOURCE FILES
+.PP
+A source file consists of a 
+.I name
+directive which specifies the program's name, 
+followed by any number of program and data statements,
+followed by an
+.I end
+directive which specifies the starting location of the program.
+Statements have the following syntax:
+.sp
+	[label] opcode arg1 [arg2] [; comment]
+.SH ADDRESSING MODES
+There are three addressing modes; 
+all address calculations are done modulo 8000.
+.sp
+.I
+Syntax		Meaning
+.sp
+#[0-9]+		immediate
+.br
+[0-9]+		relative
+.br
+@[0-9]+		indirect, relative
+.SH OPCODES
+.PP
+The following opcodes are implemented, along with the corresponding
+semantics specified in pseudo-C:
+.I
+Instruction	Mnem	Opcode	Args	Explanation
+.sp
+Move		mov	1	A B	B=A
+.br
+Add		add	2	A B	B+=A
+.br
+Subtract	sub	3	A B	B-=A
+.br
+Jump		jmp	4	A	PC=A
+.br
+Jump if zero	jmz	5	A B	PC=(B==0)?A:PC+1
+.br
+Jump if greater	jmg	6	A B	PC=(B<4000)?A:PC+1
+.br
+Dec, Jmp if 0	djz	7	A B	PC=(--B==0)?A:PC+1
+.br
+Compare		cmp	8	A B	PC=(A==B)?PC+1:PC+2
+.SH PSEUDO-OPS
+.PP
+The following non-executable directives may be used
+to reserve and initialize data space:
+.sp
+.I
+Directive	Mnem	Arg	Explanation
+.sp
+Buffer space	bss	n	Reserve n words
+.br
+Data		data	A	Initialize 1 word
+.br
+Name		name	't'	Name of program
+.br
+End		end	start	Specify starting location
+.SH A SAMPLE REDCODE PROGRAM
+.sp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.br
+;;; Dwarf, a sample Redcode program
+.br
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.br
+
+.br
+	name	'dwarf'
+.br
+site	data	-1		; address of last 0 'bomb'
+.br
+start	add	#5	site	; move site forward
+.br
+	mov	#0	@site	; write 0 'bomb'
+.br
+	jmp	start		; loop
+.br
+	end	start
+.SH OBJECT FILES
+.PP
+For documentation on the object code format, see 
+.IR mars (6).
+.SH SEE ALSO
+mars(6)
+.SH HISTORY
+.TP
+20-May-84 Paul Milazzo (milazzo) at RICE
+Created.

@@ -1,0 +1,106 @@
+.TH WWB 1 
+.SH NAME
+wwb, style, diction, punct \- writers workbench
+.SH SYNOPSIS
+.B wwb style
+[ option ] ...
+file ...
+.PP
+.B wwb diction
+[ option ] ...
+file ...
+.PP
+.B wwb suggest
+.PP
+.B wwb punct
+file ...
+.PP
+.B wwb wwb 
+[
+.B \-ms
+] [
+.B \-mm
+] file ...
+.SH DESCRIPTION
+.I Wwb
+controls many subprograms documented in 
+the references.
+For the full treatment use `wwb wwb', but for quick use the following
+subprograms are recommended.
+.PP
+.I Style
+reports on readability, sentence length and
+structure, word length and usage, verb type, and sentence openers
+in the named documents.
+.PP
+.I Diction
+prints all sentences that contain phrases
+from a list of bad or verbose word patterns.
+Option 
+.B \-p
+.I pfile
+supplies an additional private pattern file;
+option
+.B \-n
+skips the standard one.
+.PP
+.I Suggest
+reads, from the standard input, phrases deprecated by 
+.I diction
+and proposes alternatives.
+.PP
+.I Punct
+reports sentences that appear to violate standard punctuation
+rules and sentences that contain doubled words.
+.PP
+.I Style
+and
+.I diction
+expect documents prepared for
+.IR nroff/\^troff (1)
+and the preprocessors
+.I "pic, ideal, grap, eqn, refer,"
+and
+.IR tbl (1).
+Option
+.B \-mm
+overrides the default macro package,
+.BR \-ms .
+The related option
+.B \-ml 
+skips mm-style lists, and should be used if there are many lists of
+non-sentences.
+.PP
+Other options for
+.I style
+are:
+.TP
+.B \-a
+print all sentences with their length and readability index.
+.TP
+.B \-e
+print all sentences that begin with an expletive.
+.TP
+.B \-p
+print all sentences that contain a passive verb.
+.TP
+.BI \-l num
+print all sentences longer than
+.IR num .
+.TP
+.BI \-r num
+print all sentences whose readability index is greater than
+.IR num .
+.TP
+.B \-P
+print parts of speech of the words in the document.
+.SH "SEE ALSO"
+deroff(1), spell(1)
+.br
+.I "Writer's Workbench User's Manual,"
+/usr/man/manw/*
+.SH BUGS
+Use of non-standard formatting macros may cause
+incorrect sentence breaks.
+.br
+Imperatives cannot be recognized.

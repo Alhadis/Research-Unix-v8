@@ -1,0 +1,148 @@
+.TH VI 1
+.SH NAME
+ex, vi \- text editor
+.SH SYNOPSIS
+.B ex
+[
+.B \-
+] [
+.B \-v
+] [
+.B \-t 
+tag
+] [
+.B \-r
+] [
+.B \-R
+] [
+.BR + command
+] [
+.B \-l
+]
+name ...
+.PP
+.B edit
+[ options ]
+.PP
+.B vi
+[
+.B \-t
+tag ] [
+.B \-r
+] [
+.B \-R
+] [
+.BR + command
+] [
+.B \-l
+] [
+.BR \-w n
+] name ...
+.SH DESCRIPTION
+.I Ex
+is a superset of
+.IR ed (1)
+with a display editing facility;
+.I edit
+is a simplified subset of
+.IR ex ;
+and
+.I vi
+is a fully display-based editor with similar capabilities.
+Option 
+.B \-R
+makes the editor read-only.
+.SH FILES
+.DT
+/usr/lib/ex?.?strings		error messages
+.br
+/usr/lib/ex?.?recover		recover command
+.br
+/usr/lib/ex?.?preserve		preserve command
+.br
+/etc/termcap			describes capabilities of terminals
+.br
+~/.exrc				editor startup file
+.br
+/tmp/Ex\fInnnnn\fR			editor temporary
+.br
+/tmp/Rx\fInnnnn\fR			named buffer temporary
+.br
+/usr/preserve			preservation directory
+.SH SEE ALSO
+.I Edit: A Tutorial
+.br
+.I Ex Reference Manual
+.br
+.I An Introduction to Display Editing
+.I with Vi
+.br
+.I Vi Quick Reference Card,
+all in 
+.I BSD 4.1 Progammer's Manual,
+Volume 2
+.br
+ed(1), jim(9.1), sed(1)
+.SH BUGS
+The
+.I undo
+command causes all marks to be lost on lines changed and then restored
+if the marked lines were changed.
+.br
+.I Undo
+never clears the buffer modified condition.
+.br
+The
+.I z
+command prints a number of logical rather than physical lines.
+More than a screen full of output may result if long lines are present.
+.br
+File input/output errors don't print a name if the command line \fB`\-'\fR
+option is used.
+.br
+There is no easy way to do a single scan ignoring case.
+.br
+The editor does not warn if text is placed in named buffers and not used
+before exiting the editor.
+.br
+Null characters are discarded in input files, and cannot appear in resultant
+files.
+.br
+Software tabs using 
+.B ^T
+work only immediately after the
+.I autoindent.
+.br
+The
+.I wrapmargin
+option can be fooled since it looks at output columns when blanks are typed.
+If a long word passes through the margin and onto the next line without a 
+break, then the line won't be broken.
+.br
+The
+.I source
+command does not work when executed as 
+.BR :source ;
+there is no way to use the 
+.BR :append ,
+.BR :change ,
+and
+.BR :insert
+commands in
+.I vi,
+since it is not possible to give
+more than one line of input to a 
+.B :
+escape.
+To use these
+on a
+.B :global
+you must
+.B Q
+to
+.I ex
+command mode,
+execute them, and then reenter the screen editor with
+.I vi
+or
+.I open.

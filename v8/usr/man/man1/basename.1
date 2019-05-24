@@ -1,0 +1,40 @@
+.TH BASENAME 1 
+.SH NAME
+basename, dirname \- strip filename affixes
+.SH SYNOPSIS
+.B basename
+string [ suffix ]
+.PP
+.B dirname
+string
+.SH DESCRIPTION
+These functions split off useful parts of a pathname;
+they are typically used inside substitution marks \`\ \`
+in shell scripts.
+.PP
+.I Basename
+deletes any prefix ending in `/' and the
+.I suffix,
+if present in
+.I string,
+from
+.I string,
+and prints the result on the standard output.
+.PP
+.I Dirname
+deletes the last `/' and all following characters from the
+.I string
+and prints the result on the standard output.
+If there is no `/',
+.I dirname
+prints 
+.RB ` . '.
+.SH EXAMPLES
+.TP
+cc $1 \-o \`basename $1\`
+compile `dir/file.c' into `file'
+.TP
+cc $1 \-o \`dirname $1\`/\`basename $1\`
+compile into `dir/file'
+.SH "SEE ALSO"
+sh(1)

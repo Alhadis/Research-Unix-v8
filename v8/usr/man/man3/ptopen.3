@@ -1,0 +1,25 @@
+.TH PTOPEN 3
+.SH NAME
+ptopen \- find and open a pseudo-terminal file
+.SH SYNOPSIS
+.nf
+.B int ptopen (name)
+.B char \(**name;
+.fi
+.SH DESCRIPTION
+.I Ptopen
+searches for a pseudo-terminal file pair it
+can open.
+If successful, it returns a file descriptor
+for the odd-numbered member of the pair,
+and places the name of the even-numbered member in
+.I name.
+There must be enough room in
+.I name
+to contain the full pathname.
+If unsuccessful,
+.hy 0
+.I ptopen
+returns a negative value.
+.SH SEE ALSO
+pt(4)

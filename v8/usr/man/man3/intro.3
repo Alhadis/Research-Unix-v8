@@ -1,0 +1,83 @@
+.TH INTRO 3
+.SH NAME
+intro \- introduction to library functions
+.SH SYNOPSIS
+.B #include <stdio.h>
+.PP
+.B #include <math.h>
+.SH DESCRIPTION
+This section describes functions that may be found
+in various libraries, other than those functions
+that directly invoke UNIX system primitives,
+which are described in section 2.
+Functions are divided into various libraries distinguished
+by the section number at the top of the page:
+.TP 6n
+(3)
+These functions, together with those of section 2 and those
+marked (3S) and (3M), constitute library
+.I libc,
+which is automatically loaded by the C compiler
+.IR cc (1)
+and the Fortran compiler
+.IR f77 (1).
+The link editor
+.IR ld (1)
+searches this library under option
+.B \-lc .
+Declarations for some of these functions may be obtained
+from include files indicated on the appropriate pages.
+.TP
+(3F)
+These functions are in the Fortran library,
+.I libF77,
+automatically loaded by the Fortran compiler, and searched
+under option
+.B \-lF77
+of the link editor.
+.TP
+(3M)
+These functions constitute the math library, part of
+.I libc.
+(On other systems they must be loaded by
+.BR \-lm ).
+Declarations for these functions may be obtained from
+the include file <math.h>.
+.TP 
+(3S)
+These functions constitute the
+`standard IO package',
+see
+.IR stdio (3),
+part of
+.I libc
+already mentioned.
+Declarations for these functions may be obtained from
+the include file <stdio.h>.
+.TP
+(3X)
+Various
+specialized libraries have not been given distinctive
+captions.
+Files in which such libraries are found are named
+on appropriate pages.
+.SH FILES
+.nf
+/lib/libc.a
+.fi
+.SH SEE ALSO
+stdio(3),
+nm(1), ld(1), cc(1), f77(1), intro(2)
+.SH DIAGNOSTICS
+Functions in the math library (3M) may return
+conventional values when the function is undefined for the
+given arguments or when the value is not representable.
+In these cases the external variable
+.I errno
+(see
+.IR intro (2))
+is set to the value EDOM
+or ERANGE,
+defined in
+the include file
+<math.h>.

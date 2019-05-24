@@ -1,0 +1,198 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+|environment(ref_ieee_init;
+blank.lines 2, protect, center on, font bold,
+text "REFERENCES", blank.lines -1,
+macro R-,
+blank.lines;)
+
+
+
+
+
+
+
+
+|associate(author;
+incr A, clear T,
+clear string T1 T2 T3
+T4 T5 T6;
+
+store string A\nA T1,
+store string I\nA T2,
+store string L\nA T3,
+store string D\nA T4,
+store string E\nA T5,
+store string R\nA T6;
+
+[name $;
+incr T, set string T1 $;]
+[initials $;
+incr T, set string T2 $;]
+[location $;
+incr T, set string T3 $;]
+[department $;
+incr T, set string T4 $;]
+[extension $;
+incr T, set string T5 $;]
+[room $;
+incr T, set string T6 $;]
+[$;
+incr T,
+set string T\nT $;])
+|comment<summary: author (name, initials, location, department, extension, and room for title box and coversheet)>
+
+|associate(document;
+incr D, clear T,
+clear string T1 T2 T3;
+
+store string S\nD T1,
+store string F\nD T2,
+store string W\nD T3;
+
+[number $;
+incr T, set string T1 $;]
+[file_case $;
+incr T, set string T2 $;]
+[work_program $;
+incr T, set string T3 $;]
+[$;
+incr T,
+set string T\nT $;])
+|comment<summary: document (number, file_case, and work_program for title box and coversheet)>
+
+|environment(title;
+divert.input on TI;)
+|comment<summary: title (title of document for title box and coversheet)>
+
+|environment(date;
+divert.string DT;)
+|comment<summary: date (date of tm for title box and coversheet)>
+
+|environment(abstract;
+divert.input on AS;)
+|comment<summary: abstract (abstract for coversheet)>
+
+|environment(keywords;
+divert.input on KW;)
+|comment<summary: keywords (keywords for cover sheet)>
+
+|environment(titlebox;
+;
+
+new.page, indent.line +4.375i, string LO,
+blank.lines 2, size -2, remember P0,
+page.offset -.5i, text "subject:", new.line,
+return P0, indent +4.875i, text "date:", blank.lines,
+text "from:", indent, new.line, page.offset, size,
+line.length 3i, font bold, return P0, fill off,
+macro TI, fill on, line.length, new.line,
+size -1,
+|for i in 1 2 3 4 5 6 7 8 9 [
+if begin "\nD>=$i",
+new.line, text "Work Program ", string W$i,
+text " File Case ", string F$i,
+if end,
+]
+size,
+return P0, indent +4.75i, string DT,
+|for i in 1 2 3 4 5 6 7 8 9 [
+if begin "\nA>=$i",
+blank.lines,
+string A$i, new.line,
+string L$i, text " ",
+string D$i, new.line,
+string R$i, text " ",
+string E$i,
+if end,
+]
+spacing on, blank.lines, fill off,
+string S1, fill on, blank.lines 3,
+indent, center on, temporary.font italics "TECHNICAL MEMORANDUM",
+center off, blank.lines 2, font roman)
+|comment<summary: titlebox (produce title box here)>
+
+
+|environment(titlebox;
+;
+
+new.page, fill off, size +2, font bold, center on,
+macro TI, font roman, size -2, fill on,
+|for i in 1 2 3 4 5 6 7 8 9 [
+if begin "\nA>=$i",
+new.line, size +1, temporary.font italics,
+string A$i, temporary.font, size -1,
+if begin "!@\*(L$i@\*(L$i+1@",
+if begin "@\*(L$i@CM@",
+text "Carnegie-Mellon University", new.line,
+text "Electrical and Computer Engineering Department", new.line,
+text "Pittsburgh, PA 15213", new.line,
+if end,
+if begin "@\*(L$i@HL@",
+text "AT&T Bell Laboratories", new.line,
+text "Short Hills, New Jersey 07078", new.line,
+if end,
+if begin "@\*(L$i@HO@",
+text "AT&T Bell Laboratories", new.line,
+text "Holmdel, New Jersey 07733", new.line,
+if end,
+if begin "@\*(L$i@MH@",
+text "AT&T Bell Laboratories", new.line,
+text "Murray Hill, New Jersey 07974", new.line,
+if end,
+if begin "@\*(L$i@PY@",
+text "AT&T Bell Laboratories", new.line,
+text "Piscataway, New Jersey 08854", new.line,
+if end,
+if begin "@\*(L$i@WH@",
+text "AT&T Bell Laboratories", new.line,
+text "Whippany, New Jersey 07981", new.line,
+if end,
+if end,
+if end,
+]
+center off,
+
+new.page,
+
+center on, size +1, temporary.font italics "ABSTRACT",
+size -1, center off, blank.lines, macro AS, blank.lines,
+
+font italics, text "Keywords:", macro KW, font, blank.lines .5i)
+|comment<summary: titlebox (produce title box here)>
+
+|environment(:document;
+clear A D,
+format.type model,
+set W 4.25i, line.length,
+set L 11.0i, page.length,
+set S 12, font.size;)

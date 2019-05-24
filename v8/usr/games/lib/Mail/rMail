@@ -1,0 +1,45 @@
+PATH=/bin:/usr/bin
+F=/usr/games/fortune
+f="$F /usr/games/lib/Mail/"
+case "$#" in
+0)
+	echo >&2 Bus error - core dumped
+	exit 1
+	;;
+*)
+	if [ "$TERM" = 5620 ]; then
+		TERM=jerq
+	elif [ "$TERM" = "" ]; then
+		TERM="None of the above"
+	fi
+	wmi=`getuid`
+	fullname=`grep "^$wmi," /usr/adm/usrlist |
+		sed -e "s/[^,]*, //" -e "s/,.*//" \
+		    	-e "s/ [^ ]*$/ '\`${f}furniture\`'&/"`	
+	(echo "Date: `${f}date`
+From: The Tty of `cat /etc/whoami`!$wmi
+Apparently-From: $fullname, Esquire, and Sons
+Position: `${f}position`
+Salary: `${f}salary`
+His-Drink: `${f}drink`
+Shoe-Size: `${f}shooz`
+Subject: `${f}subject`
+Via: `${f}viaduct`
+Via: `${f}viaduck`
+Date: As above, or N/A
+Message-Id: `${f}id`
+Status: R
+Terminal: $TERM
+Date: `date`
+Sccs-Id: `${f}sccs`
+Weather: `${f}weather`
+Forecast: Tomorrow, `${f}forecast`
+To: `${f}to`
+Cc: `${f}cc`
+Authentic-Sender: `uuname | $F /dev/stdin`!`$F /etc/passwd | sed 's/:.*//'`
+Comment: `${f}comments`
+Newsbreak: `/usr/games/lib/Mail/newsbreak |
+	sed '	/^[ 	]/s/[ 	]*//
+		/^[^ 	]/s/^/	/'`
+" ; awk '/^\.$/{exit} {print}' ) | exec mail $*
+esac
