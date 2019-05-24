@@ -1,0 +1,34 @@
+From ikeya!frodo Mon Jul 19 17:47 EDT 1982
+a coulple of things on my jim wish list:
+1) if j of just on e file fill the layer with it
+2) <address>re>,<re>s/<re>/<re>/ including parts
+3) the ability to take a file I'm editing and shove it as input to another layer
+4) If i select a character like [{( )}] and press a match cacommand itit could hi-light
+   the matching character.  what can I say lisp is a fucked langageuageI go batty 
+.
+thanks
+
+From sola!frodo Thu Sep  2 00:09 EDT 1982
+another suggestion for jim:
+I often j a list of file and want to go through them sequentially.
+It would be nice if I could overlay the current frame with a file from the
+button 3 menue.
+
+From rob Mon Sep 13 15:34 EDT 1982
+can  get extra cursors by selecting non-frame
+
+From wild!scj Tue Oct 26 14:20 EDT 1982
+two jim suggestions:
+1.  when you select by line number, but the selected line in the middle
+of the window, not at the top.
+2.  When a region of text is selected, and you use the scroll bar, the
+selection is lost.  In fact, it is not obvious where the cursor ends up
+after the text has scrolled.
+
+From wild!scj Wed Nov 17 16:56 EST 1982
+if you haven't done so already, in jim why
+don't you make
+	e filename
+put filename in the window and give you a box,
+instead of complaining.
+

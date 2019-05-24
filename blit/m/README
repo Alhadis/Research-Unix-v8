@@ -1,0 +1,8 @@
+the source for /usr/blit/lib/ccom has been lost.
+the source here (Mip and Mcc) is for a compiler that does not generate
+the correct symbol tables for joff and pi.
+we wish we had the source, but we don't, so the binary is precious.
+please handle it with care.
+
+if you decide you need to recompile ccom, contact us.
+we may have found a solution by then...

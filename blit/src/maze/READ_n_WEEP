@@ -1,0 +1,8 @@
+ump has to be running first.  it expects /dev/pt/ump and /dev/pt/maze
+to exist.
+mazewar talks to ump and loads maze.m.
+maze.m runs in your blit.
+Mazewar and rmtmaze are used to run for jerqs on other machines
+(other than the ump's)
+Mazewar runs on the remote machine, and rmtmaze runs on its behalf on
+the ump's machine.

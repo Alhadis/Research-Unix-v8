@@ -1,0 +1,78 @@
+.TH 68LD 1 Blit
+.SH NAME
+68ld \- bootstrap loader for Blit
+.SH SYNOPSIS
+.B 68ld
+[
+.B \-d
+] [
+.B \-e
+] [
+.B \-r
+] [
+.B \-p
+] [
+.B \-z
+]
+.B file
+[ arguments ]
+.SH DESCRIPTION
+.I 68ld
+loads the named
+.I file
+for execution in the Blit connected to its standard output.
+If running under
+.IR mpx (1),
+the arguments are passed, as in
+Unix, to the program.
+.I file
+must be a 68000 object file.
+.I 68ld
+does all necessary bootstrap and protocol procedures.
+There are several options.
+.B \-d
+causes a printout of the sizes of the text, data and bss
+portions of
+.I file.
+.B \-e
+invokes an error-correcting protocol for use on noisy communications lines.
+It has no effect when running under
+.IR mpx (1).
+.B \-p
+prints down-loading protocol statistics on the diagnostic output.
+.B \-r
+causes
+.I file
+to be relocated to an address established by a separate
+protocol during bootstrap.
+It is invoked automatically when loading a process into
+.IR mpx (1),
+and usually need not be set explicitly.
+.B \-z
+loads the process but doesn't run it,
+so it must be started using
+.IR joff (1).
+It works only under
+.IR mpx (1).
+.PP
+The environment variable
+.B JPATH
+is the analog of the shell's
+.B PATH
+variable to define a set of directories in which to search for
+.IR file .
+.SH EXAMPLES
+.PP
+Loading asteroids into
+\fImpx\fR:
+.br
+.ti +4
+68ld asteroids
+.br
+Loading a terminal program with tiny characters into /dev/tty7:
+.br
+.ti +4
+68ld /usr/jerq/lib/tinyterm  > /dev/tty7
+.PP
+.SH SEE ALSO
+jx(1), mpx(1)	

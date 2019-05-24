@@ -1,0 +1,75 @@
+.TH MPX 1 Blit
+.SH NAME
+mpx \- layer multiplexor for Blit
+.SH SYNOPSIS
+.B mpx
+[
+terminal program
+]
+.SH DESCRIPTION
+.I Mpx
+manages asynchronous windows, or layers, on the Blit terminal.
+Upon invocation, it loads the Blit with a terminal program
+(default /usr/jerq/lib/mpxterm) that is
+the primary user interface.
+.I Mpx
+always invokes
+.I 68ld
+with its
+.B \-e
+option for error-correcting down-loading.
+.PP
+Each layer is in most ways functionally identical to a separate terminal.
+Characters typed on the keyboard are sent to the standard input of
+the Unix process running in the layer, and characters written on the
+standard output appear in the layer.
+When a layer is created, a separate shell (sh only)
+is established, and bound to the layer.
+.PP
+Layers are created, deleted, and otherwise dealt with using the mouse on the Blit.
+Depressing button 3 activates a menu of layer operations.
+Lifting button 3 then selects an operation.
+At this point, the rifle sight cursor indicates that an operation is pending.
+Hitting button 3 again activates the operation on the layer pointed to by the cursor.
+The New operation, to create a layer,
+requires a rectangle to be swept out,
+across any diagonal, while button 3 is depressed.
+The box outline cursor indicates that a rectangle is to be created.
+The Reshape operation, to change the size and location of a layer on the screen,
+requires first that a layer be indicated (rifle sight cursor) and a new rectangle
+be swept out (box cursor).
+The Debug operation indicates which layer/process to debug with
+.I joff.
+The other operations are self-explanatory.
+.PP
+Button 1 is a shorthand for Current and Top, which pulls a layer to the front
+of the screen and makes it the current layer for keyboard input.
+Layers which are not current are indicated by being partially obscured
+with a stipple pattern.
+.SH FILES
+/usr/jerq/lib/mpxterm: terminal program
+.SH SEE ALSO
+68ld(1), jx(1)
+.br
+A more complete description may be found in the copious unwritten documentation.
+.SH DIAGNOSTICS
+Error messages from
+.I mpx
+are written directly to the layer which caused them.
+They are usually self-explanatory only to system administrators,
+and indicate system difficulties.
+.SH ARCANA
+The SET-UP keyboard key freezes
+.I mpx
+and complements the video of the layer of the running user-level terminal process.
+Hitting mouse button 2 in this state will attempt to kill the process;
+1 or 3 will leave it running.
+.SH BUGS
+Under 4.1bsd,
+not all ioctl's are supported.  In particular, the C shell
+will not run under
+.I mpx.
+.br
+Reshape only works properly for processes that arrange to see if they have
+been reshaped.  Currently, only a few programs
+make this arrangement.

@@ -1,0 +1,4 @@
+This directory contains the source for the version of mpx which runs under
+Berkeley 4.1bsd.  ../mpx/term contains the source for the terminal
+program for mpx, which is unchanged regardless of operating system version.
+The binary for this program is distributed as (/usr/jerq/)bin/ompx

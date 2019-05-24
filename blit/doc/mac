@@ -1,0 +1,26 @@
+.hw rect\%angle
+.if n .po 5
+.de Po
+.if t \&\f(CW\\$1\f1\\$2
+.if n \&\fI\\$1\f1\\$2
+..
+.de Ja
+.ne 6
+.sp
+.in 0
+.ft CW
+.ps 12
+.br
+.if t .BX \\$1     
+.if n \\$1     
+.ps 10
+.ft 1
+\h'4m'\\$2
+.in +3
+.sp
+.ft CW
+..
+.de Jb
+.sp
+.ft 1
+..

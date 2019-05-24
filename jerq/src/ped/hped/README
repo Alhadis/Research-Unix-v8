@@ -1,0 +1,14 @@
+This is the host part of ped.
+The only file that needs special attention is Unix.h. When
+running on Unix V, change the first line of the file accordingly.
+The program assumes that there is a directory where you should
+put the documentation (DOC files). The pertinent definition is
+	DOC_LIB "/usr/DMD/lib/ped/DOC"
+If desired, change the entries in 
+	PRIV_PED "/usr/myname/mydir/ped.m"
+	PRIV_LIB "/usr/myname/mydocdir/DOC"
+The program looks for two shell env. variables:
+	TERM (it knows 5620, DMD, and dmd as synonims) and
+	PEDOPTS (private or public)
+Set PEDOPT=privat, makes ped use th PRIV options from Unix.h.
+In that case it also creates a diagnostic file name REC.

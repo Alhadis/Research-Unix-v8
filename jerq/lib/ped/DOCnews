@@ -1,0 +1,6 @@
+May 27
+tped produces now by default the compact encoding that used to be
+produced by "tped -c". "tped -c" produces the expanded encoding.
+The compact encoding results in better quality drawings but it works
+only with dcan and e202 (nd202) and not with aps.
+(Thanks go to Tom Killian for including in dcan ped plotting routines)

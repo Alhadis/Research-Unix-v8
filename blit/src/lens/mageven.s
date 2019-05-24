@@ -1,0 +1,139 @@
+data	1
+comm	Jdisplay,4
+comm	Drect,8
+text
+L%34:
+stabs	"mageven.",0x15,0,L%34
+stabs	"c",0x15,0,L%34
+stabs	"magbyeve",0x12,8,magbyeve
+global	magbyeve
+magbyeve:
+link	%fp,&F%1
+movm.l	&M%1,S%1(%fp)
+mov.l	8(%fp),%a4
+mov.l	12(%fp),%a2
+mov.l	24(%fp),%a3
+mov.w	30(%fp),%d2
+asr.w	&1,%d2
+mov.w	%d2,%d0
+and.b	&1,%d0
+mov.b	%d0,%d7
+mov.w	%d2,%d0
+sub.w	&1,%d0
+asr.w	&1,%d0
+mov.w	%d0,%d5
+mov.w	18(%fp),%d0
+ext.l	%d0
+divs.w	&2,%d0
+mov.w	%d0,18(%fp)
+mov.w	28(%fp),%d0
+add.w	&1,%d0
+asr.w	&1,%d0
+mov.w	%d0,28(%fp)
+ext.l	%d0
+add.l	%d0,%d0
+lea.l	0(%a3,%d0.l),%a0
+mov.l	%a0,-4+S%1(%fp)
+mov.w	%d2,%d0
+sub.w	28(%fp),%d0
+mov.w	%d0,-6+S%1(%fp)
+mov.b	29(%fp),%d0
+and.b	&1,%d0
+mov.b	%d0,%d6
+sub.w	&1,28(%fp)
+asr.w	&1,28(%fp)
+mov.w	%d2,%d0
+ext.l	%d0
+add.l	%d0,%d0
+add.l	%d0,%a3
+mov.w	22(%fp),%d0
+sub.w	&1,%d0
+mov.w	%d0,-8+S%1(%fp)
+sub.w	&1,20(%fp)
+mov.w	-6+S%1(%fp),%d0
+ext.l	%d0
+add.l	%d0,%d0
+sub.l	%d0,%a2
+mov.w	-6+S%1(%fp),%d0
+sub.w	%d0,18(%fp)
+L%38:
+clr.l	%d1
+mov.b	-(%a4),%d1
+mulu.w	%d2,%d1
+add.l	%d1,%d1
+mov.l	-4+S%1(%fp),%a0
+lea.l	0(%a0,%d1.l),%a5
+mov.w	28(%fp),%d3
+tst.b	%d6
+bne.b	L%40
+
+L%43:
+mov.w	-(%a5),-(%a2)
+L%40:
+mov.w	-(%a5),-(%a2)
+L%42:
+dbf	%d3,L%43
+L%41:
+mov.w	20(%fp),%d3
+br	L%44
+L%20001:clr.l	%d1
+mov.b	-(%a4),%d1
+mulu.w	%d2,%d1
+add.l	%d1,%d1
+lea.l	0(%a3,%d1.l),%a5
+mov.w	%d5,%d4
+tst.b	%d7
+bne.b	L%47
+
+L%50:
+mov.w	-(%a5),-(%a2)
+L%47:
+mov.w	-(%a5),-(%a2)
+L%49:
+dbf	%d4,L%50
+L%48:
+L%44:
+dbf	%d3,L%20001
+
+add.w	16(%fp),%a4
+mov.w	18(%fp),%d0
+ext.l	%d0
+add.l	%d0,%d0
+add.l	%d0,%a2
+L%37:
+sub.w	&1,-8+S%1(%fp)
+cmp.w	-8+S%1(%fp),&-1
+bne	L%38
+L%36:
+stabs	"i",0x5,04,8
+stabs	"j",0x4,04,3
+stabs	"k",0x4,04,4
+stabs	"to",0x4,044,10
+stabs	"bitsourc",0x4,044,13
+stabs	"excess",0x5,04,6
+stabs	"odd",0x4,02,6
+stabs	"bats",0x5,044,4
+stabs	"bits",0x4,044,11
+stabs	"from",0x4,054,12
+stabs	"wcnt",0x4,04,5
+stabs	"size",0x4,04,2
+stabs	"vodd",0x4,02,7
+L%35:
+movm.l	S%1(%fp),&M%1
+unlk	%fp
+rts
+stabs	"from",0x6,054,8
+stabs	"to",0x6,044,12
+stabs	"fjump",0x6,04,16
+stabs	"tjump",0x6,04,18
+stabs	"hcount",0x6,04,20
+stabs	"vcount",0x6,04,22
+stabs	"bits",0x6,044,24
+stabs	"valid",0x6,04,28
+stabs	"size",0x6,04,30
+stabs	"magbyeve",0x19,54,L%35
+set	S%1,-40
+set	T%1,-48
+set	F%1,-52
+set	M%1,0x3cfc
+data	1

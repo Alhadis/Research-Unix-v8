@@ -1,0 +1,35 @@
+Words about mux:
+
+The default layer program is much like a jim frame (in time, jim will become
+similar to the default layer program).  The select/cut/paste/snarf business
+is exactly the same, and all layers share a single snarf buffer (which is,
+for now, distinct from jim's).  The 'send' button2 menu operator sends the
+selected text to unix.  If no text is selected, the contents of the snarf
+buffer are sent.  Experiment to see how it all works; preloading the snarf
+buffer with a commonly-executed command for the shell or whatever is
+convenient.
+
+The behaviour of typing and editing needs some explanation.  There is a point
+in each layer, called the 'unix point', that is the character position where
+the next character from unix will be inserted.  Unlike on a regular terminal,
+this point is not advanced as you type characters, but only when you type
+a newline.  Therefore, shell prompts and the like will appear at the beginning
+of your half-typed line if you type ahead.
+
+All text on the screen can be edited.  Typing a newline after the unix point
+sends to unix the characters from the unix point to the newline.  At no
+other time are characters sent to unix (but see the discussion of raw mode
+below).  Therefore you can edit partially typed lines or copy text from
+elsewhere on the screen.   To compose a mail message, simply type it
+before the unix point and you can edit it as in jim.  Learn to re-use
+what's on the display rather than retype.
+
+Raw mode and no-echo are different: the unix point advances with each character
+typed after it.  This makes dcon somewhat uncomfortable; someday dcon (not the
+blit) may be fixed.
+
+The terminal doesn't scroll as text is received or typed.  You must use the
+scroll bar, which is much like jim's, or use the NO SCRL key which advances
+a half page.  If you must have scrolling, and don't mind if it's slow,
+there is a button 2 toggle that enables a poor facsimile of automatic
+scrolling.

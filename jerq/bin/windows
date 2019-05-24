@@ -1,0 +1,5 @@
+#!/bin/sh
+case $# in
+0)	echo 'Usage: windows ox oy cx cy "command [args]"...' ;;
+*)	/usr/jerq/bin/32ld /usr/jerq/mbin/windows.m "$@"; read dummy ;;
+esac

@@ -1,0 +1,45 @@
+.fp 1 PA
+.fp 2 PI
+.fp 3 PB
+.tr ~
+.ll 6.5i
+.lt 6.7i
+.po .5i
+.ds ET\"
+.if \n(nl .bp
+.br
+.ds ET \s9\f2Permuted \|Index\fP\s0
+.ds Ed \s9Blit Programmer's Manual\s0
+.ds Dt \s9\f2May 82\fP\s0
+.nf
+.\"	backup from slotput 1, slot, 2
+.de xx
+.ds s1\"
+.if \w\\$2 .ds s1 ~~\"
+.ds s2 ~~~\"
+.ds s3\"
+.if \w\\$4 .ds s3 ~~\"
+.ds s4 ~~\"
+.ds s5 ~~\"
+.ds y \\*(s4\f3\fP\\*(s5
+.ta 6i-\w\\*(s5u
+\h"3i-\w\\$1\\*(s1\\$2\\*(s2u"\\$1\\*(s1\\$2\\*(s2\\$3\\*(s3\\$4\\*y\\$5
+..
+.de Ep
+.sp
+.tl !\*(ET!\*(Ed!\*(Dt!
+.bp
+.sp .2i
+Permuted Index
+.sp .2i
+..
+.wh -4 Ep
+.sp
+.ft 1
+.ps 10
+Permuted Index
+.ft 1
+.sp
+.so ptxx
+.if n .ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 80n
+.if t .ta .5i 1i 1.5i 2i 2.5i 3i 3.5i 4i 4.5i 5i 5.5i 6i 6.5i

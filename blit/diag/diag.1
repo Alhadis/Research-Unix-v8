@@ -1,0 +1,32 @@
+Blit Diagnostic ROM
+
+1)  Munching squares (continuous run).  At each half cycle the next prime number
+is chosen for the munch parameter.  This part requires only that ROM work - non-
+functioning RAM merely looks bad.  Terminated by carriage return.
+
+2)  Longword bit test (continuous run).  Starting with bit 31, which is also
+chip 31, vertical lines are drawn using the selected bit.  Requires only that
+ROM work.  Terminated by carriage return.
+
+3)  Byte bit test (continuous run).  Same as before but with byte writes.
+
+4)  Keyboard output test.  Rings the bell and counts to 127 using the keyboard
+lights.
+
+5)  Keyboard test (2 parts).  Displays typed keys on the screen.  The first part
+of the test uses polling, while the second part uses interrupts.  Both tests are
+terminated by carriage return.
+
+6)  Mouse test (2 parts).  Displays an 'A' (polled) or a 'B' (interrupt) at the
+current mouse position.  The interrupt test is driven by the 60Hz field interrupt.
+If a mouse button is pressed, one of '1', '2', or '3' is displayed in the upper
+left hand corner.  Terminated by carriage return.
+
+7)  Bouncing square (continuous run).  A small rectangle bounces around the screen
+exclusive-ORing itself with the picture.  A lot of different code is used for this
+test, and the RAM is very heavily exercised.  This is probably the best test to
+be running during burn in.  Carriage return sends the program back to munching
+squares.
+
+N.B:  None of these tests exercise the RS232 line.  A terminal that passes these
+tests still has to prove itself a terminal.

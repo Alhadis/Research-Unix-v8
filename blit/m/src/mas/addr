@@ -1,0 +1,53 @@
+Address types
+	AREG	%r register
+		+A	address register
+		+D	data retister
+		+C	CC register
+		+S	status register
+		+P	PC register
+		+U	user stack
+		+SP	status register permitted
+
+	AIMM	&value  immediate
+	+O	value 1
+	+Q	value (1 - 8)
+	+M	value (-128 - 127)
+	+N	value (-8 - -1)
+	+V	value (0 - 15)
+	+H	16-bit value
+
+	AEXP	expression
+
+	AIREG	(%r)  register indirect
+
+	AINC	(%r)+  autoincrement
+
+	ADEC	-(%r)  autodecrement
+
+	AOFF	off(%r)  displacement
+
+	ANDX	off(%r,%r)  indexed
+
+	AGEN	all effective addresses
+
+Dispositions of address forms
+
+	DEA	e.a. to low order 6 bits
+	DEAM	e.d. to 11-6 as in mov (note coding!)
+	DRG	register to low order 3 bits
+	DRGL	register to bits 11-9
+	DBR	branch displacement
+	DCN	dcnt displacement
+	DMQ	move-quick 8-bit value
+	DAQ	add-quick 3bit value in 11-9
+	DIG	ignore
+	DIM	Immediate value, according to size
+	DIMH	Immediate, always short
+
+Sizes
+	0, BSL, etc.
+
+Size dispositions:
+	SD	Bits 7-6 as usual
+	SMD	bits 13-12 as in mov (note coding!)
+	SIG	ignore

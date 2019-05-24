@@ -1,0 +1,6 @@
+#! /bin/sh
+PATH=$PATH:/usr/jerq/bin
+if ismux -
+then	exec 32ld /usr/jerq/mbin/tek4014.m $*
+else	echo tek4014 does not run stand-alone.
+fi

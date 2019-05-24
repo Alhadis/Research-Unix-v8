@@ -1,0 +1,7 @@
+GEN	menu for changing the shape of objects
+insrt pnt	Insert a point in a contour (polygon or
+insrt pnt	spline). First select a point on contour,
+insrt pnt	then place the new point, and then select another
+insrt pnt	point on the contour. If the two contour points
+insrt pnt	are not adjacent, the operation is cancelled.
+

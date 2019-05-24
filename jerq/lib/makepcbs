@@ -1,0 +1,6 @@
+set -x
+3cc -J -S jpcbs.c
+mv jpcbs.s xpcbs.s
+sed -f /usr/jerq/src/mux/term/:sed.comm-bss xpcbs.s > jpcbs.s
+/usr/jerq/bin/vax/m32as -o jpcbs.o jpcbs.s
+rm [xj]pcbs.s

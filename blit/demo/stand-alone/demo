@@ -1,0 +1,35 @@
+PATH=/bin:/usr/bin:/usr/dud/bin
+JPATH=/usr/blit/demo/stand-alone
+export PATH JPATH
+case "$1" in
+"")	echo Available demos are:
+	ls /usr/blit/demo/stand-alone| egrep -v "demo|jciferr" |pr -t -6 -l1
+	;;
+smiley|ack|bounce|munch|moire|one|asteroids)	echo you\'ll have to reboot to get a shell back....	
+	sleep 2
+	68ld $1 ;;
+fake|win|fly|life)	echo push all three buttons to exit
+	sleep 2
+	68ld $1;;
+spheres)	echo push any button to exit
+		sleep 2
+		jx spheres ;;
+*ball)	echo type a character to exit
+	sleep 2;
+	68ld $1 ;;
+mazewar|toroids)	echo type q to exit
+		sleep 2
+		jx $1 ;;
+alphabet)	echo type q to exit
+	sleep 2
+	68ld $1 ;;
+elevator)	jx $1;;
+*)	echo not sure how to run $1\; i\'ll just try 68ld
+	sleep 2
+	68ld $1
+	;;
+ball)	echo type any character to exit
+	sleep 2;
+	68ld $1
+	;;
+esac

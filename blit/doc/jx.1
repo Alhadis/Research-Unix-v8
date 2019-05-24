@@ -1,0 +1,99 @@
+.TH JX 1 Blit
+.SH NAME
+jx \- Blit execution and stdio interpreter
+.SH SYNOPSIS
+.B jx
+file
+[ arguments ]
+.br
+.B ... | jx
+file [ arguments ]
+.SH DESCRIPTION
+.I Jx
+downloads the program in
+.I file
+to the Blit on /dev/tty
+and runs it there, simulating most of the standard I/O library
+functions.
+.I stdout
+and
+.I stderr
+are properly redirected, while
+.I stdin
+is properly redirected only if it is not from the
+keyboard.
+Programs wishing to read from the keyboard should use kbdchar().
+If running under
+.IR mpx (1),
+the arguments are passed to the program.
+.PP
+.I stdout
+and
+.I stderr,
+if directed to a controlling Blit, will be squirrelled away during
+execution to be cat'ed after the terminal program has
+been rebooted.
+.PP
+Programs intended for use by
+.I jx
+should include <blitio.h>
+and call exit() upon termination.  exit() returns control to
+the shell and causes a reboot of
+the ROM terminal program.
+.I Jx
+programs to be run stand-alone
+should be compiled with
+the
+.I \-j
+option of
+.IR mcc .
+No special options are required for running under
+.IR mpx (1).
+.PP
+Stdio functions available under
+.I jx
+are
+.RS 3
+.br
+getc	getchar	fgets
+.br
+putc	putchar	puts	fputs	fflush
+.br
+fopen	freopen	fclose	access
+.br
+popen	pclose
+.br
+printf	sprintf	fprintf
+.br
+fread	fwrite
+.RE
+.PP
+.I Printf
+is stripped down.
+It has %d, %s, %c, %o and %x.
+%u prints an unsigned decimal number.
+%D prints an unsigned long decimal number.
+.PP
+Since
+.I jx
+uses
+.IR sendchar ,
+.IR sendnchars ,
+and
+.IR rcvchar ,
+.I jx
+programs should avoid these,
+and use only the standard I/O routines.
+.SH FILES
+.ta \w'/usr/jerq/include/blitio.h  'u
+/usr/jerq/include/jerqio.h
+.br
+/usr/jerq/include/blitio.h	linked to jerqio.h
+.br
+/usr/jerq/lib/sysint		standard I/O interpreter
+.br
+$HOME/.jxout		saved standard output
+.br
+$HOME/.jxerr		saved standard diagnostic output
+.SH BUGS
+keyboard standard input doesn't work

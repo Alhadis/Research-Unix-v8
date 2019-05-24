@@ -1,0 +1,23 @@
+.TH PEN 1 Blit
+.SH NAME
+pen \- doodle anywhere on the screen
+.SH SYNOPSIS
+.B pen
+.SH DESCRIPTION
+.IR Pen
+writes on the screen with smooth strokes. It can scribble on layers or on 
+the background, even while other Blit programs are running.
+It can be used to make drawings, marks or annotations, or to highlight regions 
+in a crowded screen.
+.I Pen
+never needs refilling.
+.PP
+To write, press mouse button one and keep it pressed while moving the mouse. 
+To move around without writing, release the button. Button three holds 
+a menu to stop drawing (allowing one to resume normal activities), resume drawing, 
+clean up, or exit the program.
+.SH BUGS
+When drawing too fast, the pen can temporarily run out of ink;
+when this happens release
+the button and press it again. To avoid this problem, 
+make the pen layer bigger (that is where the ink supply is kept).

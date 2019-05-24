@@ -1,0 +1,883 @@
+!<arch>
+arc.c           396472164   502   4     100664  113       `
+#include "jplot.h"
+
+void
+arc(xi,yi,x0,y0,x1,y1)
+{
+
+	graphic(ARC);
+	xysc(xi, yi);
+	xysc(x0, y0);
+	xysc(x1, y1);
+}
+
+box.c           396472164   502   4     100664  139       `
+#include "jplot.h"
+
+void
+box(x0, y0, x1, y1)
+{
+	move(x0, y0);
+	cont(x0, y1);
+	cont(x1, y1);
+	cont(x1, y0);
+	cont(x0, y0);
+	move(x1, y1);
+}
+
+circle.c        396472164   502   4     100664  75        `
+#include "jplot.h"
+
+void
+circle(x,y,r)
+{
+	arc(x, y, x + r, y, x + r, y);
+}
+
+close.c         396472165   502   4     100664  227       `
+#include "jplot.h"
+#include <sgtty.h>
+
+void
+closepl()
+{
+	extern struct sgttyb
+		cooked			/* cooked tty modes */
+	;
+
+	move((int)obotx, (int)(oboty - (36 - oboty)/scaley + oboty));
+	finish();
+	ioctl(tojerq, TIOCSETP, &cooked);
+}
+
+dot.c           396472165   502   4     100664  54        `
+#include "jplot.h"
+
+void
+dot(xi,  yi, dx, n, pat)
+{
+}
+driver.c        396472165   502   4     100664  2098      `
+#include <stdio.h>
+
+float deltx;
+float delty;
+char	obuf[BUFSIZ];
+
+main(argc,argv)  char **argv; {
+	int std=1;
+	FILE *fin;
+
+	setbuf(stdout, obuf);
+	while(argc-- > 1) {
+		if(*argv[1] == '-')
+			switch(argv[1][1]) {
+				case 'l':
+					deltx = atoi(&argv[1][2]) - 1;
+					break;
+				case 'w':
+					delty = atoi(&argv[1][2]) - 1;
+					break;
+				}
+
+		else {
+			std = 0;
+			if ((fin = fopen(argv[1], "r")) == NULL) {
+				fprintf(stderr, "can't open %s\n", argv[1]);
+				exit(1);
+				}
+			fplt(fin);
+			}
+		argv++;
+		}
+	if (std)
+		fplt( stdin );
+	exit(0);
+	}
+
+
+fplt(fin)  FILE *fin; {
+	int c;
+	char s[256];
+	int xi,yi,x0,y0,x1,y1,r,dx,n,i;
+	int pat[256];
+
+	openpl();
+	while((c=getc(fin)) != EOF){
+		switch(c){
+		case 'm':
+			xi = getsi(fin);
+			yi = getsi(fin);
+			move(xi,yi);
+			break;
+		case 'l':
+			x0 = getsi(fin);
+			y0 = getsi(fin);
+			x1 = getsi(fin);
+			y1 = getsi(fin);
+			line(x0,y0,x1,y1);
+			break;
+		case 't':
+			gets(s,fin);
+			label(s);
+			break;
+		case 'e':
+			erase();
+			break;
+		case 'p':
+			xi = getsi(fin);
+			yi = getsi(fin);
+			point(xi,yi);
+			break;
+		case 'n':
+			xi = getsi(fin);
+			yi = getsi(fin);
+			cont(xi,yi);
+			break;
+		case 's':
+			x0 = getsi(fin);
+			y0 = getsi(fin);
+			x1 = getsi(fin);
+			y1 = getsi(fin);
+			space(x0,y0,x1,y1);
+			break;
+		case 'a':
+			xi = getsi(fin);
+			yi = getsi(fin);
+			x0 = getsi(fin);
+			y0 = getsi(fin);
+			x1 = getsi(fin);
+			y1 = getsi(fin);
+			arc(xi,yi,x0,y0,x1,y1);
+			break;
+		case 'c':
+			xi = getsi(fin);
+			yi = getsi(fin);
+			r = getsi(fin);
+			circle(xi,yi,r);
+			break;
+		case 'f':
+			gets(s,fin);
+			linemod(s);
+			break;
+		case 'd':
+			xi = getsi(fin);
+			yi = getsi(fin);
+			dx = getsi(fin);
+			n = getsi(fin);
+			for(i=0; i<n; i++)pat[i] = getsi(fin);
+			dot(xi,yi,dx,n,pat);
+			break;
+			}
+		}
+	closepl();
+	}
+getsi(fin)  FILE *fin; {	/* get an integer stored in 2 ascii bytes. */
+	short a, b;
+	if((b = getc(fin)) == EOF)
+		return(EOF);
+	if((a = getc(fin)) == EOF)
+		return(EOF);
+	a = a<<8;
+	return(a|b);
+}
+gets(s,fin)  char *s;  FILE *fin; {
+	for( ; *s = getc(fin); s++)
+		if(*s == '\n')
+			break;
+	*s = '\0';
+	return;
+}
+erase.c         396472165   502   4     100664  54        `
+#include "jplot.h"
+
+void
+erase()
+{
+	graphic(ERASE);
+}
+jplot.c         422429688   502   4     100664  3717      `
+#include <jerq.h>
+#include <font.h>
+
+#include "jplot.h"
+
+#define	CW	9	/* width of a character */
+#define	NS	16	/* height of a character */
+
+#define	XMARGIN	3	/* inset from border of layer */
+#define	YMARGIN	3
+
+Point
+	PtCurrent,	/* current position */
+	pt(),		/* return character point */
+	getpt()		/* return unpaced point from input */
+;
+
+Rectangle
+	arect		/* the aesthetic rectangle in a layer */
+;
+
+int
+	xdelta,		/* distance along x axis */
+	ydelta,		/* distance along y axis */
+	delta,		/* min (xdelta, ydelta) */
+	pushed = 0,	/* character stored away 0 = no, 1 = yes */
+	ready = 0,	/* send out READY every PACKET chararacters */
+	incount = 0	/* numbert of characters until we output a READY */
+;
+
+char
+	pushc		/* character stored away */
+;
+
+main()
+{
+	char
+		buf[2]	/* make a string out of one character */
+	;
+	Point
+		p0,	/* temporary points */
+		p1,
+		p2
+	;
+
+	buf[1] = '\0';
+#ifndef MPX
+	request(SEND | RCV | KBD);
+#else
+	request (RCV);
+#endif
+
+	arect = Drect;
+	arect.origin.x += XMARGIN;
+	arect.corner.x -= XMARGIN;
+	arect.origin.y += YMARGIN;
+	arect.corner.y -= YMARGIN;
+
+	xdelta = arect.corner.x - arect.origin.x;
+	ydelta = arect.corner.y - arect.origin.y;
+	delta = xdelta > ydelta ? ydelta : xdelta;
+
+	PtCurrent = arect.origin;
+
+	for(;;) {
+		switch(buf[0] = getchar() & 0177) {
+
+		case '\007':		/* bell */
+			*((char *)(384 * 1024L + 062)) = 2;
+			break;
+
+		case '\t':		/* tab modulo 8 */
+			PtCurrent.x = ((((PtCurrent.x - arect.origin.x) / CW) | 7 )
+			    + 1) * CW + arect.origin.x;
+			break;
+
+		case OPEN:
+			while ((buf[0] = getchar()) != CLOSE)
+				switch(buf[0]) {
+	
+				case ARC:	/* arc's Pcenter, Pstart, Pfinish */
+					p0 = getpt();
+					p1 = getpt();
+					p2 = getpt();
+					arc(&display, p0, p1, p2, F_OR);
+					PtCurrent = p2;
+					break;
+	
+				case ERASE:	/* erase screen */
+					stipple(arect);
+					PtCurrent = arect.origin;
+					break;
+	
+				case MOVE:	/* move to point */
+					PtCurrent = getpt();
+					break;
+	
+#ifndef MPX
+				case OFF:	/* stop sending READYs */
+					ready = 0;
+					break;
+
+				case ON:	/* start sending READYs */
+					incount = PACKET;
+					++ready;
+					sendchar(READY);
+					break;
+
+#endif
+				default:	/* continue to P */
+					ungetc(buf[0]);
+					segment(&display, PtCurrent, p0 = getpt(), F_OR);
+					PtCurrent = p0;
+					break;
+				}
+			break;
+
+		case '\b':		/* backspace */
+			if(PtCurrent.x > 0)
+				PtCurrent.x -= CW;
+			break;
+
+		case '\n':		/* linefeed */
+			newline();
+
+		case '\r':		/* carriage return */
+			PtCurrent.x = arect.origin.x;
+			break;
+
+		default:		/* ordinary char */
+			string(&defont, buf, &display, PtCurrent, F_STORE);
+			PtCurrent.x += CW;
+			break;
+		}
+
+		if(PtCurrent.x > arect.corner.x - CW) {
+			PtCurrent.x = arect.origin.x;
+			newline();
+		}
+	}
+}
+
+newline()
+{
+	if(PtCurrent.y >= arect.corner.y - 2 * NS) {
+		bitblt(&display, Rpt(Pt(arect.origin.x, arect.origin.y + NS), 
+			arect.corner), &display, arect.origin, F_STORE);
+		stipple(Rpt(Pt(arect.origin.x, arect.corner.y - NS),
+			Drect.corner));
+	} else
+		PtCurrent.y += NS;
+}
+
+getchar()
+{
+	register c;
+
+	if (pushed) {
+		pushed = 0;
+		return(pushc);
+	}
+
+	while ((c = rcvchar()) == -1) {
+#ifndef MPX
+		if ((c = kbdchar()) != -1)
+			sendchar(c&0177);
+#else
+		wait(RCV);
+#endif
+	}
+#ifndef MPX
+	if (ready && --incount == 0) {
+		sendchar(READY);
+		incount = PACKET;
+	}
+#endif
+	return(c);
+}
+
+ungetc(c)
+char c;
+{
+	pushc = c;
+	++pushed;
+}
+
+Point
+getpt()
+{
+	Point	p;
+	char	c;
+
+	p.x = getchar()&077;
+	c = getchar();
+	p.x |= (c&017) << 6;
+	p.y = getchar()& 0177;
+	p.y |= (c&0160) << 3;
+
+	p.x = muldiv(p.x, delta, 800);
+	p.x += arect.origin.x;
+	p.y = muldiv(p.y, delta, 800);
+	p.y += arect.origin.y;
+
+	return (p);
+}
+
+#ifndef MPX
+stipple(r)
+Rectangle r;
+{
+	rectf(&display, r, F_CLR);
+}
+#endif
+
+label.c         396472166   502   4     100664  84        `
+#include "jplot.h"
+
+void
+label(s)
+register char *s;
+{
+
+	while (*s)
+		alpha(*s++);
+}
+line.c          396472166   502   4     100664  192       `
+#include "jplot.h"
+
+void
+line(x0,y0,x1,y1)
+{
+	if (x1 == lastx && y1 == lasty) {
+		move(x1, y1);
+		cont(x0, y0);
+		return;
+	}
+
+	move(x0, y0);
+	cont(x1, y1);
+}
+
+void
+cont(x, y)
+{
+	xysc(x, y);
+}
+linemod.c       396472167   502   4     100664  49        `
+#include "jplot.h"
+
+void
+linemod(s)
+char *s;
+{
+}
+
+move.c          396472167   502   4     100664  116       `
+#include "jplot.h"
+
+void
+move(xi,yi)
+{
+	if (xi == lastx && yi == lasty)
+		return;
+
+	graphic(MOVE);
+	xysc(xi, yi);
+}
+open.c          456799934   502   4     100664  1677      `
+#include	"jplot.h"
+#include	<sgtty.h>
+#include	<signal.h>
+#include	<stdio.h>
+#include	"/usr/blit/include/jioctl.h"
+
+float 
+	boty = 800.,			/* screen bottom y */
+	botx = 0.,			/* screen bottom x */
+	oboty = 800.,			/* user's bottom y */
+	obotx = 0.,			/* user's bottom x */
+	scalex = 1.0,			/* scale factor x */
+	scaley = -1.0,			/* scale factor y */
+	deltx = 800.,			/* length of screen x */
+	delty = -800.			/* length of screen y */
+;	
+
+int
+	mpx = 0,			/* 0 if standalone, 1 if mpx */
+	wantready = 0,			/* 0 if blast ahead, 1 if want READY */
+	tojerq = -1,			/* file descriptor to jerq */
+	fromjerq = -1,			/* file descriptor from jerq */
+	lastx = -1,			/* current position x */
+	lasty = -1			/* current position y */
+;
+
+struct sgttyb
+	cooked				/* cooked tty modes */
+;
+
+void
+openpl()
+{
+	struct sgttyb
+		raw			/* raw tty modes */
+	;
+
+	char 
+		*ttyname(),		/* return the tty name if found */
+		plotty[40],		/* name buffer for jerq name */
+		cmd[100],		/* 68ld cmd to be */
+		*tty			/* ttyname return */
+	;
+
+	if (fromjerq == -1) {
+		fromjerq = open("/dev/tty", 0);
+
+		if ((tty = ttyname(1)) == NULL)
+			strcpy(plotty,"/dev/tty");
+		else
+			strcpy(plotty,tty);
+
+
+		if (ioctl(1,JMPX,0) != -1) {
+			mpx = 1;
+			sprintf(cmd,"/usr/blit/bin/68ld %s.m < %s > %s",
+				JPLOT, plotty, plotty);
+		} else
+			sprintf(cmd,"/usr/blit/bin/68ld %s.j < %s > %s",
+				JPLOT, plotty, plotty);
+
+		if (!isatty(1))
+			tojerq = 1;
+		else
+			tojerq = open(plotty, 1);
+
+		system(cmd);
+	}
+
+	ioctl(tojerq, TIOCGETP, &cooked);
+	raw = cooked;
+	raw.sg_flags |= RAW;
+	raw.sg_flags &= ~ECHO;
+	ioctl(tojerq, TIOCSETP, &raw);
+	ioctl(fromjerq, TIOCSETP, &raw);
+
+	sleep(2);	/* kludge for data kit */
+
+	start();
+}
+
+point.c         396472173   502   4     100664  62        `
+#include "jplot.h"
+
+void
+point(xi,yi)
+{
+	line(xi,yi,xi,yi);
+}
+space.c         396472173   502   4     100664  124       `
+#include "jplot.h"
+
+void
+space(x0,y0,x1,y1)
+{
+	obotx = x0;
+	oboty = y0;
+	scalex = deltx/(x1-x0);
+	scaley = delty/(y1-y0);
+}
+subr.c          422435959   502   4     100664  1107      `
+#include "jplot.h"
+
+static int
+	opened = 0		/* 0 if in alphanumeric mode, 1 if graphics */
+;
+
+static char
+	buf[PACKET],		/* storage for a packet of data */
+	*p = &buf[0]		/* free position in buf */
+;
+
+static void
+	flush()			/* output what we have */
+;
+
+void
+xysc(xi, yi)
+{
+	int xa, ya;
+	xa = (xi-obotx)*scalex+botx;
+	ya = (yi-oboty)*scaley+boty;
+
+	graphic((xa&077) | 0300);
+	graphic(((xa >> 6) & 017) | ((ya >> 3) & 0160) | 0200);
+	graphic(ya&0177 | 0200);
+
+	lastx = xi;
+	lasty = yi;
+}
+
+void
+start()
+{
+	if (mpx == 0) {
+		graphic(ON);
+		flush();
+		++wantready;
+	}
+}
+
+void
+graphic(c)
+char c;
+{
+
+	if (opened == 0) {
+		++opened;
+		graphic(OPEN);
+	}
+
+	*p++ = c;
+	if (p == &buf[PACKET])
+		flush();
+}
+
+void
+alpha(c)
+char c;
+{
+
+	if (opened) {
+		graphic(CLOSE);
+		opened = 0;
+	}
+
+	*p++ = c;
+	if (p == &buf[PACKET])
+		flush();
+}
+
+static void
+flush()
+{
+	char c;
+
+	if (wantready)
+		do {
+			read(fromjerq, &c, 1);
+		} while (c != READY);
+
+	write(tojerq, &buf[0], p - &buf[0]);
+
+	p = &buf[0];
+}
+
+void
+finish()
+{
+	if (mpx == 0) {
+		graphic(OFF);
+		flush();
+		wantready = 0;
+	}
+
+	graphic(CLOSE);
+	opened = 0;
+	flush();
+}
+
+
+
+jplot.h         456802463   502   4     100664  1395      `
+#define	JPLOT	"/usr/blit/mbin/jplot"
+
+#define	OPEN	033
+#define	ARC	00
+#define	CONT
+#define	MOVE	01
+#define	ERASE	02
+#define	CLOSE	03
+#define	ON	04
+#define	OFF	05
+
+#define	PACKET	100
+#define	READY	017
+
+int	
+	mpx,			/* 0 if standalone, 1 if mpx */
+	wantready,		/* 0 if blast ahead, 1 if wait till READY */
+	tojerq,			/* fd to jerq tty */
+	fromjerq,		/* fd from jerq tty */
+	lastx,			/* last x coordinate */
+	lasty			/* last y coordinate */
+;
+
+void
+	alpha(),		/* output a character in alphanumeric mode */
+	arc(),			/* draw an arc */
+	box(),			/* draw an box */
+	circle(),		/* draw a circle */
+	closepl(),		/* close the plot */
+	cont(),			/* draw to a point */
+	dot(),			/* draw a dot */
+	erase(),		/* erase the screen */
+	finish(),		/* flush buffer, turn off READYs */
+	graphic(),		/* output a character in graphics mode */
+	label(),		/* output text */
+	line(),			/* draw a line */
+	linemod(),		/* change line drawing mode */
+	move(),			/* move to a point */
+	openpl(),		/* open a plot */
+	space(),		/* define the user coordinates */
+	start(),		/* turn on READYs */
+	xysc()			/* scale, pack and output x and y coordinates */
+;
+
+float 
+	boty,			/* screen bottom y */
+	botx,			/* screen bottom x */
+	oboty,			/* user's bottom y */
+	obotx,			/* user's bottom x */
+	scalex,			/* scale factor x */
+	scaley,			/* scale factor y */
+	deltx,			/* length of screen x */
+	delty			/* length of screen y */
+;	
+
+plot.sh         396475681   502   4     100775  315       `
+PATH=/bin:/usr/bin:/usr/jerq/bin
+case $1 in
+-T*)	t=$1
+	shift ;;
+*)	t=-T$TERM
+esac
+case $t in
+-T450)	exec t450 $*;;
+-T300)	exec t300 $*;;
+-T300S|-T300s)	exec t300s $*;;
+-Tver)	exec vplot $*;;
+-Ttek|-T4010|-T4014|-T)	exec tek $* ;;
+-Tjerq)	exec jplot $* ;;
+*)  echo plot: terminal type $t not known 1>&2; exit 1
+esac
+
+makefile        456799587   502   4     100664  1559      `
+CFLAGS = -O
+LDFLAGS = -s
+
+INS = cp
+LIBNAME = libjplot.a
+LIBDIR = /usr/blit/lib
+BINDIR = /usr/blit/bin
+
+MCC = mcc
+MCFLAGSJ = -j
+MCFLAGSM =
+
+MSTRIP = mstrip
+
+FRC =
+
+OFILES = \
+	arc.o\
+	box.o\
+	circle.o\
+	close.o\
+	dot.o\
+	erase.o\
+	label.o\
+	line.o\
+	linemod.o\
+	move.o\
+	open.o\
+	point.o\
+	space.o\
+	subr.o
+
+all: $(LIBNAME) jplot jplot.j jplot.m plot
+
+$(LIBNAME): $(OFILES)
+	ar r $(LIBNAME) $(OFILES)
+	ranlib $(LIBNAME)
+
+jplot: driver.o libjplot.a
+	$(CC) driver.o libjplot.a $(LDFLAGS) -o jplot
+
+jplot.j: jplot.c
+	$(MCC) $(MCFLAGSJ) jplot.c -o jplot.j
+	$(MSTRIP) jplot.j
+
+jplot.m: jplot.c
+	$(MCC) $(MCFLAGSM) jplot.c -o jplot.m
+	$(MSTRIP) jplot.m
+
+plot : plot.sh
+	cp plot.sh plot
+
+install: all
+	$(INS) $(LIBNAME) $(LIBDIR)
+	$(INS) jplot $(BINDIR)
+	$(INS) jplot.m $(LIBDIR)
+	$(INS) jplot.j $(LIBDIR)
+	$(INS) plot $(BINDIR)
+
+clean:
+	-rm -f *.o
+
+clobber:	clean
+	-rm -f $(LIBNAME) jplot jplot.j jplot.m plot
+
+arc.o: \
+	jplot.h \
+	$(FRC)
+
+box.o: \
+	jplot.h \
+	$(FRC)
+
+circle.o: \
+	jplot.h \
+	$(FRC) 
+
+close.o: jplot.h \
+	/usr/include/sgtty.h \
+	$(FRC)
+
+dot.o: \
+	jplot.h \
+	$(FRC)
+
+driver.o: \
+	/usr/include/stdio.h \
+	$(FRC)
+
+erase.o: \
+	jplot.h \
+	$(FRC)
+
+jplot.o: \
+	jerq.h \
+	font.h \
+	jplot.h \
+	$(FRC)
+
+label.o: \
+	jplot.h \
+	$(FRC)
+
+line.o: \
+	jplot.h \
+	$(FRC)
+
+linemod.o: \
+	jplot.h \
+	$(FRC)
+
+move.o: \
+	jplot.h \
+	$(FRC)
+
+open.o:	\
+	jplot.h \
+	/usr/include/sgtty.h \
+	/usr/include/signal.h \
+	/usr/include/stdio.h \
+	/usr/blit/include/jioctl.h \
+	$(FRC)
+
+point.o: \
+	jplot.h \
+	$(FRC)
+
+space.o: \
+	jplot.h \
+	$(FRC)
+
+
+subr.o: \
+	jplot.h \
+	$(FRC)
+
+FRC:
+
+

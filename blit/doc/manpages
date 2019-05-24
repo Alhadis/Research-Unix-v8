@@ -1,0 +1,1189 @@
+.SH
+Appendix: The Blit Library
+.PP
+In the following summaries,
+all coordinates are screen or bitmap coordinates
+(which are scaled the same),
+unless specified as layer coordinates.
+.sp
+.PP
+.in 0
+.ft 1
+.Ja Word "Word: quantum of display memory
+typedef short Word;
+.Jb
+A
+.Po Word
+is a 16-bit integer, and is the unit of storage used in the graphics software.
+.Ja Point "Point: data structure for position on screen
+.nf
+typedef struct{
+	short x;
+	short y;
+}Point;
+.fi
+.Jb
+A
+.Po Point
+is a location in a
+.Po Bitmap ,
+such as the display.
+The coordinate system has x increasing to the right and y increasing down.
+.Ja Rectangle "Rectangle: data structure for rectangle on screen
+.nf
+typedef struct{
+	Point origin;	/* Upper left */
+	Point corner;	/* Lower right */
+}Rectangle;
+.fi
+.Jb
+A
+.Po Rectangle
+is a rectangular area in a
+.Po Bitmap .
+By definition,
+.Po origin.x<=corner.x
+and
+.Po origin.y<=corner.y .
+By convention, the right (maximum x) and bottom (maximum y) edges are
+excluded from the represented rectangle, so abutting rectangles have no
+points in common.  Thus,
+.Po corner
+is the coordinates of the first point beyond the rectangle.
+The data on the display is contained in the
+.Po Rectangle
+.Po "{0, 0, XMAX, YMAX}" ,
+where
+.Po XMAX==800
+and
+.Po YMAX==1024 .
+.Ja Bitmap "Bitmap: data structure for bitmap
+.nf
+typedef struct{
+	Word	*base;			/* pointer to start of data */
+	unsigned width;		/* width in Words of total data area */
+	Rectangle rect;		/* rectangle in data area, screen coords */
+}Bitmap;
+.fi
+.Jb
+A
+.Po Bitmap
+holds a rectangular image, stored in contiguous memory starting at
+.Po base .
+Each
+.Po width
+.Po Word s
+of memory form a scan-line of the image.
+.Po rect
+defines the coordinate system inside the
+.Po Bitmap :
+.Po rect.origin
+is the location in the
+.Po Bitmap
+of the upper-leftmost point in the image.
+.Ja Texture "Texture: data structure for texture
+.nf
+typedef struct{
+	Word bits[16];
+}Texture;
+.fi
+.Jb
+A
+.Po Texture
+is a 16\(mu16 dot bit pattern.
+.Po Texture s
+are aligned to absolute display positions,
+so adjacent areas colored with the same
+.Po Texture
+mesh smoothly.
+.Ja Font "Font, Fontchar: data structure for character set
+.nf
+typedef struct{
+	short n;		/* ascii value of last char in font */
+	char height;	/* height of bitmap */
+	char ascent;	/* top of bitmap to baseline */
+	long unused;	/* for a rainy day */
+	Bitmap *bits;	/* where characters are stored */
+	Fontchar info[0..n+1];	/* n+2 character descriptors */
+}Font;
+typedef struct{
+	short x;		/* left edge of bits in bitmap */
+	char top;	/* y of first non-zero scan-line */
+	char bottom;	/* y of last non-zero scan-line */
+	char left;	/* x offset of baseline (for kerning) */
+	char width;	/* width of baseline */
+}Fontchar;
+.fi
+.Jb
+A
+.Po Font
+is a character set.  The character information is stored in the
+.Po Fontchar
+structures.  The actual images of the characters are stored in the
+horizontal
+Bitmap
+.Po bits .
+A character at point
+.Po p
+has its upper-leftmost dot, including empty space above it in the
+Bitmap,
+at
+.Po p .
+Characters in the
+Bitmap
+abut exactly, so the width of a character
+.Po c
+is
+.Po Font.info[c+1].x-Font.info[c].x .
+.Ja add "add, sub, mul, div: arithmetic on Points
+Point add(p, q) Point p, q;
+.br
+Point sub(p, q) Point p, q;
+.br
+Point mul(p, a) Point p; int a;
+.br
+Point div(p, a) Point p; int a;
+.Jb
+.Po add
+returns the Point sum of its arguments: (\c
+.Po p.x+q.x ,
+.Po p.y+q.y ).
+.Po sub
+returns the Point difference of its arguments: (\c
+.Po p.x-q.x ,
+.Po p.y-q.y ).
+.Po mul
+returns the Point
+.Po "(p.x*a, p.y*a)" .
+.Po div
+returns the Point
+.Po "(p.x/a, p.y/a)" .
+.Ja addr "addr: Word address of Point in Bitmap
+Word *addr(b, p) Bitmap *b; Point p;
+.Jb
+.Po addr
+returns the address of the Word containing the bit
+corresponding to the Point
+.Po p
+in the Bitmap
+.Po b .
+.Ja alarm "alarm: wakeup call timer
+void alarm(t) unsigned t;
+.Jb
+.Po alarm
+starts a timer which will ``fire''
+.Po t
+ticks (60ths of a second) in the future.
+A pseudo-resource
+.Po ALARM
+can be used to check the status of the timer:
+see
+.Po own
+and
+.Po wait .
+Calling
+.Po alarm
+implicitly requests the
+.Po ALARM
+pseudo-resource.
+.Po alarm
+does not interfere with
+.Po sleep ,
+and vice versa.
+.Ja alloc "alloc, free: allocate memory
+char *alloc(nbytes) unsigned nbytes;
+.br
+void free(s) char *s;
+.Jb
+.Po alloc
+corresponds to the standard C function
+.Po malloc .
+It returns a pointer to a block of
+.Po nbytes
+contiguous bytes of storage, or 0 (\c
+.Po NULL )
+if unavailable.
+The storage is aligned on 4-byte boundaries.
+Unlike
+.Po malloc ,
+.Po alloc
+clears the storage to zeros.
+.Po free
+frees storage allocated by
+.Po alloc .
+.Ja atan2 "atan2: inaccurate arc tangent
+int atan2(x, y) int x, y;
+.Jb
+.Po atan2
+returns the approximate arc-tangent of
+.Po y/x .
+The return value is in integral degrees.
+The approximation is poor; the error may be as large as two degrees.
+.Ja balloc "balloc, bfree: allocate a bitmap
+Bitmap *balloc(r) Rectangle r;
+.br
+void bfree(b) Bitmap *b;
+.Jb
+.Po balloc
+returns a pointer to a Bitmap large enough to contain
+the Rectangle
+.Po r ,
+or 0 (\c
+.Po NULL )
+for failure.
+The coordinate system inside the Bitmap is set by
+.Po r :
+the
+.Po origin
+and
+.Po corner
+of the Bitmap are those of
+.Po r ,
+which must itself be in screen coordinates.
+There is a total of about two thirds of a screenful of off-screen bitmap memory
+available.
+.Po bfree
+frees the storage associated with a Bitmap allocated by
+.Po balloc .
+.Ja bitblt "bitblt: Rectangle copy
+void bitblt(sb, r, db, p, f) Bitmap *sb, *db; Rectangle r; Point p; Code f;
+.Jb
+.Po bitblt
+(bit-block transfer)
+copies the data in Rectangle
+.Po r
+in Bitmap
+.Po sb
+to the congruent Rectangle with
+.Po origin
+.Po p
+in Bitmap
+.Po db .
+The nature of the copy is specified by the function code
+.Po f .
+.Ja button1 "button[123]: button state
+int button1(), button2(), button3();
+.br
+int button12(), button23(), button123();
+.Jb
+.Po button1
+and its counterparts return the state of the associated mouse button:
+non-zero if the button is depressed, 0 if not.
+The buttons are numbered left to right.
+.Po button12
+and the other multi-button functions return the
+.I OR
+of their states: true if either button 1 or button 2 is depressed
+(as opposed to button 1 \fIand\fP button 2).
+.Ja circle "circle, disc, arc: draw a circle
+void circle(b, p, r, f) Bitmap *b; Point p; int r; Code f;
+.br
+void disc(b, p, r, f) Bitmap *b; Point p; int r; Code f;
+.br
+void arc(b, p0, p1, p2, f) Bitmap *b; Point p0, p1, p2; Code f;
+.Jb
+.Po circle
+draws the best approximate circle of radius
+.Po r
+at point
+.Po p
+in the Bitmap
+.Po b
+with code
+.Po f .
+The circle is guaranteed to be symmetrical about the horizontal,
+vertical and diagonal axes.
+.Po disc
+draws the corresponding disc.
+.Po arc
+draws a circular arc centered on
+.Po p0,
+travelling counter-clockwise
+from
+.Po p1
+to the point on the circle closest to
+.Po p2 .
+.Ja cos "cos, sin: cosine and sine
+int cos(d) int d;
+.br
+int sin(d) int d;
+.Jb
+.Po cos
+and
+.Po sin
+return scaled integer approximations to the trigonometric functions.
+The argument values are in degrees.
+The return values are scaled so that
+.Po cos(0)==1024 .
+Therefore, to calculate, for example, the mathematical expression
+.Po x=x0*cos(d)
+to calculate a projection, the multiplication must be scaled:
+.Po "x=muldiv(x0, cos(d), 1024)"
+.Ja cursinhibit "cursinhibit, cursallow: control cursor tracking
+void cursallow(), cursinhibit();
+.Jb
+.Po cursinhibit
+turns off interrupt-time cursor tracking
+(the drawing of the cursor on the screen),
+although the mouse coordinates are still kept current
+and available in the global structure
+.Po mouse .
+.Po cursallow
+enables interrupt-time cursor tracking.
+.Po cursallow
+and
+.Po cursinhibit
+stack: to enable cursor tracking after two calls to
+.Po cursinhibit ,
+two calls to
+.Po cursallow
+are required.
+.Ja cursswitch "cursswitch: switch cursor
+Texture *cursswitch(t) Texture *t;
+.Jb
+.Po cursswitch
+changes the mouse cursor (a 16\(mu16 pixel image) to that specified by the
+Texture
+.Po t .
+If the argument is
+.Po "(Texture *)0" ,
+the cursor is restored to the default arrow.
+.Po cursswitch
+returns the previous value of the cursor: the argument of the previous
+call to
+.Po cursswitch.
+.Ja display "display, Drect, Jrect: globals describing display
+Bitmap display;
+.br
+Rectangle Drect, Jrect;
+.Jb
+.Po display
+is a global Bitmap describing the display area,
+in screen coordinates.
+.Po Drect
+is a Rectangle defining, in screen coordinates,
+the display area available to the program.
+It is not necessarily
+.Po display.rect
+because of the Art Deco border around each layer in
+.I mpx .
+.Po Jrect
+is the Rectangle
+.Po {0,\ 0,\ XMAX,\ YMAX} .
+.Ja ellipse "ellipse, eldisc, elarc: draw an ellipse
+void ellipse(bp, p, a, b, f) Bitmap *bp; Point p; int a, b; Code f;
+.br
+void eldisc(bp, p, a, b, f) Bitmap *bp; Point p; int a, b; Code f;
+.br
+void elarc(bp, p0, a, b, p1, p2, f) Bitmap *bp; Point p0, p1, p2; int a, b; Code f;
+.Jb
+.Po ellipse
+draws an ellipse centered at
+.Po p
+with horizontal semi-axis
+.Po a
+and vertical semi-axis
+.Po b
+in Bitmap
+.Po bp
+with code
+.Po f .
+.Po eldisc
+draws the corresponding elliptical disc.
+.Po elarc
+draws the correspoding elliptical arc, travelling
+counter-clockwise from the ellipse point closest to
+.Po p1
+to the point closest to
+.Po p2 .
+(Beware the regrettable difference between the calling conventions for
+.Po arc
+and
+.Po elarc .)
+.Ja eqpt "eqpt: compare two points for equality
+int eqpt(p, q) Point p, q;
+.Jb
+.Po eqpt
+returns the equality of its arguments:
+.Po 0
+if unequal,
+.Po 1
+is equal.
+Two
+.Po Point s
+are equal if the corresponding coordinates are equal.
+.Ja eqrect "eqrect: compare two rectangles for equality
+int eqrect(r, s) Rectangle r, s;
+.Jb
+.Po eqrect
+returns the equality of its arguments:
+.Po 0
+if unequal,
+.Po 1
+if equal.
+Two
+.Po Rectangles
+are equal if all four corresponding coordinates are equal.
+.Ja exit "exit: cease execution
+void exit();
+.Jb
+.Po exit
+terminates the process.
+Unlike on Unix,
+.Po exit
+does not return an exit status to a parent.
+In either the stand-alone or
+.I mpx
+world, calling
+.Po exit
+replaces the running process by the appropriate terminal program.
+Any associated Unix process must arrange for its own demise \(em
+.Po exit
+is a purely local function.
+When a process calls
+.Po exit ,
+all local resources: keyboard, mouse, storage, etc.,
+are deallocated automatically.
+.Ja gcalloc "gcalloc, gcfree: garbage compacting allocator
+char *gcalloc(nbytes, where) unsigned long nbytes; char **where;
+.br
+void gcfree(p) char *p;
+.Jb
+.Po gcalloc
+provides a simple garbage-compacting allocator.
+It returns a pointer to a block of
+.Po nbytes
+contiguous bytes of storage, or
+.Po NULL
+if unavailable.
+The storage is not initialized to zeros.
+.Po where
+is a pointer to the user's data where the location of the
+block is to be saved.
+.Po *where
+will be updated after each compaction.
+Therefore, a program using
+.Po gcalloc
+should never store the location of gcallocated memory
+anywhere other than the location handed to the allocator.
+Typically, this location is contained in a structure, such as a
+.Po Bitmap .
+.Po gcfree
+frees the storage block at
+.Po p.
+.Po gcalloc
+is not for novices.
+.Ja getrect "getrect: get rectangle swept out by user
+Rectangle getrect();
+.Jb
+.Po getrect
+prompts the user with a box cursor and waits for a
+rectangle to be swept out with button 3.
+It returns the screen coordinates of the box swept.
+The box may be partly or wholly outside the process's layer.
+There is no
+.Po getrect
+call in the stand-alone world.
+.Ja infont "infont, getfont, outfont, ffree: read a font from Unix
+#include <font.h>
+.br
+Font *infont(inch) int (*inch)();
+.br
+Font *getfont(file) char *file;
+.br
+int outfont(f, ouch) Font *f; int (*ouch)();
+.br
+void ffree(f) Font *f;
+.Jb
+.Po infont
+creates a font by reading the byte-wise binary representation
+returned by successive calls to
+.Po inch.
+It returns
+.Po "(Font *)0
+on error.
+.Po inch
+must return successive bytes of the Unix file representation of the font,
+and
+.Po ((int)-1)
+at end-of-file.
+.Po outfont
+calls the routine
+.Po ouch
+to write successive bytes of the binary representation of font
+.Po f .
+It returns
+.Po -1
+on error, as must
+.Po ouch .
+For programs running (only) under
+.I jx ,
+.Po getfont
+returns a pointer to a font read from the named
+.Po file ,
+essentially by calling
+.Po infont
+with argument routine
+.Po getc .
+It too returns
+.Po "((Font *)0)
+on error.
+.Po ffree
+frees a font allocated by
+.Po infont
+or
+.Po getfont .
+.Ja inset "inset: inset a Rectangle for a border
+Rectangle inset(r, n) Rectangle r; int n;
+.Jb
+.Po inset
+returns the Rectangle
+(\c
+.Po r.origin.x+n ,
+.Po r.origin.y+n ,
+.Po r.corner.x-n ,
+.Po r.corner.y-n ).
+The following code creates a clear rectangle
+.Po r
+with a 2-dot wide border
+.ul
+inside
+.Po r :
+.DS
+.ft CW
+rectf(&display, r, F_STORE);
+rectf(&display, inset(r, 2), F_CLR);
+.ft
+.DE
+.Ja jcircle "jcircle, jdisc, jarc: draw scaled circle on display
+void jcircle(p, r, f) Point p; int r; Code f;
+.br
+void jdisc(p, r, f) Point p; int r; Code f;
+.br
+void jarc(p0, p1, p2, f) Point p0, p1, p2; Code f;
+.Jb
+.Po jcircle
+draws in the display Bitmap the approximate circle of radius
+.Po r
+centered at
+.Po p
+with code
+.Po f .
+.Po jdisc
+draws the corresponding disc.
+.Po jarc
+draws the circular arc centered at
+.Po p0
+counterclockwise from
+.Po p1
+to the point on the circle closest to
+.Po p2 .
+All coordinates and radii are in layer coordinates, so
+under 
+.I mpx ,
+because the layer is scaled,
+these routines are actually implemented by calls to the ellipse routines.
+.Ja jellipse "jellipse, jeldisc, jelarc: draw ellipse on display
+void jellipse(p, a, b, f) Point p; int a, b; Code f;
+.br
+void jeldisc(p, a, b, f) Point p; int a, b; Code f;
+.br
+void jelarc(p0, a, b, p1, p2, f) Point p0, p1, p2; int a, b; Code f;
+.Jb
+.Po jellipse
+draws in the display Bitmap an approximate ellipse centered at
+.Po p ,
+with horizontal semi-axis
+.Po a
+and vertical semi-axis
+.Po b .
+.Po jeldisc
+draws the corresponding elliptical disc.
+.Po jelarc
+draws the corresponding elliptical arc, counterclockwise from the
+ellipse point closest to
+.Po p1
+to the ellipse point closest to
+.Po p2 .
+All coordinates and semi-axes are in layer coordinates.
+.Ja jline "jline, jlineto, jsegment: draw line on display
+void jline(p, f) Point p; Code f;
+.br
+void jlineto(p, f) Point p; Code f;
+.br
+void jsegment(p, q, f) Point p, q; Code f;
+.Jb
+.Po jline
+draws a line, with function code
+.Po f ,
+in the display Bitmap, from the current point (initially
+.Po (0,\ 0) ),
+along the relative vector, in layer coordinates,
+.Po p .
+.Po jlineto
+draws a line from the current point to the absolute layer coordinate
+.Po p .
+.Po jsegment
+draws a line from the layer coordinate
+.Po p
+to the layer coordinate
+.Po q .
+.Po p
+is in layer coordinates.
+All three routines leave the
+current point at the end of the line.
+.Ja jmove "jmove, jmoveto: move relative to current point on display
+void jmove(p) Point p;
+.br
+void jmoveto(p) Point p;
+.Jb
+.Po jmove
+moves the current point by the relative vector
+.Po p ,
+in layer coordinates.
+.Po jmoveto
+sets the current point to the absolute location
+.Po p ,
+which is in layer coordinates.
+.Ja jpoint "jpoint: draw single pixel on display
+void jpoint(p, f) Point p; Code f;
+.Jb
+.Po jpoint
+sets the pixel at location
+.Po p ,
+in layer coordinates,
+in the display Bitmap
+according to the function code
+.Po f .
+.Ja jrectf "jrectf: rectangle function on display
+void jrectf(r, f) Rectangle r; Code f;
+.Jb
+.Po jrectf
+performs the action specified by the function code
+.Po f
+on the Rectangle r in the display Bitmap.
+.Po r
+is in layer coordinates.
+.Ja jstring "jstring: draw string on display
+Point jstring(s) char *s;
+.Jb
+.Po jstring
+draws, in
+.Po F_XOR
+mode,
+the null-terminated string
+.Po s
+in the display Bitmap, 
+so that the
+.Po origin
+of the rectangle enclosing the first character is at the current point.
+It returns the new current point, which is left after the last character
+of the string, so adjacent calls to
+.Po jstring
+will appear to concatenate their argument strings on the screen.
+.Ja jtexture "jtexture: draw texture in rectangle on display
+void jtexture(r, t, f) Rectangle r; Texture *t; Code f;
+.Jb
+.Po jtexture
+draws with function specified by
+.Po f
+in the rectangle
+.Po r ,
+in the display Bitmap,
+the texture specified by
+.Po t .
+The texture is a 16\(mu16 pattern of dots
+which is replicated to cover
+.Po r .
+Although
+.Po r
+is in layer coordinates, in which a unit of distance may not represent a
+screen dot,
+the texture is 16\(mu16 screen dots.
+.Ja kbdchar "kbdchar: read character from keyboard
+int kbdchar();
+.Jb
+.Po kbdchar
+returns the next keyboard character typed to the process.
+If no characters have been typed,
+.Po kbdchar
+returns
+.Po -1 .
+If
+.Po KBD
+has not been
+.Po request 'ed,
+.Po kbdchar
+will always return
+.Po -1 .
+.Ja menuhit "menuhit: present user with menu and get selection
+int menuhit(m, n) Menu *m; int n;
+.Jb
+.Po menuhit
+presents the user with a menu specified by the Menu pointer
+.Po m
+and returns an integer indicating the selection made,
+or
+.Po -1
+for no selection.
+.Po n
+specifies which button to use for the interaction: 1, 2 or 3.
+.Po menuhit
+assumes that the button is already depressed when it is called.
+The user makes a selection by lifting the button when the cursor
+points at the desired selection;
+lifting the button outside the menu indicates no selection.
+The menu consists of an array of strings, terminated with a NULL
+pointer, set up as follows:
+.DS
+.ft CW
+char *menutext[]={"Item 0", "Item 1", "Item 2", NULL};
+Menu menu={ menutext };
+.ft 1
+.DE
+and used as follows:
+.DS
+.ft CW
+switch(menuhit(&menu, 1)){	/* Use left button */
+	case 0:
+		item_0();
+		break;
+	case 1:
+		item_1();
+		break;
+	case 2:
+		item_2();
+		break;
+	case -1:
+		noselection();
+		break;
+}
+.ft 1
+.DE
+.Ja mouse "mouse, buttons: state of mouse
+struct {Point xy; Point jxy; int buttons;} mouse;
+.Jb
+.Po mouse
+is a global location containing the current mouse coordinates
+and button states.
+.Po xy
+is in screen coordinates;
+.Po jxy
+is in layer coordinates.
+The buttons are encoded with the
+.Po 04
+bit giving the state of button 1 (non-zero implies depressed),
+.Po 02
+button 2 and
+.Po 01
+button 3.
+The
+.Po buttons
+are most easily interpreted using the
+macros
+.Po button1() ,
+.Po button2() ,
+etc.
+.Ja muldiv "muldiv: calculate (a*b)/c accurately
+int muldiv(a, b, c) int a, b, c;
+.Jb
+.Po muldiv
+is a macro that returns the 16-bit result
+.Po (a*b)/c .
+.Po (a*b)
+is calculated to 32 bits, so
+no precision is lost.
+.Po muldiv
+is convenient for calculating transformations.
+.Ja nap "nap, sleep: relax for a while
+void nap(nticks) int nticks;
+.br
+void sleep(nticks) int nticks;
+.Jb
+.Po nap
+does nothing for
+.Po nticks
+ticks of the 60 Hz internal clock.
+To avoid beating with the display, programs drawing rapidly changing scenes
+should call
+.Po nap(2)
+between updates, to synchronize the display and memory.
+.Po nap
+busy loops until the time is up;
+.Po sleep
+is identical except that it
+gives up the processor for the interval.
+Unless using the mouse, a program should call
+.Po sleep
+in preference to
+.Po nap .
+.Ja norm "norm: return norm of three-dimensional vector
+int norm(x, y, z) int x, y, z;
+.Jb
+.Po norm
+returns the norm of the vector
+.Po "(x, y, z)" .
+.Ja own "own: which resources have data
+int own();
+.Jb
+.Po own
+returns a bit vector
+(see the description of
+.Po request )
+of which I/O resources have data available.
+For example, \f(POown()&KBD\fP can be used to indicate
+if a character is available to be read by
+.Po kbdchar() .
+.Po own()&ALARM
+indicates whether the alarm timer has fired.
+.Ja point "point: draw a single pixel in a bitmap
+void point(b, p, f) Bitmap *b; Point p; Code f;
+.Jb
+.Po point
+draws the pixel at location
+.Po p
+in the Bitmap
+.Po b
+according to function code
+.Po f .
+.Ja Pt "Pt: create a point from two coordinates
+Point Pt(x, y) int x, y;
+.Jb
+.Po Pt
+is a macro to pass a coordinate pair as a Point to a function.
+It only works in parameter lists.
+.Ja ptinrect "ptinrect: is point within a rectangle?
+int ptinrect(p, r) Point p; Rectangle r;
+.Jb
+.Po ptinrect
+returns 1 if
+.Po p
+is a point within
+.Po r ,
+and 0 otherwise.
+.Ja raddp "raddp, rsubp: arithmetic on Rectangles
+Rectangle raddp(r, p) Rectangle r; Point p;
+.br
+Rectangle rsubp(r, p) Rectangle r; Point p;
+.Jb
+.Po raddp
+returns the Rectangle
+.ft CW
+(add(r.origin, p), add(r.corner, p)).
+.ft
+.Po rsubp
+returns the Rectangle
+.ft CW
+(sub(r.origin, p), sub(r.corner, p)).
+.ft
+.Ja rcvchar "rcvchar: receive character from host
+int rcvchar();
+.Jb
+.Po rcvchar
+returns the next character received from the host,
+typically written on the standard output of a Unix process.
+If there are no characters available, or
+.Po RCV
+was not requested,
+.Po rcvchar
+returns
+.Po -1 .
+.Ja realtime "realtime: wall clock
+long realtime();
+.Jb
+.Po realtime
+returns the number of 60Hz clock ticks since
+.I mpx
+was booted.
+There is no
+.Po realtime
+call in the stand-alone world.
+.Ja Rect "Rect: create a rectangle from four coordinates
+Rectangle Rect(a, b, c, d)	int a, b, c, d;
+.Jb
+.Po Rect
+is a macro to pass four coordinates (two coordinate pairs) as a Rectangle,
+to a function.
+It only works in parameter lists.
+.Ja rectXrect "rectXrect: do rectangles overlap?
+int rectXrect(r, s) Rectangle r, s;
+.Jb
+.Po rectXrect
+returns 1 if
+.Po r
+and
+.Po s
+share any point; 0 otherwise.
+.Ja rectclip "rectclip: clip rectangle to another rectangle
+int rectclip(rp, s) Rectangle *rp, s;
+.Jb
+.Po rectclip
+clips in place
+the Rectangle pointed to by
+.Po rp
+so that it is completely contained within
+.Po s .
+The return value is 1 if any part of
+.Po *rp
+is within
+.Po s .
+Otherwise, the return value is 0 and
+.Po *rp
+is unchanged.
+.Ja rectf "rectf: perform function on rectangle in bitmap
+void rectf(b, r, f) Bitmap *b; Rectangle r; Code f;
+.Jb
+.Po rectf
+performs the action specified by the function code
+.Po f
+on the Rectangle
+.Po r
+within the Bitmap
+.Po b .
+.Ja request "request: request I/O resources
+void request(r) int r;
+.Jb
+.Po request
+announces a program's intent to use I/O devices and resources,
+and is usually called once early in the program.
+.Po r
+is a bit vector indicating which resources are to be used,
+composed by OR'ing together one or more of the elements
+.Po KBD
+(keyboard),
+.Po MOUSE ,
+.Po RCV
+(characters received by Blit from Unix),
+.Po SEND
+(characters sent from Blit to Unix)
+and
+.Po ALARM
+(see
+.Po alarm ).
+For example,
+\f(POrequest(MOUSE|KBD)\fP indicates that the process
+wants to use the mouse and keyboard.
+If the keyboard is not requested,
+characters typed will be sent to the standard input of the Unix process.
+If the mouse is not requested,
+mouse events in the process's layer will be interpreted by the
+system rather than passed to the process.
+.Po SEND
+and
+.Po CPU
+(see \f(CWwait\f1) are always implicitly
+.Po request ed.
+In \f2mpx\f1,
+.Po request
+sleeps for one clock tick to synchronize mouse control with the kernel.
+.Ja Rpt "Rpt: create a rectangle from two points
+Rectangle Rpt(p, q) Point p, q;
+.Jb
+.Po Rpt
+is a macro to pass two points as a Rectangle to a function.
+It only works in parameter lists.
+.Ja rol "rol, ror: rotate bits
+int rol(x, n) int x, n;
+.br
+int ror(x, n) int x, n;
+.Jb
+.Po rol
+returns
+.Po x
+bit-rotated left by
+.Po n .
+.Po ror
+returns
+.Po x
+bit-rotated right by
+.Po n .
+.Ja screenswap "screenswap: swap screen rectangle and bitmap
+void screenswap(b, r, s) Bitmap *b; Rectangle r, s;
+.Jb
+.Po screenswap
+does an in-place exchange of the screen Rectangle
+.Po s
+and the Rectangle
+.Po r
+within the Bitmap
+.Po b .
+Its action is undefined if
+.Po r
+and
+.Po s
+are not congruent.
+.Po s
+is
+.ul
+not
+clipped to the display area, only to the screen.
+.Ja segment "segment: draw a line segment in a bitmap
+void segment(b, p, q, f) Bitmap *b; Point p, q; Code f;
+.Jb
+.Po segment
+draws a line segment in Bitmap
+.Po b
+from Point
+.Po p
+to
+.Po q ,
+with function code
+.Po f .
+Like all the other graphics operations,
+.Po segment
+clips the line so that only the portion of the line intersecting the
+bitmap is displayed.
+.Ja sendchar "sendchar, sendnchars: send a character to host
+void sendchar(x) int x;
+.br
+void sendnchars(n p) int n; char *p;
+.Jb
+.Po sendchar
+sends a single byte to the host,
+which will normally be read on the standard input of the Unix process.
+.Po sendnchars
+sends to the host
+.Po n
+characters pointed to by
+.Po p .
+Sent by either routine,
+the characters are passed to the Unix teletype input routine,
+and will be processed as though they were typed on the keyboard by a user.
+A process may always send characters:
+these routines
+never block.
+.Ja sqrt "sqrt: integer square root
+int sqrt(x) long x;
+.Jb
+.Po sqrt
+returns the 16-bit signed integer closest to the
+square root of its 32-bit signed argument.
+.Ja string "string, defont: draw string in bitmap
+#include <font.h>
+.br
+Point string(ft, s, b, p, f) Font *ft; char *s; Bitmap *b; Point p; Code f;
+.br
+Font defont;
+.Jb
+.Po string
+draws the null-terminated string
+.Po s
+using characters from font
+.Po ft
+in Bitmap
+.Po b
+at Point
+.Po p ,
+with function code
+.Po f .
+The return value is the location of the first character
+.ul
+after
+.Po s ;
+passed to another call to
+.Po string ,
+the two strings will be concatenated.
+The characters are drawn such that the
+.Po origin
+point of the bounding rectangle of a maximum height character
+lies at
+.Po p .
+Therefore, a character drawn on the screen at
+.Po "(0, 0)"
+will occupy the upper-leftmost character position on the screen.
+.Po string
+draws characters as they are in the font.
+No special action is taken for control characters such as tabs or newlines.
+The global
+.Po defont
+is predefined, and is the name of the standard font (not a pointer to it).
+.Ja strwidth "strwidth, jstrwidth: width of character string
+#include <font.h>
+.br
+int strwidth(f, s) Font *f; char *s;
+int jstrwidth(s) char *s;
+.Jb
+.Po strwidth
+returns the width, in full screen coordinates,
+of the null-terminated string
+.Po s ,
+interpreted in the
+.Po Font
+.Po *f .
+The height of a character string is simply
+.Po f->height .
+.Po jstrwidth(s)
+is equivalent to
+.Po strwidth(&defont, s) .
+.Ja texture "texture: draw texture in rectangle in bitmap
+void texture(b, r, t, f) Bitmap *b; Rectangle r; Texture *t; Code f;
+.Jb
+.Po texture
+draws with function specified by
+.Po f
+in the rectangle
+.Po r ,
+in the Bitmap
+.Po b ,
+the texture specified by
+.Po t .
+The array is taken to be a 16\(mu16 pattern of dots
+which is replicated to cover
+.Po r .
+.Ja transform "transform,rtransform: layer to screen coordinates
+Point transform(p) Point p;
+.br
+Rectangle rtransform(r) Rectangle r;
+.Jb
+.Po transform
+returns the screen coordinates of its argument layer coordinate
+.Po Point
+.Po p .
+.Po rtransform
+returns the screen coordinates of its argument layer coordinate
+.Po Rectangle
+.Po r .
+.Ja wait "wait: wait for resources
+int wait(r) int r;
+.Jb
+.Po r
+is a bit vector composed according to the description of
+.Po request
+above.
+.Po wait
+suspends the process,
+enabling others,
+until at least one of the requested resources is available.
+The return value is a bit vector indicating which of the requested resources
+are available
+\(em the same as
+.Po own()&r .
+For example, if a process wants to read from
+the keyboard or the host, the following fragment illustrates
+how to use
+.Po request
+and
+.Po wait :
+.DS
+.ft CW
+request(KBD|RCV);
+for(;;){
+	r=wait(KBD|RCV);
+	if(r&KBD)
+		keyboard(kbdchar());
+	if(r&RCV)
+		receive(rcvchar());
+}
+.ft 1
+.DE
+Processes wishing to give up the processor to enable other processes to run
+may call
+.Po wait(CPU) .
+It will return as soon as all other active processes have had a chance to run.
+.Po CPU
+is a fake resource which is always
+.Po request ed.
+.Po wait(SEND)
+is a no-op,
+but is not guaranteed to remain so.
+.PP

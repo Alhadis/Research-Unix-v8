@@ -1,0 +1,5 @@
+for i in picy.y picl.l pic.h *.c makefile 
+do (echo Jpic file $i: ; echo; cat $i) | Mail $1
+echo $i
+done
+

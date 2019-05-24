@@ -1,0 +1,185 @@
+#THE SPACING OF THE FIELDS OF NM:
+#HEX:
+#          Name    | Value |Class |Tv|       Type       | Size |Line |Section
+#2345678901234567890123456789012345678901234567890123456789012345678901234567890
+#        1         2         3         4         5         6         7         8
+#OCTAL:
+#          Name    | Value  |Class |Tv|       Type       | Size  |Line |Section
+
+BEGIN	{
+	 FS = "|"
+	 OFS = "|"
+	 tab = "\t   "
+	 pfile = ""
+	 eflag = 1
+	 sflag = 1
+	 subtab = "  "
+	 xflag = 0
+	}
+
+
+#the file begins with six records of header information
+NR == 1 {
+	 next
+	}
+
+NR == 2 {
+	 next
+	}
+
+NR == 3 && $1 ~ /^S/ {
+	 xflag = 1
+	}
+
+NR == 3 {
+	 print "\n\n" $1
+	 next
+	}
+
+NR == 4 {
+	 next
+	}
+
+NR == 5 && $0 ~ /Sourcefile/ {
+	 tab = "   "
+	}
+
+NR == 5 {
+	 if (xflag == 1) {
+	  printf("\n%sName      Value     Class  Tv        Type         ", tab)
+	  printf("Size  Line  Section\n\n")
+	 } else {
+	  printf("\n%sName      Value       Class  Tv      Type       ", tab)
+	  printf("Size   Line  Section\n\n")
+	 }
+	 next
+	}
+
+NR == 6 {
+	 next
+	}
+
+#new b16 source file symbols --file with local symbols
+$3 ~ /file/ {
+	 print "\nFile:  " $1 "\n"
+	 sflag = 1
+	 eflag = 1
+	 next
+	}
+
+#beginning of external symbols (if eflag == 1) w/ locals
+$3 ~ /ext/ && $5 !~ /[^\)]\( \)$/ {
+	 if (eflag == 1) {
+	     print "\nExternal Symbols"
+	     eflag = 0
+	 }
+	}
+
+#beginning of external symbols w/o locals
+NF == 9 && $3 ~ /ext/ {
+	 if (eflag == 1) {
+	     print "\nExternal Symbols"
+	     eflag = 0
+	 }
+	}
+
+#static symbols from another b16 source file  --without local symbols
+NF == 9 && $9 != pfile && $3 ~ /static/ {
+	 print "\nStatic Symbols in " $9
+	 pfile = $9
+	 eflag = 1
+	}
+
+#beginning of static symbols in a file with local symbols
+NF != 9 && $3 ~ /static/ && $5 !~ /[^\)]\( \)$/ {
+	 if (sflag == 1) {
+	     print "\nStatic Symbols"
+	     sflag = 0
+	     eflag = 1
+	 }
+	}
+
+#beginning of function marker
+$3 ~ /fcn/ && $1 ~ /\.bf/ {
+	 print "  Function begins:  " $2 "    (source line " $7 ")"
+	 sflag = 0
+	 next
+	}
+
+#end of function marker
+$3 ~ /fcn/ && $1 ~ /\.ef/ {
+	 print "  Function ends:    " $2 "    (source line " $7 ")\n"
+	 subtab = "  "
+	 sflag = 1
+	 next
+	}
+
+#beginning of block marker
+$3 ~ /block/ && $1 ~ /\.bb/ {
+	 subtab = subtab "  "
+	 print subtab "Block begins:  " $2 "    (source line " $7 ")"
+	 next
+	}
+
+#end of block marker
+$3 ~ /block/ && $1 ~ /\.eb/ {
+	 print subtab "Block ends:    " $2 "    (source line " $7 ")"
+	 subtab = subtab  ""
+	 next
+	}
+
+#end of structure or union members marker
+$3 ~ /endstr/ {
+	 print subtab "  }    (size " $6 ")"
+	 next
+	}
+
+#structure or union tag name entry
+$3 ~ /strtag/ {
+	 print subtab "  Struct " $1 " {"
+	 next
+	}
+
+$3 ~ /untag/ {
+	 print subtab "  Union  " $1 " {"
+	 next
+	}
+
+$3 ~ /entag/ {
+	 print subtab "  Enum   " $1 " {"
+	 next
+	}
+
+#any user generated symbol, printed in hex
+xflag == 1 {
+  #if length of type field is <= 18 characters, print line normally
+	 if (length($5) <= 18) {
+	 printf("%s%s|%s|%s|%s|%18.18s|%s|%s|%s\n",tab,$1,$2,$3,$4,$5,$6,$7,$8)
+	 } else if (length($5) <= 42) {
+  #if length is <= 42 print size, line, section fields on next line
+	     print tab $1,$2,$3,$4,$5
+	       print tab "\t\t\t\t\t\t|" $6,$7,$8
+	 } else {
+	     print tab $1,$2,$3,$4,substr($5,1,42)
+	    printf("%s\t\t\t     %18.18s|%s|%s|%s\n",tab,substr($5,43),$6,$7,$8)
+	 }
+	 next
+	}
+
+#any user generated symbol printed in octal, field sizes different from hex
+xflag == 0 {
+	 if (length($5) <= 14) {
+	printf("%s%s|%s|%s|%s|%14.14s|%s|%s|%s\n",tab,$1,$2,$3,$4,$5,$6,$7,$8)
+	 } else if (length($5) <= 41) {
+	     print tab $1,$2,$3,$4,$5
+	     print tab "\t\t\t\t\t\t |" $6,$7,$8
+	 } else {
+	     print tab $1,$2,$3,$4,substr($5,1,41)
+	   printf("%s\t\t\t      %14.14s|%s|%s|%s\n",tab,substr($5,42),$6,$7,$8)
+	 }
+	}
+
+
+
+# information for sccs:
+#       @(#) m32nmawk: 1.1 1/9/82

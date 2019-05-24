@@ -1,0 +1,10 @@
+#!/bin/sh
+PATH=/bin/:/usr/bin:/usr/blit/bin
+export PATH
+
+if ismpx -
+then
+	exec jx /usr/blit/mbin/twid.m
+else
+	echo twid only runs under mpx
+fi

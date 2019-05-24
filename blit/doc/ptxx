@@ -1,0 +1,278 @@
+.xx "" "muldiv: calculate" "(a*b)/c accurately" "" muldiv
+.xx "" "muldiv: calculate (a*b)/c" "accurately" "" muldiv
+.xx "" "" "add, sub, mul, div: arithmetic on Points" "" add
+.xx "" "" "addr: Word address of Point in Bitmap" "" addr
+.xx "" "addr: Word" "address of Point in Bitmap" "" addr
+.xx "" "" "alarm: wakeup call timer" "" alarm
+.xx "" "" "alloc, free: allocate memory" "" alloc
+.xx "" "balloc, bfree:" "allocate a bitmap" "" balloc
+.xx "" "alloc, free:" "allocate memory" "" alloc
+.xx "" "gcalloc, gcfree: garbage compacting" "allocator" "" gcalloc
+.xx "" "circle, disc," "arc: draw a circle" "" circle
+.xx "" "atan2: inaccurate" "arc tangent" "" atan2
+.xx "" "add, sub, mul, div:" "arithmetic on Points" "" add
+.xx "" "raddp, rsubp:" "arithmetic on Rectangles" "" raddp
+.xx "" "" "atan2: inaccurate arc tangent" "" atan2
+.xx "" "" "balloc, bfree: allocate a bitmap" "" balloc
+.xx "" "balloc," "bfree: allocate a bitmap" "" balloc
+.xx "" "" "bitblt: Rectangle copy" "" bitblt
+.xx "" "addr: Word address of Point in" "Bitmap" "" addr
+.xx "" "balloc, bfree: allocate a" "bitmap" "" balloc
+.xx "" "Bitmap: data structure for" "bitmap" "" Bitmap
+.xx "" "point: draw a single pixel in a" "bitmap" "" point
+.xx "" "rectf: perform function on rectangle in" "bitmap" "" rectf
+.xx "" "screenswap: swap screen rectangle and" "bitmap" "" screenswap
+.xx "" "segment: draw a line segment in a" "bitmap" "" segment
+.xx "" "string, defont: draw string in" "bitmap" "" string
+.xx "" "texture: draw texture in rectangle in" "bitmap" "" texture
+.xx "" "" "Bitmap: data structure for bitmap" "" Bitmap
+.xx "" "rol, ror: rotate" "bits" "" rol
+.xx "" "inset: inset a Rectangle for a" "border" "" inset
+.xx "" "button[123]:" "button state" "" button1
+.xx "" "" "button[123]: button state" "" button1
+.xx "" "mouse," "buttons: state of mouse" "" mouse
+.xx "" "muldiv:" "calculate (a*b)/c accurately" "" muldiv
+.xx "" "alarm: wakeup" "call timer" "" alarm
+.xx "" "exit:" "cease execution" "" exit
+.xx "" "rcvchar: receive" "character from host" "" rcvchar
+.xx "" "kbdchar: read" "character from keyboard" "" kbdchar
+.xx "" "Font, Fontchar: data structure for" "character set" "" Font
+.xx "" "strwidth, jstrwidth: width of" "character string" "" strwidth
+.xx "" "sendchar, sendnchars: send a" "character to host" "" sendchar
+.xx "" "circle, disc, arc: draw a" "circle" "" circle
+.xx "" "" "circle, disc, arc: draw a circle" "" circle
+.xx "" "jcircle, jdisc, jarc: draw scaled" "circle on display" "" jcircle
+.xx "" "rectclip:" "clip rectangle to another rectangle" "" rectclip
+.xx "" "realtime: wall" "clock" "" realtime
+.xx "" "gcalloc, gcfree: garbage" "compacting allocator" "" gcalloc
+.xx "" "eqpt:" "compare two points for equality" "" eqpt
+.xx "" "eqrect:" "compare two rectangles for equality" "" eqrect
+.xx "" "cursinhibit, cursallow:" "control cursor tracking" "" cursinhibit
+.xx "" "Pt: create a point from two" "coordinates" "" Pt
+.xx "" "Rect: create a rectangle from four" "coordinates" "" Rect
+.xx "" "transform,rtransform: layer to screen" "coordinates" "" transform
+.xx "" "bitblt: Rectangle" "copy" "" bitblt
+.xx "" "" "cos, sin: cosine and sine" "" cos
+.xx "" "cos, sin:" "cosine and sine" "" cos
+.xx "" "Pt:" "create a point from two coordinates" "" Pt
+.xx "" "Rect:" "create a rectangle from four coordinates" "" Rect
+.xx "" "Rpt:" "create a rectangle from two points" "" Rpt
+.xx "" "jmove, jmoveto: move relative to" "current point on display" "" jmove
+.xx "" "cursinhibit," "cursallow: control cursor tracking" "" cursinhibit
+.xx "" "" "cursinhibit, cursallow: control cursor tracking" "" cursinhibit
+.xx "" "cursswitch: switch" "cursor" "" cursswitch
+.xx "" "cursinhibit, cursallow: control" "cursor tracking" "" cursinhibit
+.xx "" "" "cursswitch: switch cursor" "" cursswitch
+.xx "" "own: which resources have" "data" "" own
+.xx "" "Bitmap:" "data structure for bitmap" "" Bitmap
+.xx "" "Font, Fontchar:" "data structure for character set" "" Font
+.xx "" "Point:" "data structure for position on screen" "" Point
+.xx "" "Rectangle:" "data structure for rectangle on screen" "" Rectangle
+.xx "" "Texture:" "data structure for texture" "" Texture
+.xx "" "string," "defont: draw string in bitmap" "" string
+.xx "" "display, Drect, Jrect: globals" "describing display" "" display
+.xx "" "circle," "disc, arc: draw a circle" "" circle
+.xx "" "display, Drect, Jrect: globals describing" "display" "" display
+.xx "" "jcircle, jdisc, jarc: draw scaled circle on" "display" "" jcircle
+.xx "" "jellipse, jeldisc, jelarc: draw ellipse on" "display" "" jellipse
+.xx "" "jline, jlineto, jsegment: draw line on" "display" "" jline
+.xx "" "jmoveto: move relative to current point on" "display" "jmove," jmove
+.xx "" "jpoint: draw single pixel on" "display" "" jpoint
+.xx "" "jrectf: rectangle function on" "display" "" jrectf
+.xx "" "jstring: draw string on" "display" "" jstring
+.xx "" "jtexture: draw texture in rectangle on" "display" "" jtexture
+.xx "display" "" "display, Drect, Jrect: globals describing" "" display
+.xx "" "Word: quantum of" "display memory" "" Word
+.xx "" "add, sub, mul," "div: arithmetic on Points" "" add
+.xx "" "circle, disc, arc:" "draw a circle" "" circle
+.xx "" "segment:" "draw a line segment in a bitmap" "" segment
+.xx "" "point:" "draw a single pixel in a bitmap" "" point
+.xx "" "ellipse, eldisc, elarc:" "draw an ellipse" "" ellipse
+.xx "" "jellipse, jeldisc, jelarc:" "draw ellipse on display" "" jellipse
+.xx "" "jline, jlineto, jsegment:" "draw line on display" "" jline
+.xx "" "jcircle, jdisc, jarc:" "draw scaled circle on display" "" jcircle
+.xx "" "jpoint:" "draw single pixel on display" "" jpoint
+.xx "" "string, defont:" "draw string in bitmap" "" string
+.xx "" "jstring:" "draw string on display" "" jstring
+.xx "" "texture:" "draw texture in rectangle in bitmap" "" texture
+.xx "" "jtexture:" "draw texture in rectangle on display" "" jtexture
+.xx "" "display," "Drect, Jrect: globals describing display" "" display
+.xx "" "ellipse, eldisc," "elarc: draw an ellipse" "" ellipse
+.xx "" "ellipse," "eldisc, elarc: draw an ellipse" "" ellipse
+.xx "" "ellipse, eldisc, elarc: draw an" "ellipse" "" ellipse
+.xx "" "" "ellipse, eldisc, elarc: draw an ellipse" "" ellipse
+.xx "" "jellipse, jeldisc, jelarc: draw" "ellipse on display" "" jellipse
+.xx "" "" "eqpt: compare two points for equality" "" eqpt
+.xx "" "" "eqrect: compare two rectangles for equality" "" eqrect
+.xx "" "eqpt: compare two points for" "equality" "" eqpt
+.xx "" "eqrect: compare two rectangles for" "equality" "" eqrect
+.xx "" "exit: cease" "execution" "" exit
+.xx "" "" "exit: cease execution" "" exit
+.xx "" "infont, getfont, outfont," "ffree: read a font from Unix" "" infont
+.xx "set" "" "Font, Fontchar: data structure for character" "" Font
+.xx "" "infont, getfont, outfont, ffree: read a" "font from Unix" "" infont
+.xx "" "Font," "Fontchar: data structure for character set" "" Font
+.xx "" "alloc," "free: allocate memory" "" alloc
+.xx "" "jrectf: rectangle" "function on display" "" jrectf
+.xx "" "rectf: perform" "function on rectangle in bitmap" "" rectf
+.xx "" "gcalloc, gcfree:" "garbage compacting allocator" "" gcalloc
+.xx "" "" "gcalloc, gcfree: garbage compacting allocator" "" gcalloc
+.xx "" "gcalloc," "gcfree: garbage compacting allocator" "" gcalloc
+.xx "" "infont," "getfont, outfont, ffree: read a font from Unix" "" infont
+.xx "" "" "getrect: get rectangle swept out by user" "" getrect
+.xx "" "display, Drect, Jrect:" "globals describing display" "" display
+.xx "" "rcvchar: receive character from" "host" "" rcvchar
+.xx "" "sendchar, sendnchars: send a character to" "host" "" sendchar
+.xx "" "atan2:" "inaccurate arc tangent" "" atan2
+.xx "from Unix" "" "infont, getfont, outfont, ffree: read a font" "" infont
+.xx "" "inset:" "inset a Rectangle for a border" "" inset
+.xx "" "" "inset: inset a Rectangle for a border" "" inset
+.xx "" "sqrt:" "integer square root" "" sqrt
+.xx "" "request: request" "I/O resources" "" request
+.xx "" "jcircle, jdisc," "jarc: draw scaled circle on display" "" jcircle
+.xx "display" "" "jcircle, jdisc, jarc: draw scaled circle on" "" jcircle
+.xx "" "jcircle," "jdisc, jarc: draw scaled circle on display" "" jcircle
+.xx "" "jellipse, jeldisc," "jelarc: draw ellipse on display" "" jellipse
+.xx "" "jellipse," "jeldisc, jelarc: draw ellipse on display" "" jellipse
+.xx "display" "" "jellipse, jeldisc, jelarc: draw ellipse on" "" jellipse
+.xx "" "" "jline, jlineto, jsegment: draw line on display" "" jline
+.xx "" "jline," "jlineto, jsegment: draw line on display" "" jline
+.xx "on display" "" "jmove, jmoveto: move relative to current point" "" jmove
+.xx "display" "jmove," "jmoveto: move relative to current point on" "" jmove
+.xx "" "" "jpoint: draw single pixel on display" "" jpoint
+.xx "" "display, Drect," "Jrect: globals describing display" "" display
+.xx "" "" "jrectf: rectangle function on display" "" jrectf
+.xx "" "jline, jlineto," "jsegment: draw line on display" "" jline
+.xx "" "" "jstring: draw string on display" "" jstring
+.xx "" "strwidth," "jstrwidth: width of character string" "" strwidth
+.xx "" "" "jtexture: draw texture in rectangle on display" "" jtexture
+.xx "" "" "kbdchar: read character from keyboard" "" kbdchar
+.xx "" "kbdchar: read character from" "keyboard" "" kbdchar
+.xx "" "transform,rtransform:" "layer to screen coordinates" "" transform
+.xx "" "jline, jlineto, jsegment: draw" "line on display" "" jline
+.xx "" "segment: draw a" "line segment in a bitmap" "" segment
+.xx "" "alloc, free: allocate" "memory" "" alloc
+.xx "" "Word: quantum of display" "memory" "" Word
+.xx "" "menuhit: present user with" "menu and get selection" "" menuhit
+.xx "selection" "" "menuhit: present user with menu and get" "" menuhit
+.xx "" "mouse, buttons: state of" "mouse" "" mouse
+.xx "" "" "mouse, buttons: state of mouse" "" mouse
+.xx "" "jmove, jmoveto:" "move relative to current point on display" "" jmove
+.xx "" "add, sub," "mul, div: arithmetic on Points" "" add
+.xx "" "" "muldiv: calculate (a*b)/c accurately" "" muldiv
+.xx "" "" "nap, sleep: relax for a while" "" nap
+.xx "" "norm: return" "norm of three-dimensional vector" "" norm
+.xx "" "" "norm: return norm of three-dimensional vector" "" norm
+.xx "" "infont, getfont," "outfont, ffree: read a font from Unix" "" infont
+.xx "" "rectXrect: do rectangles" "overlap?" "" rectXrect
+.xx "" "" "own: which resources have data" "" own
+.xx "" "rectf:" "perform function on rectangle in bitmap" "" rectf
+.xx "" "point: draw a single" "pixel in a bitmap" "" point
+.xx "" "jpoint: draw single" "pixel on display" "" jpoint
+.xx "" "" "Point: data structure for position on screen" "" Point
+.xx "" "" "point: draw a single pixel in a bitmap" "" point
+.xx "" "Pt: create a" "point from two coordinates" "" Pt
+.xx "" "addr: Word address of" "Point in Bitmap" "" addr
+.xx "" "jmove, jmoveto: move relative to current" "point on display" "" jmove
+.xx "" "ptinrect: is" "point within a rectangle?" "" ptinrect
+.xx "" "add, sub, mul, div: arithmetic on" "Points" "" add
+.xx "" "Rpt: create a rectangle from two" "points" "" Rpt
+.xx "" "eqpt: compare two" "points for equality" "" eqpt
+.xx "" "" "Pt: create a point from two coordinates" "" Pt
+.xx "" "" "ptinrect: is point within a rectangle?" "" ptinrect
+.xx "" "Word:" "quantum of display memory" "" Word
+.xx "" "" "raddp, rsubp: arithmetic on Rectangles" "" raddp
+.xx "" "" "rcvchar: receive character from host" "" rcvchar
+.xx "" "infont, getfont, outfont, ffree:" "read a font from Unix" "" infont
+.xx "" "kbdchar:" "read character from keyboard" "" kbdchar
+.xx "" "" "realtime: wall clock" "" realtime
+.xx "" "rcvchar:" "receive character from host" "" rcvchar
+.xx "" "" "Rect: create a rectangle from four coordinates" "" Rect
+.xx "" "ptinrect: is point within a" "rectangle?" "" ptinrect
+.xx "" "rectclip: clip rectangle to another" "rectangle" "" rectclip
+.xx "" "screenswap: swap screen" "rectangle and bitmap" "" screenswap
+.xx "" "bitblt:" "Rectangle copy" "" bitblt
+.xx "screen" "" "Rectangle: data structure for rectangle on" "" Rectangle
+.xx "" "inset: inset a" "Rectangle for a border" "" inset
+.xx "" "Rect: create a" "rectangle from four coordinates" "" Rect
+.xx "" "Rpt: create a" "rectangle from two points" "" Rpt
+.xx "" "jrectf:" "rectangle function on display" "" jrectf
+.xx "" "rectf: perform function on" "rectangle in bitmap" "" rectf
+.xx "" "texture: draw texture in" "rectangle in bitmap" "" texture
+.xx "" "jtexture: draw texture in" "rectangle on display" "" jtexture
+.xx "" "Rectangle: data structure for" "rectangle on screen" "" Rectangle
+.xx "" "getrect: get" "rectangle swept out by user" "" getrect
+.xx "" "rectclip: clip" "rectangle to another rectangle" "" rectclip
+.xx "" "raddp, rsubp: arithmetic on" "Rectangles" "" raddp
+.xx "" "eqrect: compare two" "rectangles for equality" "" eqrect
+.xx "" "rectXrect: do" "rectangles overlap?" "" rectXrect
+.xx "" "" "rectclip: clip rectangle to another rectangle" "" rectclip
+.xx "" "" "rectf: perform function on rectangle in bitmap" "" rectf
+.xx "" "" "rectXrect: do rectangles overlap?" "" rectXrect
+.xx "" "jmove, jmoveto: move" "relative to current point on display" "" jmove
+.xx "" "nap, sleep:" "relax for a while" "" nap
+.xx "" "request:" "request I/O resources" "" request
+.xx "" "" "request: request I/O resources" "" request
+.xx "" "request: request I/O" "resources" "" request
+.xx "" "wait: wait for" "resources" "" wait
+.xx "" "own: which" "resources have data" "" own
+.xx "" "norm:" "return norm of three-dimensional vector" "" norm
+.xx "" "" "rol, ror: rotate bits" "" rol
+.xx "" "sqrt: integer square" "root" "" sqrt
+.xx "" "rol," "ror: rotate bits" "" rol
+.xx "" "rol, ror:" "rotate bits" "" rol
+.xx "" "" "Rpt: create a rectangle from two points" "" Rpt
+.xx "" "raddp," "rsubp: arithmetic on Rectangles" "" raddp
+.xx "" "jcircle, jdisc, jarc: draw" "scaled circle on display" "" jcircle
+.xx "" "Point: data structure for position on" "screen" "" Point
+.xx "" "Rectangle: data structure for rectangle on" "screen" "" Rectangle
+.xx "" "transform,rtransform: layer to" "screen coordinates" "" transform
+.xx "" "screenswap: swap" "screen rectangle and bitmap" "" screenswap
+.xx "" "" "screenswap: swap screen rectangle and bitmap" "" screenswap
+.xx "" "" "segment: draw a line segment in a bitmap" "" segment
+.xx "" "segment: draw a line" "segment in a bitmap" "" segment
+.xx "" "menuhit: present user with menu and get" "selection" "" menuhit
+.xx "" "sendchar, sendnchars:" "send a character to host" "" sendchar
+.xx "" "" "sendchar, sendnchars: send a character to host" "" sendchar
+.xx "" "sendchar," "sendnchars: send a character to host" "" sendchar
+.xx "" "cos," "sin: cosine and sine" "" cos
+.xx "" "cos, sin: cosine and" "sine" "" cos
+.xx "" "point: draw a" "single pixel in a bitmap" "" point
+.xx "" "jpoint: draw" "single pixel on display" "" jpoint
+.xx "" "nap," "sleep: relax for a while" "" nap
+.xx "" "" "sqrt: integer square root" "" sqrt
+.xx "" "sqrt: integer" "square root" "" sqrt
+.xx "" "strwidth, jstrwidth: width of character" "string" "" strwidth
+.xx "" "" "string, defont: draw string in bitmap" "" string
+.xx "" "string, defont: draw" "string in bitmap" "" string
+.xx "" "jstring: draw" "string on display" "" jstring
+.xx "" "Bitmap: data" "structure for bitmap" "" Bitmap
+.xx "" "Font, Fontchar: data" "structure for character set" "" Font
+.xx "" "Point: data" "structure for position on screen" "" Point
+.xx "" "Rectangle: data" "structure for rectangle on screen" "" Rectangle
+.xx "" "Texture: data" "structure for texture" "" Texture
+.xx "" "" "strwidth, jstrwidth: width of character string" "" strwidth
+.xx "" "add," "sub, mul, div: arithmetic on Points" "" add
+.xx "" "screenswap:" "swap screen rectangle and bitmap" "" screenswap
+.xx "" "getrect: get rectangle" "swept out by user" "" getrect
+.xx "" "cursswitch:" "switch cursor" "" cursswitch
+.xx "" "atan2: inaccurate arc" "tangent" "" atan2
+.xx "" "Texture: data structure for" "texture" "" Texture
+.xx "" "" "Texture: data structure for texture" "" Texture
+.xx "" "" "texture: draw texture in rectangle in bitmap" "" texture
+.xx "" "texture: draw" "texture in rectangle in bitmap" "" texture
+.xx "" "jtexture: draw" "texture in rectangle on display" "" jtexture
+.xx "" "norm: return norm of" "three-dimensional vector" "" norm
+.xx "" "alarm: wakeup call" "timer" "" alarm
+.xx "" "cursinhibit, cursallow: control cursor" "tracking" "" cursinhibit
+.xx "coordinates" "" "transform,rtransform: layer to screen" "" transform
+.xx "" "getfont, outfont, ffree: read a font from" "Unix" "infont," infont
+.xx "" "getrect: get rectangle swept out by" "user" "" getrect
+.xx "" "menuhit: present" "user with menu and get selection" "" menuhit
+.xx "" "norm: return norm of three-dimensional" "vector" "" norm
+.xx "" "wait:" "wait for resources" "" wait
+.xx "" "" "wait: wait for resources" "" wait
+.xx "" "alarm:" "wakeup call timer" "" alarm
+.xx "" "realtime:" "wall clock" "" realtime
+.xx "" "strwidth, jstrwidth:" "width of character string" "" strwidth
+.xx "" "" "Word: quantum of display memory" "" Word

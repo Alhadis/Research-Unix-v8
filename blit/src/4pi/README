@@ -1,0 +1,2 @@
+For /usr/blit/bin/pi use /usr/jerq/bin/pi. It decides what to download
+depending on TERM. /usr/blit/bin/3pi doesn't make sense.

@@ -1,0 +1,195 @@
+o 6i
+r 143 576 720 80
+[
+f 352 160
+[
+i  P14
+i FR
+m 352 160
+t \LOptical|Character| and|Graphics|Recognition
+]
+[
+k  s
+P 336 80
+v 336 240
+v 496 240
+v 496 80
+]
+]
+[
+kb s
+p 336 128
+v 256 128
+v 256 208
+]
+[
+f 144 320
+[
+k  s
+P 144 320
+v 144 384
+v 304 384
+v 304 320
+]
+[
+i  P10
+i FR
+m 224 352
+t \CSeparation of|Graphics and Text
+]
+]
+[
+f 464 336
+[
+i  P10
+i FR
+m 464 336
+t \CVectorization
+]
+[
+f 400 320
+[
+k  s
+P 400 320
+v 400 352
+v 528 352
+v 528 320
+]
+]
+]
+[
+f 384 384
+[
+k  s
+P 384 384
+v 384 448
+v 544 448
+v 544 384
+]
+[
+i  P10
+i FR
+m 464 416
+t \CSeparation of|Graphics and Text
+]
+]
+[
+f 224 432
+[
+i  P10
+i FR
+m 224 432
+t \CVectorization
+]
+[
+f 160 416
+[
+k  s
+P 160 416
+v 160 448
+v 288 448
+v 288 416
+]
+]
+]
+[
+f 208 208
+[
+k  s
+P 208 208
+v 208 272
+v 304 272
+v 304 208
+]
+[
+i  P10
+i FR
+m 256 240
+t \CDigitization
+]
+]
+[
+kb d
+p 240 272
+v 240 288
+v 224 288
+v 224 320
+]
+[
+kb d
+p 224 384
+v 224 416
+]
+[
+kb s
+p 272 272
+v 272 288
+v 464 288
+v 464 320
+]
+[
+kb s
+p 464 352
+v 464 384
+]
+[
+kb d
+p 256 384
+v 256 400
+v 336 400
+v 336 496
+v 576 496
+]
+[
+kb s
+p 464 448
+v 464 480
+v 576 480
+]
+[
+kb s
+s 432 448
+w 432 480
+v 448 496
+v 432 512
+w 432 528
+w 288 528
+]
+[
+kb d
+p 224 448
+v 224 480
+]
+[
+f 160 480
+[
+k  s
+P 160 480
+v 160 576
+v 288 576
+v 288 480
+]
+[
+i  P10
+i FR
+m 224 528
+t \CSmoothing|and|Normalization
+]
+]
+[
+f 576 448
+[
+k  s
+P 576 448
+v 576 528
+v 720 528
+v 720 448
+]
+[
+i  P12
+i FR
+m 648 488
+t \CClassification
+]
+]
+e

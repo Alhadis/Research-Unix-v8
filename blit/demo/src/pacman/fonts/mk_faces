@@ -1,0 +1,15 @@
+:
+# make pacman faces from font40_[bcd]
+#
+awk '{printf("%-40s\n",$0)}' font40_b | rev|rot > font40_e
+awk '{printf("%-40s\n",$0)}' font40_c | rev|rot > font40_f
+awk '{printf("%-40s\n",$0)}' font40_d | rev|rot > font40_g
+#
+awk '{printf("%-40s\n",$0)}' font40_b | rev > font40_h
+awk '{printf("%-40s\n",$0)}' font40_c | rev > font40_i
+awk '{printf("%-40s\n",$0)}' font40_d | rev > font40_j
+#
+awk '{printf("%-40s\n",$0)}' font40_b | rot > font40_k
+awk '{printf("%-40s\n",$0)}' font40_c | rot > font40_l
+awk '{printf("%-40s\n",$0)}' font40_d | rot > font40_m
+#

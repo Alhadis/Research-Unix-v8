@@ -1,0 +1,56 @@
+The diagnostic program is two proms: diag0 goes in socket 68 and diag1 in
+socket 69.  To run, DTR must be set,
+by connecting the terminal to a computer (but beware: most computer
+installations do not transmit DTR on hardwired lines; a modem is
+preferable).
+
+The program runs in several steps.  When first turned on, the terminal should
+draw munching squares.  If the image is recognizable but not completely
+correct, don't worry, later tests should discover the problem.  If the image
+is a steady, slightly random pattern of almost horizontal bands, the
+processor is not running at all: check DTR or get a logic analyzer out.
+The display should slowly get completely bright, then completely dark.
+If some bits are left over, some of the memory is bad, but barge on
+anyway.
+
+After munching squares, there is a brief pause,  and the screen should go
+completely white (well, green) -- this is the video sense bit -- with
+25 vertical black lines.  All the black dots forming these lines
+visible at once are in the same RAM chip.  The program will step through
+32 times, drawing 25 lines each time, so it will appear that the lines
+are slowly marching from left to right across the screen.  If any of the
+lines are unsteady or flicker in places, that particular RAM chip is slow
+and should be replaced.  It is typical to find one or two slow chips;
+don't be dismayed.  By counting 31 through 0 as the lines march across,
+you'll be able to determine which chip is bad.
+
+The program next does the same thing for bytes, drawing 100 vertical lines,
+8 times.  This tests byte writes to RAM, which munching squares needs to
+work properly.  Next, 10 horizontal lines are drawn, again using byte write.
+These tests are likely to find bad address leads, such as address leads shorted
+to each other or to power or ground.  If any of these line tests show
+lines which are not horizontal or vertical, or randomness of any kind
+(outside of flicker within the lines, which is a RAM problem), check the
+connectivity of the address leads in the RAM with an ohmmeter.
+
+The last few tests check out the peripherals.  The screen should now be
+completely white.  The terminal will now copy a line of text, terminated
+by a carriage return, from the keyboard to the upper left corner of the
+screen.  This uses the keyboard ACIA with interrupts disabled.  When you
+type a carriage return,  the screen will clear and the terminal will
+copy a second line to the screen, this time with ACIA interrupts enabled.
+A second carriage return should clear the screen again, except for a
+capital 'A'.
+
+The 'A' is tracking the mouse position, without video (60Hz) interrupts
+disabled.  If the 'A' is stuck near the edge, pull the mouse a few inches --
+it may be out of range.  The 'A' will follow the mouse somewhat jumpily
+as you move it.  Try pushing each of the three mouse buttons, individually.
+When a button is depressed, you will see which button you have depressed
+shown in the upper left corner of the screen.  To go on to the next test,
+type another carriage return.
+
+The 'B' on the screen is again tracking the mouse, this time using
+video interrupts.  The tracking will be smoother than with the 'A'.
+
+Typing another carriage return will cause the entire test to repeat.

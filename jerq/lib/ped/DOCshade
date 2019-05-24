@@ -1,0 +1,3 @@
+shade	Use this  texture to fill the object you select next.
+shade	If you point first to `unfill' and then to an object with
+shade	filling, the filling is removed.

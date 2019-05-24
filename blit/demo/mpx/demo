@@ -1,0 +1,30 @@
+PATH=/bin:/usr/bin:/usr/blit/bin
+JPATH=/usr/blit/demo/mpx
+export JPATH
+case "$1" in
+"")	echo Available demos are:
+	ls /usr/blit/demo/mpx| egrep -v "demo|jciferr" |mc
+	;;
+bounce|*ball|a|b)	echo "type any character to exit"
+	sleep 2
+	68ld $1
+	;;
+jcif)	echo "type 'q' to exit, arrows to move (it takes a minute to start)"
+	sleep 2
+	/usr/blit/bin/jcif ./jcif
+	;;
+clock)	68ld $1 "`date`"
+	;;
+road|kbd)	echo "type 'q' to exit"
+	sleep 2
+	jx $1
+	;;
+swar)	echo "type 'Q' to exit"
+	sleep 2
+	68ld $1
+	;;
+*)	echo "type 'q' to exit"
+	sleep 2
+	68ld $1
+	;;
+esac

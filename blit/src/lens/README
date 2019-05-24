@@ -1,0 +1,39 @@
+lens.c is the main program.
+
+magn.c is the expansion routine; it does horrible things, and only
+works in restricted cases, not to mention having a bizarre set
+of arguments.  Use it in other programs only with care.
+
+magn.c requires magslow.o, magodd.o, mageven.o, and permits
+(currently requires) mag2.o and mag3.o.  You can hand-wire
+as many special-case magnification routines as you like; each one
+will take a slot in the byn magnification tables.  Having just 2 and
+3 specially coded seems to be about right, however.  You can also
+wire in magnification tables; the tables for 2 and 3 can be found
+in bytables.H, which is produced by magtbl.
+
+mag2.C, mag3.C, mageven.C and magodd.C are source for the corresponding
+files ending in .s, which have been modestly hand-fiddled to make the
+inner loops go faster, after compiling with -O.  You probably don't want
+to look at the .s files except to hand-tune them.
+
+magslow.c lets the magnification process take place even if the tables
+couldn't be generated.  It's *supposed* to be slow.
+
+safemagn.C is (gasp) the obvious magnify algorithm, with a somewhat
+more rational set of arguments.  If you want a general purpose blow-
+it-up algorithm, here it is--I have no use for it.  unsafemagn.C has
+the same calling requirements as magn.C, is slower, but is (sort of)
+portable.  If I were willing to think really hard, it would be almost
+as sage as safemagn, but the effort seems undeserved.  If you happen
+to want to blow things up by modestly large amounts, and only once,
+and they aren't very big, this might pay off for you.  Both of these
+require a bitblt they can trust, and thus call Bitblt, which is just
+Bart's bitblt with a capital B.  You can find it in
+/usr/jerq/src/lib/bitblt.C, and hack it yourself.
+
+In the makefile, mopt is currently local.  If you don't have it, you can
+just "cp lens /usr/jerq/lib/lens.m", or whatever.  It will still work just
+as well.
+
+Mark (rabbit|research|ikeya ! msm) Manasse

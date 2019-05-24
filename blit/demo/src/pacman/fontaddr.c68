@@ -1,0 +1,31 @@
+
+
+extern short int *font_ptr;   /* selected loadable font */
+extern char *wid_ptr;	      /* selected width table */
+
+extern char font_G0;	/* font number to be used for G0 */
+extern char font_SO;	/* set to zero to select font_G0 */
+
+
+main()
+{
+	int i;
+	short int *font0;
+	short int *save;
+	font0 = font_ptr;
+	for ( i=0 ; i<4 ; i++ ) {
+		SetFont(i);
+		save = font_ptr;
+		font_ptr = font0;
+		printf("Font %d at %x\r\n",i,save);
+	}
+}
+
+SetFont(n)	/* Make font n be the current font. */
+{
+	font_SO = 0;	/* insure G0 is selected */
+	font_G0 = n;	/* make G0 our font */
+	setfont();	/* make G0 the current font */
+}
+
+

@@ -1,0 +1,48 @@
+PATH=/bin:/usr/bin
+case "$1" in
+m)	modified=modified ;;
+-m)	;;
+*)	echo 1>&2 jimunpack should only be run from jim.recover; exit 1
+esac
+file=$2
+shift; shift
+force=false
+
+for i in $*	# must say $* because if no args left, "for i" executes once anway!
+do
+	case "$i" in
+	-t)	echo "$file (${modified-not modified})"
+		exit 0
+		;;
+	-m)	case ${modified-false} in
+		false)	exit 0
+		esac
+		;;
+	-f)	force=true
+		;;
+	-*)	echo 1>&2 "usage: jim.recover [-m] [-f] [files]"
+		exit 1
+		;;
+	*)	looking=unlikelyfilename
+		case $i in
+		$file)	looking=$file
+			break
+			;;
+		esac
+	esac
+done
+
+case ${looking-$file} in
+unlikelyfilename)	exit 0 ;;
+$file)	;;
+esac
+
+case $force in
+false)	echo -n "$file (${modified-not modified})? "
+	read x
+	case $x in
+	[yY]*)	exit 0;;
+	*)	exit 1
+	esac
+esac </dev/tty &&
+(echo $file; cat > $file)

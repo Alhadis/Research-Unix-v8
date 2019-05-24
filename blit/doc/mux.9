@@ -1,0 +1,95 @@
+.TH MUX 9 Blit
+.SH NAME
+mux \- layer multiplexer for Blit
+.SH SYNOPSIS
+.B mux
+[
+terminal program
+]
+.SH DESCRIPTION
+.I Mux
+manages asynchronous windows, or layers, on the Blit terminal.
+Upon invocation, it loads the Blit with a terminal program
+(default /usr/jerq/lib/muxterm) that is
+the primary user interface.
+.PP
+Each layer is in most ways functionally identical to a separate terminal.
+Characters typed on the keyboard are sent to the standard input of
+the Unix process running in the layer, and characters written on the
+standard output appear in the layer.
+When a layer is created, a separate shell
+(the value of the
+.B SHELL
+parameter, or /bin/sh by default)
+is established, and bound to the layer.
+.PP
+Layers are created, deleted, and rearranged using the mouse on the Blit.
+Depressing button 3 activates a menu of layer operations.
+Lifting button 3 then selects an operation.
+At this point, the rifle sight cursor indicates that an operation is pending.
+Hitting button 3 again activates the operation on the layer pointed to by the cursor.
+The New operation, to create a layer,
+requires a rectangle to be swept out,
+across any diagonal, while button 3 is depressed.
+The box outline cursor indicates that a rectangle is to be created.
+The Reshape operation, to change the size and location of a layer on the screen,
+requires first that a layer be indicated (rifle sight cursor) and a new rectangle
+be swept out (box cursor).
+The other operations are self-explanatory.
+.PP
+Button 1 is a shorthand for Current and Top, which pulls a layer to the front
+of the screen and makes it the current layer for keyboard and mouse input.
+Layers which are not current are indicated by being partially obscured
+with a stipple pattern.
+.PP
+The default terminal program allows text editing using the mouse, much as in
+.IR jim (9),
+and all layers share a common snarf buffer (distinct from
+.IR jim 's,
+however).
+There is a point
+in each layer, called the 'Unix point', that is the character position where
+the next character from Unix will be inserted.  Unlike on a regular terminal,
+this point is not advanced as you type characters, but only when you type
+a newline.  Therefore, shell prompts and other output will appear at the beginning
+of your half-typed line if you type ahead.
+.PP
+All text on the screen can be edited.  Typing a newline after the Unix point
+sends to Unix the characters from the Unix point to the newline.  At no
+other time are characters sent to unix (but see the discussion of raw mode
+below).  Therefore partially typed lines or text anywhere before the Unix
+point may be edited, and text may be copied from place to place,
+including between layers.
+.PP
+Raw mode and no-echo are different: the Unix point advances with each character
+typed after it.
+.PP
+The terminal doesn't scroll automatically
+as text is received or typed, but a button 2 menu item selects scrolling.
+The scroll bar behaves much like
+.IR jim's,
+and the NO SCRL key advances a half page.
+.SH FILES
+/usr/jerq/lib/muxterm: terminal program
+.SH SEE ALSO
+68ld(9), jim(9), jx(9)
+.SH DIAGNOSTICS
+Error messages from
+.I mux
+are written directly to the layer which caused them.
+They are usually self-explanatory only to system administrators,
+and indicate system difficulties.
+.SH ARCANA
+CTRL-SHIFT-BREAK freezes
+.I mux
+and complements the video of the layer of the running user-level terminal process.
+Hitting mouse button 2 in this state will attempt to kill the process;
+1 or 3 will leave it running.
+.SH BUGS
+Reshape only works properly for processes that arrange to see if they have
+been reshaped, although most programs
+make this arrangement.
+.PP
+The behavior of raw mode makes
+.IR dcon (1)
+somewhat uncomfortable.

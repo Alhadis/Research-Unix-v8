@@ -1,0 +1,4 @@
+#!/bin/sh
+PATH=/usr/blit/bin:/bin:/usr/bin
+
+68ld /usr/blit/mbin/invert.m

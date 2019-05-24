@@ -1,0 +1,46 @@
+.TH CIP 1 Blit
+.SH NAME
+cip \- picture drawing program for Blit terminals
+.SH SYNOPSIS
+.B cip
+.SH DESCRIPTION
+.I Cip
+is an interactive drawing system for the 
+Blit 
+bitmap display terminal.
+It provides a pallette of 
+.I pic(1)
+shapes (box, circle, ellipse, line, arc, spline, and text)
+for drawing and editing pictures on a screen.  There is a macro
+facility for treating a collection of drawn shapes as a single entity.
+The principal
+input device is a 
+.I mouse
+that provides positional information.  It has three buttons that invoke
+drawing, editing, and command functions.
+The keyboard is used only for typing in text 
+strings and filenames.  The pictures are saved as 
+.I pic
+descriptions, and can be included with text,
+tables, and equations as input to 
+.I troff.
+Existing
+.I pic
+descriptions of pictures can be displayed and edited as well.  
+.I cip.  
+.SH SEE ALSO
+pic(1)
+.br
+TM 82-11276-1   Cip User's Manual: One Picture is Worth a Thousand Words
+.SH BEWARE
+.I Cip
+relies on the host machine only for file transfers.  If the host crashes
+while you are creating or modifying a picture, there may be no way to save
+the picture.
+.PS
+The
+Blit
+keyboard is used only for entering filenames and text strings.  Every character
+you type will be read by
+.I cip,
+though not necessarily when typed.

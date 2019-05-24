@@ -1,0 +1,41 @@
+CC=Ncc
+CFLAGS= -g
+YFLAGS= 
+a.out: 	stabread.o names.o environ5.o alloc.o stabsearch.o main.o joff.o \
+	jerq.o format.o snap.o stack.o gram.o context.o stabhelp.o traps.o \
+	menu.o menus.o scratch.o expr.o chase.o
+	Ncc *.o
+
+gram.o:	gram.y
+#	this is a kludge to get round a bug in 5.0 UNIX yacc which under
+#	certain input conditions, found in gram.y, will produce defines like
+# define  0 48       etc. C does not like that.
+	yacc gram.y
+	sed -e "/^#  *define  *[0123456789]  */d" y.tab.c > gram.c
+	rm y.tab.c
+	$(CC) -c gram.c
+
+clean:	
+	rm *.o a.out	
+
+print:	@lint.out
+	@pr -n *.h *.c *.y linit.out
+
+menus.c: ../menus.c
+	cp ../menus.c menus.c
+
+menus.o: ../menu.h
+#########
+stab.h :a.out.h 
+alloc.o context.o environ5.o expr.o format.o gram.o jerq.o joff.o main.o menu.o menus.o scratch.o snap.o stabhelp.o stabread.o stabsearch.o stack.o traps.o y.tab.o :common.h 
+expr.o gram.o y.tab.o :expr.h 
+context.o expr.o joff.o menu.o stack.o traps.o :frame.h 
+context.o stab.h :mcc.h 
+names.o stab.h :names.h 
+stab.h :sdb.h 
+context.o main.o snap.o stabhelp.o stabread.o stabsearch.o user.h :stab.h 
+expr.o gram.o joff.o menu.o stack.o traps.o y.tab.o :user.h 
+stack.o traps.o :../isp.h 
+menu.o menus.o scratch.o traps.o :../menu.h 
+common.h :../protocol.h 
+context.o expr.o gram.o joff.o menu.o stack.o traps.o y.tab.o :../traps.h 

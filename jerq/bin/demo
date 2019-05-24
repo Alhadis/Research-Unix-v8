@@ -1,0 +1,7 @@
+#!/bin/sh
+if ismux -
+then
+	/usr/jerq/demo/mux/demo $*
+else
+	/usr/jerq/demo/stand-alone/demo $*
+fi

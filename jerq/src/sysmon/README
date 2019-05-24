@@ -1,0 +1,5 @@
+In addition to the sources for sysmon, this directory includes two
+test programs:
+	testfrom.c	- tests the from line recognition code
+	smtest.c	- tests the mail monitoring code
+

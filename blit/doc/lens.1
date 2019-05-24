@@ -1,0 +1,59 @@
+.de m
+.if t \{\
+.nr N \w'\s24\|\|\\$1'
+\(br\|\\$1\|\(br\l'|0\(rn'\l'|0\(ul'\
+\s24\v'1m'\
+\(br\|\\$1\|\(br\\h'-\\nNu'\l'\\nNu\(rn'\\h'-\\nNu'\l'\\nNu\(ul'\
+\v'-1m'\s0 \}
+.if n \\$1
+..
+.TH LENS 1 Blit
+.SH NAME
+lens \- bitmap
+.m magnifier
+.SH SYNOPSIS
+.B lens
+.SH DESCRIPTION
+.I Lens
+is an interactive screen bitmap magnifier.
+When it
+starts, it displays an enlarged image of a magnifying glass in
+its layer, which becomes a setting sun when
+.I lens
+wants to confirm a command to exit.
+.PP
+Button 1 or the first item in the button 2 menu,
+which alternately reads
+.I go
+and
+.I stop,
+toggles the presence of
+a magnifier.  When the magnifier is present, a rectangle is drawn
+around the source, and another around the image.  The mouse controls
+the position of the source rectangle.  
+.I Bigger
+and
+.IR smaller ,
+on the button 2 menu, step the magnification factor through the
+Fibonacci numbers.  If there is insufficient bitmap space,
+the image may fail to get bigger.
+The initial magnification is a factor of two.
+.I New viewer
+uses button 3
+to sweep a new source rectangle.
+.I Freckles
+inverts stippling on all layers except that of
+.IR lens .
+.I Pause
+freezes the enlarged image on the screen, and allows other programs
+to run.  If the image overlaps any active layer, the screen may become
+inconsistent when
+.I lens
+is restarted.
+.I Exit
+uses button 3 to confirm.
+.SH BUGS
+.I Lens
+assumes that the enlarged image always fits on the screen.  If not,
+distortions may occur in the image as the source moves.
+

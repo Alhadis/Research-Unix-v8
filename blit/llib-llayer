@@ -1,0 +1,18 @@
+#include <jerq.h>
+#include <layer.h>
+
+#define	void	int /* goddam lint */
+
+Layer *LP;
+
+void dellayer(l) Layer *l; {}
+/*VARARGS3*/
+void layerop(l, fn, r, f) Layer *l; void (*fn)(); Rectangle r; int f; {}
+void lblt(b, r, l, p, f) Layer *l; Bitmap *b; Rectangle r; Point p; Code f; {}
+void lpoint(l, p, f) Layer *l; Point p; Code f; {}
+void lrectf(l, r, f) Layer *l; Rectangle r; Code f; {}
+void lscroll(l) Layer *l; {}
+void lsegment(l, p, q, f) Layer *l; Point p, q; Code f; {}
+void ltexture(l, r, t, f) Layer *l; Rectangle r; Texture t; Code f; {}
+Layer *newlayer(r) Rectangle r; {return LP;}
+void upfront(l) Layer *l; {}

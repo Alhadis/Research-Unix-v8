@@ -1,0 +1,1 @@
+exec jx /usr/jerq/src/jf/jf.m $*

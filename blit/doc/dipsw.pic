@@ -1,0 +1,54 @@
+.PS
+scale=100
+define m0 |
+[ box invis ht 35 wid 12 with .sw at 0,0
+box ht 35 wid 12 with .nw at 0,35 
+] |
+
+define m1 |
+[ box invis ht 35 wid 73 with .sw at 0,0
+m0 with .nw at 0,35
+m0 with .nw at 20,35
+m0 with .nw at 41,35
+m0 with .nw at 61,35
+] |
+
+define m2 |
+[ box invis ht 35 wid 156 with .sw at 0,0
+m1 with .nw at 0,35
+m1 with .nw at 83,35
+] |
+
+box invis ht 207 wid 227 with .sw at 0,0
+"local reset" at 171,193
+"7" at 158,15
+"6" at 138,15
+"5" at 117,14
+"4" at 98,14
+"3" at 77,14
+"2" at 56,14
+"1" at 35,14
+"OFF" at 14,33
+"ON" at 12,58
+box ht 73 wid 197 with .nw at 0,76 
+box ht 1 wid 0 with .nw at 143,34 
+line  from 136,176 to 55,87 
+m2 with .nw at 28,66
+"8" at 179,15
+"300 baud" at 191,101
+"1200 baud" at 186,119
+"9600 baud" at 185,138
+line  from 156,101 to 137,86 
+line  from 137,67 to 137,86 
+line  from 116,67 to 116,87 
+line  from 95,66 to 95,87 
+line  from 75,67 to 75,86 
+line  from 55,67 to 55,87 
+line  from 34,67 to 34,87 
+line  from 149,120 to 116,87 
+line  from 147,138 to 95,87 
+line  from 138,157 to 75,86 
+"19200 baud" at 182,156
+"hangup" at 166,176
+line  from 137,199 to 34,87 
+.PE

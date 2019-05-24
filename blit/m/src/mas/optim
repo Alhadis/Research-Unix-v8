@@ -1,0 +1,30 @@
+Here is what will be possible w.r.t. optimization.
+
+The codes TEA0 etc. will be present only
+when the operand is a long direct memory reference
+(mode 071).
+If the 32-bit value is <32K or <-32K it may be
+truncated to 16 bits and the mode replaced by 070.
+If it is with 32K of the current PC, the difference may be truncated
+to 16 bits and the mode changed to 072.
+The value of the program counter is the address of the
+extension word (not the instruction).
+
+For TEA0<<TSHFT1 the same appleis except that
+the modes get their octal digits reversed and are in a different
+place.
+
+The (new) code TIM0 means a long immediate that
+may be shortened if its value is between -32K and 32K.
+This will apply only to the instructions add, sub, and cmp.
+(You don't have to check this, it's just a fact).
+The change is made by truncating the value
+and changing 07xx to 03xx in the instruction word.
+TIM0 will never occur in the TSHFT form
+and no TIM1 etc. is necessary because immediates
+always follow immediately.
+The mov case can be handled in the assembler
+by changing certain moves to 'lea'.
+
+If TBR1 occurs then the instruction may be shrunk when appropriate
+to a short branch.

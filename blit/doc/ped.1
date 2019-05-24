@@ -1,0 +1,141 @@
+.TH PED 1 Blit
+.SH NAME
+ped  \- point editor for Blit terminals
+.SH SYNOPSIS
+.B ped [file]
+.SH DESCRIPTION
+.I Ped
+is an interactive drawing system for the 
+Blit 
+bitmap display terminal running under
+.I mpx(1).
+This page provides only an outline of its functions and
+users should consult the complete manual before attempting
+any serious work.
+.I Ped
+uses the mouse for drawing, pointing, and selecting menu actions.
+Button 1 selects an action from a menu displayed on the left side of
+the screen and it is also used to draw and pick up an object.
+Button 3 terminates drawing and also selects from a menu under the
+cursor. That selection determines the menu displayed on the left.
+Button 2 has only limited functions that are of no
+interest to beginners.
+.PP
+.I ped
+runs both on the host and on the blit. When a file is first read it is kept on
+the host. It requires user action to bring it to the blit so that
+it can be edited (``bring in'' item on the menu).
+The ``type comm'' action deactivates the mouse and takes input
+from the keyboard which is transmitted directly to the host.
+It also makes sure that the host has an exact copy of what is in the blit
+before allowing any other action to occur.
+The keyboard commands recognized by
+.I ped
+are
+.I "e, f, r, w,"
+.I "m, qq,"
+.I "pwd,"
+and
+.I "cd dir."
+The first four may take a file name as argument and have similar functions
+as in
+.I ed(1).
+.I m
+or an empty line
+reactivates the mouse.
+.I qq
+causes the program to exit. Whenever
+.I ped
+exits (or is asked to edit a new file), it checks whether the file
+has been modified since a previous save, and if it has it writes in
+``ped.save.''
+.I pwd
+and
+.I cd
+have the same effect  as
+.I pwd(1)
+and
+.I cd(1).
+.I ped
+files have a format that is similar to display lists.
+.PP
+There are eight menus that can be selected by button 3:
+.de bR
+-
+..
+.bR
+.I Basic
+which is the same as the one displayed initially.
+It includes a
+.I blitblt
+command that allows you to make hard copies of the blit display
+in the same way as
+.I blitblt(1)
+does.
+.bR
+.I Ch size
+includes changes in the object size, rotations, etc.
+.bR
+.I Move
+includes ``move'', and ``copy'' commands for objects.
+.bR
+.I Draw
+has the object creation actions. Pressing button 1 fixes a point,
+while button 3 terminates drawing that particular objects.
+It takes two empty lines to terminate input for ``text.''
+.bR
+.I Reshape
+has commands that allow detailed editing of objects.
+Some of them, marked with ``(t)'' have a toggle action.
+``Formal'' makes all nearly vertical
+or nearly horizontal lines of an object vertical or horizontal.
+An ``undo'' command can be used to cancel the action of others.
+.bR
+.I Shade
+offers a selection of textures that can be used to fill
+polygons.
+.bR
+.I Remote
+allows editing on the host and it is not recommended for beginners.
+.PP
+As a rule, the program, remembers the last command given and it will
+execute it repeatedly, as long as it is meaningful to do so
+or until the user makes another selection.
+Thus one can fill many polygons with the same texture without
+having to select it each time.
+.PP
+.I ped
+uses a lot of space on the blit, so it is unlikely that it could be
+loaded if there are many overlapping windows, or there is another big
+program (
+.I jim(1), joff(1),
+for example)
+loaded in another layer.
+Error messages of the part running on the host
+.I (stderr)
+are placed in a file called
+.I .pederr
+in the current directory of the user.
+Error messages of the part running on the Blit appear on the screen.
+.PP
+Hard copies can be made in two ways:
+(1) By the ``blitblt'' menu selection. That creates a file
+called BLITBLT which can then be printed by the
+.I [4]bcan(1)
+command.
+(2) By a
+.I troff(1)
+preprocessor called
+.I tped(1).
+See the respective manual section.
+.SH BUGS
+.PP
+Plots are clipped only with respect to the
+.I mpx
+window so that may spill over to the menu or message areas.
+The only known bugs live in parts of the program
+that are of no interest to beginners, and are all benign.
+However
+since the program has been tested extensively
+only by its designer, it is likely that hidden and
+vicious bugs exist.

@@ -1,0 +1,20 @@
+#!/bin/sh
+# don't set -p or PATH= because we're going to return to the user
+: ${SHELL=sh}
+load(){
+	TERM=$1
+	prog=$2
+	shift 2
+	/usr/jerq/bin/32ld $prog $*
+	export TERM
+	unset TERMCAP
+	exec $SHELL
+}
+case "$1" in
+mux)	/usr/jerq/lib/jterm; TERM=5620 export TERM; exec $SHELL;;
+2621)	load 2621 /usr/jerq/mbin/hp.m $*;;
+33)	load 33 /usr/jerq/mbin/m33.m $*;;
+5620)	load 5620 /usr/jerq/mbin/56.m $*;;
+4014)	load 4014 /usr/jerq/mbin/tek4014.m $*;;
+*)	echo usage: term '[mux|33|2621|5620|4014]' 1>&2; exec $SHELL;;
+esac

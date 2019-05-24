@@ -1,0 +1,37 @@
+LoadFace(bitmap,filename)
+Bitmap *bitmap;
+char *filename;
+{
+/*
+   FILE *fp;
+   Rectangle rect;
+   int ch,i,j;
+   rect = bitmap->rect;
+   fp = fopen(filename,"r");
+   if (fp == ((FILE *) 0)) 
+	{string(&defont, "file not found", &display,
+		 Pt(rect.origin.x, rect.corner.y+11), F_XOR);
+	return;
+	}
+   i = rect.origin.x; j = rect.origin.y;
+   getc(fp);
+   getc(fp);
+   for (;;) {
+     putnibble(getc(fp),bitmap,rect,Pt(i,j)); i+=4;
+     putnibble(getc(fp),bitmap,rect,Pt(i,j)); i+=4;
+     putnibble(getc(fp),bitmap,rect,Pt(i,j)); i+=4;
+     putnibble(getc(fp),bitmap,rect,Pt(i,j)); i+=4;
+     getc(fp);
+     ch = getc(fp);
+     if (ch=='0') {
+       getc(fp);
+     } else if (ch=='\n') {
+       i = rect.origin.x;
+       j++;
+       getc(fp);
+       getc(fp);
+     } else break;
+   }
+   fclose(fp);
+*/
+}

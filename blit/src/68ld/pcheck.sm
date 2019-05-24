@@ -1,0 +1,126 @@
+#
+#	CRC-16 32 word look-up table
+#
+	data	1
+	even
+	global	crc16t_3
+crc16t_3:
+	short	0
+	short	49345
+	short	49537
+	short	320
+	short	49921
+	short	960
+	short	640
+	short	49729
+	short	50689
+	short	1728
+	short	1920
+	short	51009
+	short	1280
+	short	50625
+	short	50305
+	short	1088
+	short	0
+	short	52225
+	short	55297
+	short	5120
+	short	61441
+	short	15360
+	short	10240
+	short	58369
+	short	40961
+	short	27648
+	short	30720
+	short	46081
+	short	20480
+	short	39937
+	short	34817
+	short	17408
+#
+#	This version is a byte-at-a-time calculation
+#
+#	newcrc = bcrc(oldcrc, byte);
+#
+#	text
+#	even
+#	global	bcrc
+#bcrc:
+#	link	%fp,&bcrcF
+#	movm.l	&bcrcM,bcrcS(%fp)
+#	mov.w	8(%fp),%d2	# old crc
+#	mov.w	10(%fp),%d3	# new byte
+#	eor.b	%d2,%d3
+#	mov.l	&15,%d0
+#	and.b	%d3,%d0
+#	add.l	%d0,%d0
+#	mov.l	&crc16t_3,%a1
+#	mov.w	0(%a1,%d0.l),%d0
+#	lsr.b	&3,%d3
+#	and.w	&30,%d3
+#	mov.l	&crc16t_3+32,%a0
+#	mov.w	0(%a0,%d3.w),%d1
+#	eor.w	%d0,%d1
+#	lsr.w	&8,%d2
+#	eor.w	%d1,%d2
+#	mov.w	%d2,%d0
+#	movm.l	bcrcS(%fp),&bcrcM
+#	unlk	%fp
+#	rts
+#	set	bcrcS,-16
+#	set	bcrcF,-22
+#	set	bcrcM,02034
+#
+#	This version calculates the crc for a whole packet.
+#	The calculated crc is compared with the one found at the tail;
+#	- returns !0 for not equal, 0 for equal.
+#	The correct crc is stored at the tail.
+#
+#	error = crc(&packet, length);
+#
+	text
+	even
+	global	crc
+crc:
+	link	%fp,&crcF
+	movm.l	&crcM,crcS(%fp)
+	mov.l	8(%fp),%a2	# packet address
+	clr.l	%d2		# calculated crc
+	mov.w	12(%fp),%d4	# length
+	ble	crc%140
+crc%170:
+	mov.b	(%a2)+,%d3
+	eor.b	%d2,%d3
+	mov.l	&15,%d0
+	and.b	%d3,%d0
+	add.l	%d0,%d0
+	mov.l	&crc16t_3,%a1
+	mov.w	0(%a1,%d0.l),%d0
+	lsr.b	&3,%d3
+	and.w	&30,%d3
+	mov.l	&crc16t_3+32,%a0
+	mov.w	0(%a0,%d3.w),%d1
+	eor.w	%d0,%d1
+	lsr.w	&8,%d2
+	eor.w	%d1,%d2
+	sub.w	&1,%d4
+	bgt	crc%170
+crc%140:
+	cmp.b	%d2,(%a2)
+	beq	crc%180
+	add.w	&1,%d4
+crc%180:
+	mov.b	%d2,(%a2)+
+	lsr.w	&8,%d2
+	cmp.b	%d2,(%a2)
+	beq	crc%190
+	add.w	&1,%d4
+crc%190:
+	mov.b	%d2,(%a2)+
+	mov.w	%d4,%d0
+	movm.l	crcS(%fp),&crcM
+	unlk	%fp
+	rts
+	set	crcS,-16
+	set	crcF,-22
+	set	crcM,02034

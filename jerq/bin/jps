@@ -1,0 +1,2 @@
+#!/bin/sh
+exec jx /usr/jerq/mbin/jps.m "$@"

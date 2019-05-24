@@ -1,0 +1,8 @@
+/usr/jerq/lib/jpcbs.o
+SECTIONS {
+ GROUP 0x71c050 : {
+	.pcbs :	{ /usr/jerq/lib/jpcbs.o (.data) }
+	.stck:	{ /usr/jerq/lib/jpcbs.o (.bss) }
+	.text :	{}
+	.data  : {}
+	.bss : {}}}

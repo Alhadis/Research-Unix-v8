@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/jerq/bin/32ld /usr/jerq/mbin/invert.m

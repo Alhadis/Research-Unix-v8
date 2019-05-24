@@ -1,0 +1,16 @@
+GEN	Collection of commands that manipulate files and/or groups
+GEN	of objects.
+type comm	Activate the keyboard so that actions on files can
+type comm	be taken. Commands are the same as in ED: w, r, e, f.
+type comm	Also `pwd' and `cd' act like the Unix commands
+type comm	Typing `m' or a newline, or pressing any button revives the mouse.
+view host	Display the whole file. No object descriptions are kept
+view host	on the DMD5620 though. This is called a `remote' mode of display.
+view host	You can edit the file either through the `remote' menu
+view host	commands or by using the `bring in' command.
+view host	If you are already in such mode and you ask for `view host',
+view host	then a window controlled by button 1 becomes available
+view host	and you can select the area to be displayed. In
+view host	such a case `view host' acts like a `zoom and pan' combination.
+zoom	Display a closeup of the image. The size is increased by 1/8
+zoom	there is no change in the actual size of the objects

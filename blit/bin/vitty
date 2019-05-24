@@ -1,0 +1,5 @@
+#!/bin/sh
+# execute via ". vitty"
+TERM=layer
+export TERM
+/usr/blit/bin/68ld /usr/blit/mbin/vitty.m

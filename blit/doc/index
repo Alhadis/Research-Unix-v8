@@ -1,0 +1,53 @@
+add add, sub, mul, div: arithmetic on Points
+addr addr: Word address of Point in Bitmap
+alloc alloc, free: allocate memory
+atan2 atan2: inaccurate arc tangent
+balloc balloc, bfree: allocate a bitmap
+bitblt bitblt: Rectangle copy
+button1 button[123]: button state
+circle circle, disc, arc: draw a circle
+cos cos, sin: cosine and sine
+cursinhibit cursinhibit, cursallow: control cursor tracking
+cursswitch cursswitch: switch cursor
+display display, Drect, Jrect, defont: globals describing display
+ellipse ellipse, eldisc, elarc: draw an ellipse
+eqpt eqpt: compare two points for equality
+eqrect eqrect: compare two rectangles for equality
+exit exit: cease execution
+infont infont, getfont, outfont, ffree: read a font from Unix
+inset inset: inset a Rectangle for a border
+jcircle jcircle, jdisc, jarc: draw scaled circle on display
+jellipse jellipse, jeldisc, jelarc: draw ellipse on display
+jinit jinit: initialize world
+jline jline, jlineto, jsegment: draw line on display
+jmove jmove, jmvoeto: move relative to current point on display
+jpoint jpoint: draw single pixel on display
+jrectf jrectf: rectangle function on display
+jstring jstring: draw string on display
+jtexture jtexture: draw texture in rectangle on display
+kbdchar kbdchar: read character from keyboard
+menuhit menuhit: present user with menu and get selection
+mouse mouse, buttons: state of mouse
+muldiv muldiv: calculate (a*b)/c accurately
+nap nap, sleep: relax for a while
+norm norm: return norm of three-dimensional vector
+own own: which resources are currently available
+point point: draw a single pixel in a bitmap
+Pt Pt: create a point from two coordinates
+ptinrect ptinrect: is point within a rectangle?
+raddp raddp, rsubp: arithmetic on Rectangles
+rcvchar rcvchar: receive character from host
+Rect Rect: create a rectangle from four coordinates
+rectXrect rectXrect: do rectangles overlap?
+rectclip rectclip: clip rectangle to another rectangle
+rectf rectf: perform function on rectangle in bitmap
+request request: request I/O resources
+Rpt Rpt: create a rectangle from two points
+rol rol, ror: rotate bits
+screenswap screenswap: swap screen rectangle and bitmap
+segment segment: draw a line segment in a bitmap
+sendchar sendchar, sendnchars: send a character to host
+string string: draw string in bitmap
+strwidth strwidth: width of character string
+texture texture: draw texture in rectangle in bitmap
+wait wait: wait for resources

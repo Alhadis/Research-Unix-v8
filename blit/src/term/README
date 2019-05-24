@@ -1,0 +1,55 @@
+This directory contains the source for the ROM terminal program.
+vitty.c (the name is intentional) is what you get when the
+terminal is turned on. The term* entries are:
+
+terminfo:
+
+jerq,
+	cr=^M, ind=^J, bel=^G, am, ht=^I, it#8, cud1=^J, cuf1=\EC,
+	cuu1=\EA, cub1=^H, cols#87, lines#72, clear=^L, el=\EK,
+	cup=\EY%p2%' '%+%c%p1%' '%+%c, il1=\EF!, dl1=\EE!, ich1=\Ef!,
+	dch1=\Ee!, il=\EF%p1%' '%+%c, dl=\EE%p1%' '%+%c,
+	ich=\Ef%p1%' '%+%c, dch=\Ee%p1%' '%+%c,
+	kcuu1=\EA, kcud1=\EB, kcuf1=\EC, kcub1=\ED, kbs=^H,
+termcap:
+
+jerq:\
+	:am:ta=^I:it#8:pt:do=^J:nd=\EC:up=\EA:bs:co#87:li#72:cl=^L:ce=\EK:\
+	:cm=\EY%r%+ %+ :al=\EF!:dl=\EE!:ic=\Ef!:dc=\Ee!:AL=\EF%+ :
+	DL=\EE%+ :IC=\Ef%+ :DC=\Ee%+ :ku=\EA:kd=\EB:kr=\EC:kl=\ED:kb=^H:
+
+bootrom.s is the run-time startup and associated stuff.
+Basically, it calls vitty when turned on.  When vitty gets a ^P,
+it jumps through rom (256*1024+010, jmp START) which starts the
+down-load protocol in load.s.  The loader is in ../68ld.
+
+Early in the rom (and therefore bootrom.s) are a pointer to a text
+string identifying the rom version and the display bitmap structure.
+If you make a terminal with a different shaped screen, it is possible
+to rearrange some things so that the same code will run without
+recompilation on different terminals.  Currently, that won't work because
+(for example) XMAX and YMAX are just numbers in jerq.h.
+
+After that, there is a list of useful routines.  This list serves two
+purposes:  first, it forces loading of library stuff (such as the 
+allocators and the layer code) that would not otherwise make it into rom,
+and secondly it provides a version-independent interface to the roms.
+On the other hand, interfacing to roms the way mpxterm does gives a
+faster interface that can utilize much more of the roms; see
+/usr/jerq/src/mpx/term/makefile and romroutines.
+(Just for the record, if you try to use alloc and balloc through
+these vectors, they won't work: there is no vector for allocinit.
+Such is life.)
+
+
+To make new ROMs:
+	1) Copy someone else's.
+If that isn't good enough,
+	2) rom.? are the bits for the roms.
+If you insist on making your own terminal (a bad idea, flat out),
+	3) Use the makefile and make sure to update romterm.nm in
+		/usr/jerq/src/mpx/term (it must be sorted).
+		The output will be in bits[012], which are the bits
+		to roms [01], [23], [45].  The bits? in this directory
+		are NOTNOTNOTNOTNOT the bits of the TTY roms.
+		To test the new terminal, make ramterm instead of romterm.

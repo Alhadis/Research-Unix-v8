@@ -1,0 +1,268 @@
+set	PROCSIZE,2312
+	text
+global	spl0
+global	spl1
+global	spl4
+global	spl5
+global	spl7
+global	splx
+global	Sys
+	jmp	Start
+#	P must be set to a valid process; an unused one is the best bet
+Sys:	long	proctab+2*PROCSIZE	# P; loaded by system as it runs
+	long	defont			# Sys[1]==pointer to default font
+	long add
+	long addr
+	long Ualloc
+	long Uballoc
+	long bfree
+	long Ubitblt
+	long Ucursallow
+	long Ucursinhibit
+	long Ucursswitch
+	long dellayer
+	long div
+	long eqrect
+	long Uexit
+	long free
+	long inset
+	long Ujinit
+	long Ujline
+	long Ujlineto
+	long Ujmove
+	long Ujmoveto
+	long Ujpoint
+	long Ujrectf
+	long Ujsegment
+	long Ujstring
+	long Ujtexture
+	long Ukbdchar
+	long nap
+	long Upoint
+	long Urectf
+	long Usegment
+	long sleep
+	long Utexture
+	long menuhit
+	long mul
+	long newlayer
+	long Uown
+	long ptinrect
+	long raddp
+	long Urcvchar
+	long rectXrect
+	long rectclip
+	long Urequest
+	long rsubp
+	long Uscreenswap
+	long Usendchar
+	long sendnchars
+	long string
+	long strwidth
+	long sub
+	long sw
+	long upfront
+	long Uwait
+	long clear
+	long debug
+	long realgcalloc
+	long gcfree
+	long getrect
+	long alarm
+	long lpoint
+	long lrectf
+	long lsegment
+	long ltexture
+	long transform
+	long rtransform
+	long realtime
+	long cursinhibit
+	long cursallow
+	long Ucursset
+	long Unewproc
+	long mpxnewwind
+	long newwindow
+	long tolayer
+	long jstrwidth
+	long mpxkill
+#endif	MPX_H
+
+Start:
+	mov.l	&t%0,0x60	# level 0 autovector
+	mov.l	&t%1,0x64	# level 1 autovector
+	mov.l	&t%2,0x68	# level 2 autovector
+	mov.l	&t%3,0x6c	# level 3 autovector
+	mov.l	&t%4,0x70	# level 4 autovector
+	mov.l	&t%5,0x74	# level 5 autovector
+	mov.l	&trap%BPT,0x80	# trap 0, used as BPT
+	mov.l	&trap%B,0x8	# bus error
+	mov.l	&trap%A,0xC	# address error
+	mov.l	&trap%I,0x10	# illegal inst
+	mov.l	&trap%Z,0x14	# zero divide
+	mov.l	&trap%C,0x18	# chk inst
+	mov.l	&trap%V,0x1C	# trapv inst
+	mov.l	&trap%P,0x20	# privileged inst
+	mov.l	&trap%T,0x24	# trace trap
+	mov.l	&trap%E,0x28	# 1010 emt
+	mov.l	&trap%E,0x2c	# 1111 emt
+	mov.w	&2,(384*1024+050)	# enable bus error
+	jsr	main
+exit:	bra	exit
+t%0:
+	rte
+t%1:
+	movm.l	&0xC0C0,-(%sp)
+	mov.w	&0, 384*1024+070	# turn the interrupt off
+	jsr	auto1
+	mov.l	mouse, mouse+4		# BUG FIX FOR OPTIMIZED CURSOR.C IN ROM!!
+	jsr	clockroutine
+	movm.l	(%sp)+,&0x0303
+
+	rte
+t%2:
+	movm.l	&0xC0C0,-(%sp)
+	jsr	auto2
+	movm.l	(%sp)+,&0x0303
+	rte
+t%3:
+#	movm.l	&0xC0C0,-(%sp)
+#	jsr	auto3
+#	movm.l	(%sp)+,&0x0303
+	rte
+t%4:
+	movm.l	&0xC0C0,-(%sp)
+	jsr	auto4
+	or.w	&1, proctab+1*PROCSIZE+8	# setrun(&controlp)
+	movm.l	(%sp)+,&0x0303
+	rte
+	set	PIO2,	(384*1024+013)	# ACIA data reg
+	set	STAT2,	(384*1024+011)	# ACIA status reg
+	set	RDRFBIT,	0	# bit num of RDRF in STAT2
+t%5:
+	movm.l	&0xC0C0,-(%sp)
+	mov.b	STAT2, %d0
+	btst	&RDRFBIT, %d0
+	bne	t%5a
+	jsr	aciatrint
+	bra	t%5b
+t%5a:
+	mov.w	&0, %d0
+	mov.b	PIO2, %d0
+	mov.w	%d0, -(%sp)
+	mov.l	&queues, -(%sp)
+	jsr	qputc	# qputc(%d0, RCVQUEUE)
+	add.l	&6, %sp
+	or.w	&1,  proctab+8	# setrun(&demuxp);
+t%5b:
+	movm.l	(%sp)+, &0x0303
+	rte
+
+spl0:
+	mov.w	%sr,%d0
+	mov.w	&0x2000, %sr
+	rts
+spl1:
+	mov.w	%sr, %d0
+	mov.w	&0x2100, %sr
+	rts
+spl4:
+	mov.w	%sr, %d0
+	mov.w	&0x2400, %sr
+	rts
+spl5:
+	mov.w	%sr, %d0
+	mov.w	&0x2500, %sr
+	rts
+spl7:
+	mov.w	%sr, %d0
+	mov.w	&0x2700, %sr
+	rts
+splx:
+	mov.w	4(%sp), %sr
+	rts
+global	trap
+trap%BPT:
+	mov.w	&0, traptype
+	bra.b	trapsave
+trap%T:
+	mov.w	&1, traptype
+	bra.b	trapsave
+trap%B:
+	mov.w	&2, traptype
+	add.l	&8, %sp		# skip the goo
+	bra.b	trapsave
+trap%A:
+	mov.w	&3, traptype
+	add.l	&8, %sp
+	bra.b	trapsave
+trap%I:
+	mov.w	&4, traptype
+	bra.b	trapsave
+trap%Z:
+	mov.w	&5, traptype
+	bra.b	trapsave
+trap%C:
+	mov.w	&6, traptype
+	bra.b	trapsave
+trap%V:
+	mov.w	&7, traptype
+	bra.b	trapsave
+trap%P:
+	mov.w	&8, traptype
+	bra.b	trapsave
+trap%E:
+	mov.w	&9, traptype
+	# fall through
+trapsave:
+#	mov.w	&0x2700, %sr	# spl7()
+	sub.l	&14*4, %sp
+	movm.l	&0x3FFF, (%sp)	# save all regs
+	lea.l	2+(14*4)(%sp), %a0	# pc where trap occurred
+	mov.l	%a0, traploc		# (well, its loc'n on stack)
+	mov.w	traptype, %d0
+	ext.l	%d0
+	lsl.l	&2, %d0
+	mov.l	&msglist, %a0
+	mov.l	0(%a0,%d0.l),-(%sp)
+	jsr	trap
+	# if we get here, it's a trace trap
+	add.l	&4, %sp
+	movm.l	(%sp)+, &0x3FFF
+	rte
+	
+BPTmsg:	byte 'B,'P,'T,' ,'(,'t,'r,'a,'p,' ,'0,'),0	
+Tmsg:	byte 'T,'r,'a,'c,'e,' ,'t,'r,'a,'p,0
+Bmsg:	byte 'B,'u,'s,' ,'e,'r,'r,'o,'r,0
+Amsg:	byte 'A,'d,'d,'r,'e,'s,'s,' ,'e,'r,'r,'o,'r,0
+Imsg:	byte 'I,'l,'l,'e,'g,'a,'l,' ,'i,'n,'s,'t,'r,'u,'c,'t,'i,'o,'n,0
+Zmsg:	byte 'Z,'e,'r,'o,' ,'d,'i,'v,'i,'d,'e,0
+Cmsg:	byte 'C,'H,'K,' ,'i,'n,'s,'t,'r,'u,'c,'t,'i,'o,'n,0
+Vmsg:	byte 'T,'R,'A,'P,'V,' ,'i,'n,'s,'t,'r,'u,'c,'t,'i,'o,'n,0
+Pmsg:	byte 'P,'r,'i,'v,'i,'l,'e,'g,'e,' ,'v,'i,'o,'l,'a,'t,'i,'o,'n,0
+Emsg:	byte 'E,'m,'u,'l,'a,'t,'o,'r,' ,'t,'r,'a,'p,0
+
+msglist:
+	long	BPTmsg
+	long	Tmsg
+	long	Bmsg
+	long	Amsg
+	long	Imsg
+	long	Zmsg
+	long	Cmsg
+	long	Vmsg
+	long	Pmsg
+	long	Emsg
+global	traploc
+global	traptype
+even
+traploc:
+	space	4
+traptype:
+	space	2
+text
+global	reboot
+reboot:
+	mov.w	&0, 384*1024+050	# disable bus error
+	mov.w	&0x2700, %sr		# spl7()
+	mov.l	256*1024+4, %a0
+	jmp	(%a0)

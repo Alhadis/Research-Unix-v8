@@ -1,0 +1,12 @@
+This is the 5620 ped part.
+It is  supposed to be identical to the Blit part except
+for the device.h file. The differences are of importance in where
+to look for the include files (jped.h) and the memory allocation (jsub.c)
+
+Bundles that are exported for Unix V systems are subjected to a sed
+script that replaces the appropriate names as specified by
+Bob Hutchison (pyuxvv!hutch, PY-2678)
+
+Users on other systems must modify the makefile. Bob suggests
+	CC=dmdcc
+	CFLAGS=-O

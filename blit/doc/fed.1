@@ -1,0 +1,73 @@
+.TH FED 1 Blit
+.SH NAME
+fed \- Blit font editor
+.SH SYNOPSIS
+.B fed
+.SH DESCRIPTION
+.I Fed
+is the font editor for the Blit terminal.
+It relies heavily on the mouse for selecting text and commands.
+It only runs under
+.IR mpx (1).
+.IR Fed 's
+screen consists of a number of areas:
+a rectangle on the right showing the fonts currently being edited,
+a strip along the top showing text printed in the current font,
+and a small (real size) and enlarged view of the current character.
+.PP
+The mouse buttons are used for the most common operations.
+Clicking button 1 inside a font selects the new current character.
+Clicking button 1 inside the exploded character will invert the pixel
+pointed at by the cursor.
+Button 2 provides a menu for managing the exploded character.
+Button 3 provides font operations.
+.PP
+The button 2 menu entries are:
+.TP
+.B "char bounds"
+Draw a rectangle for the bounds of the current character.
+This will affect the bits stored for this character and the fields
+.IR top and
+.IR bottom.
+.TP
+.B baseline
+Draw a rectangle corresponding to the desired position of the baseline.
+The left edge and width of the rectangle affect the
+.IR left
+and
+.IR width
+ields.
+The vertical position of the baseline is set by the top edge of the rectangle.
+.TP
+.B restart
+Restart editing this character.
+.PP
+The button 3 menu entries are:
+.TP
+.B "get font"
+The user is prompted for the name of a file containing a font.
+The only editing provided is BS (delete last character) and @ (delete whole line).
+The name is terminated by a newline.
+While the font is being downloaded, the cursor becomes a Buddha.
+.TP
+.B "put font"
+After selecting the font to be written out,
+the user is prompted the name of the file to put the font.
+The original name is supplied as a first approximation.
+.TP
+.B "copy char"
+The user selects (with button 1) the character to be copied and its destination.
+Characters can be copied within or between fonts.
+.TP
+.B "sample text"
+The user is prompted for a text sample to be displayed in the current font.
+.TP
+.B "exit"
+Quit the editor.
+No fonts are written out.
+.PP
+.SH FILES
+.ta \w'/usr/jerq/lib/fed.m      'u
+/usr/jerq/lib/fed.m	terminal support program
+.SH CAVEATS
+If something strange happens, try restarting the current character.

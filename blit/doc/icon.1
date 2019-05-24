@@ -1,0 +1,76 @@
+.TH ICON 1 Blit
+.SH NAME
+icon \- icon editor
+.SH SYNOPSIS
+.B icon
+[
+.B \-x
+number ] [
+.B \-y
+number ]
+.SH DESCRIPTION
+.IR icon
+is a pixel-level editor for (16\(mu16) textures and small bitmaps.
+An icon screen consists of i) a magnified grid where each square represents
+a pixel: squares can be turned black by pressing the left mouse button, and can be 
+turned white by pressing the middle button; and ii) an image of the grid
+in the top left corner which displays the picture at its normal size.
+.PP
+The following is an elaboration of the
+help command on the button three menu.
+The command icons are listed in order
+left to right and
+top to bottom in the menu. Rectangles can always be selected by
+the middle button (which supplies a fixed 16\(mu16 rectangle) or swept by the right
+button (for rectangles of any size).
+.LP
+ \(bu arrow: move a region (subsequently, sweep a source rectangle
+and click at a destination)
+ \(bu copier: copy a region (subsequently, sweep a source rectangle
+and click at a destination)
+ \(bu inverted cross: invert a region (subsequently, sweep a rectangle)
+ \(bu garbage can: erase a region (subsequently, sweep a rectangle)
+ \(bu horizontal (vertical) folded arrow: reflect a region horizontally (vertically) (subsequently, sweep a rectangle)
+ \(bu clockwise (counterclockwise) arrow: rotate a region clockwise (couterclockwise) (subsequently, sweep a rectangle)
+ \(bu horizontal (vertical) sheared lines: shear a region horizontally (vertically) (subsequently, sweep a source rectangle and point at the position that the 
+nearest corner of the rectangle must assume after shearing)
+ \(bu scaled square: scale a region (subsequently, sweep a source rectangle and
+sweep a destination rectangle (bigger or smaller than the source) to which the 
+destination will be moved and scaled (i.e. stretched or compressed))
+ \(bu tweed pattern: texture a region (subsequently, sweep a source rectangle and
+a (bigger) destination rectangle, which will be filled with copies of the source).
+ \(bu glasses: read an icon (subsequently, type a file name and position the
+icon frame by clicking)
+ \(bu grid: switch on or off the background grid.
+ \(bu mouse: pick up a 16\(mu16 rectangle and make it the current cursor icon
+(subsequently, click a button to pick up a 16\(mu16 region, and click a button to
+revert to normal)
+ \(bu pen: write an icon (subsequently, sweep a rectangle to write out and
+write a file name)
+ \(bu bitblt: bitblt a region (subsequently driven by submenus on button 3)
+ \(bu help: display help information (subsequently, press a button to revert to normal)
+ \(bu gun: exit (subsequenly, press button 3 to confirm, or button 1 or 2
+to abort exit)
+.PP
+Icon files are written in two formats. When the region to write is swept by
+the middle button (obtaining a 16\(mu16 rectangle) a "Texture" definition is written 
+(see <blit.h>), which can be directly included in C programs. When the region to 
+write is swept by the right button, a simple
+hexadecimal format (e.g. 0xFA22, 0X4EA4, ..) 
+is used. Both formats can be read back without need to specify which is
+being used.
+.PP
+The options determine the size of the initial grid.
+.PP
+.B \-x
+determines the horizontal size (default 50)
+.PP
+.B \-y
+determines the vertical size (default 50)
+.PP
+.I icon
+runs only under
+.IR mpx (1).
+.PP
+.SH BUGS
+On reshape, the icon being drawn is lost.

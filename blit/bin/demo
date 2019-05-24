@@ -1,0 +1,7 @@
+#!/bin/sh
+if /usr/blit/bin/ismpx -
+then
+	/usr/blit/demo/mpx/demo $*
+else
+	/usr/blit/demo/stand-alone/demo $*
+fi

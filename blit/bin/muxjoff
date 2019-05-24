@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/blit/lib/joff -t/usr/blit/mbin/joff.m -m/usr/blit/lib/muxterm  $*

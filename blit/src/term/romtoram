@@ -1,0 +1,2 @@
+/^#IF	ROM/,/^#ENDIF/s/^/#/
+/^##IF	RAM/,/^##ENDIF/s/^#//

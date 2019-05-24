@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/blit/bin/68ld /usr/blit/mbin/tek4014.m $*

@@ -1,0 +1,18 @@
+LIB=/usr/jerq/lib
+MBIN=/usr/jerq/mbin
+case $1 in
+	-p)
+		shift
+		apply "ls -l %1 | awk -f $LIB/jraw.pic - %1" $*
+		;;
+	-w)
+		shift
+		$LIB/jraw.net $*
+		;;
+	-x)
+		shift
+		jx jraw.m $*
+	*)
+		jx $MBIN/jraw.m $*
+		;;
+esac

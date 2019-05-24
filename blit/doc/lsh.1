@@ -1,0 +1,23 @@
+.TH LSH 1 12/16/83
+.SH NAME
+lsh \- create layers and run shell commands
+.SH SYNOPSIS
+.B lsh
+[<file] [>file]
+.br
+.SH DESCRIPTION
+Each line of the standard input is of the form:
+.ce
+x0 y0 x1 y1 shell-command
+.PP
+For each line
+.I Lsh
+creates a layer at Rect(x0,y0,x1,y1) and then runs the shell
+command in that layer.
+.PP
+The standard output gives the Rectangle of each layer that already exists and
+its downloaded object file, if any.
+After manually setting up a desired layout,
+this provides coordinates for preparing an input script.
+.SH BUGS
+Standard input cannot be the keyboard.

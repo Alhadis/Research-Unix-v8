@@ -1,0 +1,202 @@
+This directory contains programs to run the Blit, the 256Kbyte 68000-based
+research terminal. /usr/jerq has the DMD-5620 code, which is fresher but
+more memory-consumptive.  You may choose to port some of the new 5620 software
+(many programs, such as pi(9), are identical in both environments),
+but beware that some of the programs (e.g. jim) have been rewritten
+to take advantage of the greater memory available there.
+We apologize for the dustiness of the Blit code.
+
+The following is the documentation for the last research distribution
+of this software made within Bell Labs, preparatory to the development
+of the 5620.  Considerable research work happened after this distribution;
+the main element is that the main terminal multiplexer is mux(9), not
+mpx(9), although both work.  The documentation in /usr/man refers
+to the 5620 software; there are innumerable regrettable differences,
+but those man pages should be indicative and generally sound.
+
+To extract the tape:	cpio -idcB < /dev/rmt1	#1600 bpi
+	You will need the 4.0 or 5.0 cpio (good old reliable cpio!).
+
+This is a snapshot of ikeya!/usr/jerq as of Dec 10 or thereabouts, 1982.
+It is not really a distribution, just a copy of the work in progress,
+although we have tried to make it self-consistent.
+
+The principal reason for this distribution is the Teletype Corp. Blits,
+which have reasonable PROMs.  This software will only run on Blits
+with the new PROMs.  If you have the old PROMs (the simplest test:
+does the character set for the stand-alone terminal one have one pixel
+wide vertical lines, or two?  Two ==> new PROMs) you will have to
+get new ones.  See ./src/term/README.  The PROMs have a version stamp:
+check it by
+	cd ./src
+	mcc -j version.c
+	68ld a.out
+The TTY version is "rob Sep 82".
+
+The main differences since the last (August 1 1982) distribution, other
+than support for the new PROMs and bug fixes, are:
+	mpxterm		(often called layersys) relies heavily on the
+			new PROMs, making it a little faster and a third
+			the down-loaded size.  It is much cleaner inside,
+			has better cursor support, and user binaries are
+			independent of the version (but you must still
+			recompile all your old programs for this and
+			subsequent versions).
+	Mouse cursor	behaves much better.  Unfortunately, the improvements
+			came after the PROMs, so the cursor code in PROM
+			is inferior.  The improvements cost about 1K in
+			mpxterm downloaded space; space manics can adjust.
+	proof		is a working (mostly) troof proofer. It only
+			works for the `new' troff.
+	icon		is a new program for building textures and little
+			pictures.
+	crabs		is an exciting new adventure game; see doc/crabs.6.
+	hp		functionally replaces the old vitty, although vitty
+			still works (it didn't in August, however).  hp is
+			a 2621 emulator (cough), with frills.  dmr wrote it,
+			if that's a justification.
+	kbd		is a plaything, but a fun one.  Try it.
+	Graphics	is faster.  bitblt and texture, in particular, have
+			been rewritten by John Reiser and go like hell.
+	jim		is more solid, and has regular expressions.
+	joff		is spectacularly effective and a joy to use.
+	mcc		is three times less slow, and has an optimizer.
+			The optimizer has a scheduled demise, however.
+			The -m flag has reversed sense:
+				mcc file.c
+			compiles a program for mpx, while
+				mcc -m file.c
+			compiles for a normal (non-Blit) 68000 environment.
+			The -j flag is unchanged.
+			There is now floating point support, accessed through
+				mcc ... -lf
+			Warning: binaries mcc'd on a non-VAX may be
+			incompatible with the libf.a here. Fix: recompile
+			libf.a on your CPU.
+	demo		has a few new things.  Try maxwell (use button 2...),
+			pacman and clock.
+	asteroids	has an even stronger battle computer
+	support		exists. Peter Ivanov is working on Blit support in
+			Dept 45423. Two tapes of 5.0 compatible Blit worlds
+			will soon be available in the Comp. Inf. Library at MH
+			and a 5.0 add-on product should be available by mid 83.
+			The first tape will be available by the end of Dec. 82,
+			and represents a Blit world from early Nov. 82. The
+			Second tape will be a 5.0ised version of this distrib.
+			The tapes will support both VAX and 3B host processors.
+			Problems in these distributions and, to a lesser extent,
+			this distribution may be sent to
+				Peter Ivanov
+				MH 3B-424
+
+Besides mcc -m, there are a number of changes that improve only the mpx
+world, not the stand-alone environment.  This reflects two things:
+	1) Our commitment to multiplexed asynchronous graphics, and
+	2) The solidity and addiction of mpx: no one has written any
+		stand-alone programs (other than little tests) for at
+		least six months.
+The differences are documented in the revised ./doc/manual.
+If you decide you like some of the new mpx features, the code in
+./src/mpx/term/user.c should tell you how to get them into the
+stand-alone world.  But why bother?
+
+Here follows an edited road map from the May 1982 distribution.
+
+First, a word about the name.  Officially, the terminals are Blits.
+To us, they will always be Jerqs.  Therefore, all of the code talks
+about jerqs, as in "#include <jerq.h>" or "68ld /usr/jerq/lib/jim.j".
+The public (i.e. Bell-Labs wide) documentation talks about blits,
+so for consistency "jerq.h" is linked to "blit.h" so the code in
+the documentation will work.  The programs all expect things to be
+in /usr/jerq; if that bothers you, you will have to recompile or adjust
+at least:
+	mld
+	mcc
+	jim
+	demo
+	bin/all the shell files
+In other words, try to install this tape at /usr/jerq.
+
+Next, operating systems.  We run under Berkeley 4.1bsd or Dennis Ritchie's
+stacked line-discipline system.  If you run neither of these, you won't
+be able to use mpx (the layer environment) without changing your kernel.
+If you do run one of these, look in src/mpx/README and src/ompx/README to
+see which version of mpx you should run.  src/ompx/sys contains system
+bug fixes to 4.1bsd necessary to run jerqs (excuse me).
+Nothing else should matter, but the different dialect of C on recent
+451 systems may cause trouble.  You're on your own if it does (or if it
+doesn't, actually).  The binaries in /usr/jerq/bin are compiled for a
+4.1bsd system.  They also run on Ritchie's system.  /usr/jerq/bin/ompx
+is the 4.1bsd mpx.  You will probably want to just 
+	mv /usr/jerq/bin/ompx /usr/jerq/bin/mpx
+if you're on a straight 4.1bsd.  But, I warn you, it has been a long
+time since that program was compiled here...
+
+If you're stuck on a 451 system, look in src/xt for the stuff you'll need.
+The xt driver is a kernel driver that supports mpx (which they call layers,
+for political reasons).  Other directories have makefiles suffixed .5;
+make these the default makefiles and recompile and you should be able to
+run.  The only tricky part is that you will need a new cpp and archiver
+(mcpp and mar), the source for which is in m/src.
+
+Here's what you'll find in the top directory:
+	bin
+		vax binaries for Unix support programs.
+	demo
+		demonstration programs
+	demo/mpx
+		demos for the layer environment
+	demo/stand-alone
+		demos for the stand-alone environment
+	demo/src
+		not necessarily accurate source for some of the demos
+	diag
+		some diagnostic programs for the hardware.  if you think
+		your terminal's broken, 68ld diag/diag>/dev/ttywhatever and
+		read diag/manual
+	doc
+		many manuals.  this is actually where the greatest name
+		confusion resides.
+	font
+		ugly disc format fonts suitable for infont() and used
+		by proof.
+	icon
+		a little library of cute pictures
+	include
+		include files for jerq programs and the utilities that
+		mangle them
+	lib
+		libraries, terminal-side halves of programs (e.g. mpx, jim),
+		etc.
+	m
+		mc68000 support and source thereof
+	src
+		the obvious
+
+The in-prom turn-on-time terminal does now supports curses etc.
+The TERM* entries are in ./src/term/README.
+The standard layered terminal process still doesn't support curses,
+and hence doesn't support vi, and for good reason:
+we plan to make the terminal program under mpx TOTALLY different from
+anything that supports vi, and it would be a mistake to provide support
+for something we would later take away.
+
+Anyway, try jim.  It should give indication of what we think screen
+editors are about.
+
+llib-llayer and llib-lj in this directory are our lint libraries for the
+graphics stuff.  lint is our local version; copy it with discretion to
+/usr/bin on your system.  The way it works, you unfortunately have to
+explicitly say
+	lint -I/usr/jerq/include myfile.c -lj
+You don't get the -I/usr/jerq/include for free.
+
+If you have problems, we may want to know.  Try research!rob or mhtsa!peteri.
+Please, no phone calls.
+
+				Rob Pike
+				Peter Ivanov
+
+P.S.  Those who notice the absence of Bart's name may be interested to
+learn that he has left Bell.  So, for that matter, has John Reiser.
+

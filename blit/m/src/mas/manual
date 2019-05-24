@@ -1,0 +1,366 @@
+A preliminary and adequately cryptic manual for the MC68000 assembler.
+
+Comments:
+	Comments are introduced by the `#' character, and continue to
+the end of the line.
+
+Labels:
+	A label consists of a name followed by a colon.
+
+Address modes:
+	%a#		address register (0<=#<=7);  %sp is the same as %a7
+	%d#		data register
+	(%a#)		register indirect
+	(%a#)+		autoincrement
+	-(%a#)		autodecrement
+	offset(%a#)	offset must be absolute and is 16-bit signed
+	offset(%a#,%r#.s)	offset must be absolute and is 8-bit signed;
+			%r is either data or address register.
+			s is 'w' or 'l' and specifies the number of significant
+			bits in %r
+	expression	absolute address
+	offset(%pc)	pc-relative; offset must be absolute and is
+			signed 16 bits.
+	offset(%pc,%r#.s)	pc-relative with index;
+			offset must be absolute and is 8 bit signed;
+			%r is either data or address register.
+			s is 'w' or 'l' and specifies the number of
+			significant bits in %r
+	&expression	literal
+	%usp
+	%cc
+	%sr		Some instructions allow the (user) stack pointer,
+			the condition codes,
+			or the status register as a destination.
+
+Pseudo-ops:  the following are available.
+	space	<abs-exp>
+			set aside <abs-exp> bytes of 0's.
+
+	byte	<abs-explist>
+			assemble bytes with the given values.
+	short	<abs-explist>
+			assemble shorts with the given values.
+
+	long	<explist>
+			assemble longs with the given values
+			(can be relocatable).
+
+			Expressions in the list can specify bitfields:
+				<abs-exp> : <abs-exp>
+			Bitfields are assigned left to right.  The first
+			expression specifies the width.
+
+	data	<abs-exp>
+			start assembling under data location counter
+			<abs-exp>.  There are 4, numbered 0-3.
+			A missing argument means 0.
+
+	text	<abs-exp>
+			start assembling under text location counter
+			<abs-exp>.  There are 4, numbered 0-3.
+			A missing argument means 0.
+
+	global	<symbol>
+			Make symbol externally visible from outside.
+			Undefined symbols are global by default.
+
+	set	<symbol> , <exp>
+			Set <symbol> to <exp>.  There are some strange
+			rules about forward references.
+
+	comm	<symbol> , <abs-exp>
+			Make <symbol> a common of size <abs-exp>.
+			If it is not defined elsewhere, the loader
+			will assign space for it.
+
+	lcomm	<symbol> , <abs-exp>
+			Make <symbol> a `local common' of size <abs-exp>.
+			If it is not otherwise defined the assembler
+			will assign space for it.  (This replaces
+			`bss' in other assemblers.)
+
+	even
+			Round location counter upwards to an even value.
+
+	org	<expression>
+			Set location counter to the expression.
+			Cannot move backwards, cannot change to a different
+			location counter, and a warning is produced if
+			an absolute value is used.
+
+	pcrel	<symbol>
+	pcrel.w	<symbol>
+	pcrel.l	<symbol>
+			Assemble a halfword (pcrel, pcrel.w) or longword
+			(pcrel.l) containing the value of the symbol less
+			the current value of the location counter.
+			The symbol must be in the current segment.
+			
+
+	stabs	"symbol",code,c_type,expression
+
+			Define a symbol for sdb, or another debugger.
+			The symbol is put in the symbol table as a
+			unique entry, not overwriting any previous entries.
+			Code and c_type are absolute expressions intended
+			to contain information useful to sdb.  The
+			last expression is the value of the symbol;
+			it should be absolute for automatic and register
+			variables, and relocatable for static and externals.
+
+	stabn	code,c_type,expression
+
+			Same as
+				stabs	"", ...
+
+	stabd	code,line#
+
+			Used for line-number, block markers, and the like.
+			It is the same as
+
+				stabs	"",code,line,L%x
+			L%x:
+
+Instructions:  Here are instruction templates.
+A stands for a general address, R for a register, AR for an
+address register, DR for a data register, &I for an immediate,
+X for an expression.
+Most instructions require a size specification;
+'b' is byte, 'w' is (half-)word, 'l' is long.
+The possible sizes will just be concatenated.
+Some semantic conditions aren't remarked on, most notably
+that byte operations on address registers don't
+work.
+
+add bcd
+	abcd.b		%D,%D
+	abcd.b		-(%A),-(%A)
+
+add
+	add.bwl		&I,A
+	add.bwl		A,R
+	add.bwl		DR,A
+
+add with extend
+	addx.bwl	DR,DR
+	addx.bwl	-(AR),-(AR)
+
+and
+	and.bwl		&I,A
+	and.bwl		A,DR
+	and.bwl		DR,A
+
+arithmetic shift left
+	asl.w		&1,A
+	asl		&I,DR	# 1<=I<=8
+	asl		%DR,%DR
+
+arithmetic shift right
+	asr.bwl	see asl
+
+branches
+	Branches can be coded as "bra.b" etc. to force the short forms.
+
+	bra	X
+	br	X	# same as bra
+	bhi	X
+	bhs	X
+	bcc	X	#same as bhs
+	bne	X
+	bvc	X
+	bpl	X
+	bge	X
+	bgt	X
+	bls	X
+	blo	X
+	bcs	X	# same as blo
+	beq	X
+	bvs	X
+	bmi	X
+	blt	X
+	ble	X
+
+bit change
+bit change (caution: word vs byte spec up in the air)
+	bchg		%DR,A
+	bchg		&I,A
+
+bit clear (see bit change)
+	bclr		%DR,A
+	bclr		&I,A
+
+bit set (see bit change)
+	bset		%DR,A
+	bset		&I,A
+
+branch to subroutine
+	bsr		X
+
+bit test (see bit change)
+	btst		%DR,A
+	btst		&I,A
+
+check limits
+	chk.w	A,%DR
+
+clear  (hope to make this a special case of mov)
+	clr.bwl		A
+
+compare
+	cmp.bwl		A,&I
+	cmp.bwl		R,A
+	cmp.bwl		(AR)+,(AR)+
+
+test, decrement, and branch
+	dbxx	%DR,X
+	where "xx" is ra, r, hi, etc as for
+	the branches.
+
+signed divide
+	divs.w		A,%DR
+
+unsigned divide
+	divu.w		A,%DR
+
+exclusive or
+	eor.bwl		&I,A
+	eor.bwl		%DR,A
+
+exchange registers
+	exg		%R,%R
+
+sign extend
+	ext.wl		%DR
+
+jump
+	jmp		A
+
+jump to subroutine
+	jsr		A
+
+load effective address (not incorporated into move!)
+	lea.l		A,%AR
+
+link
+	link	%AR,&I
+
+logical shift left
+	lsl.bwl		see asl
+
+logical shift right
+	lsr.bwl		see asl
+
+move
+	mov.bwl	A,A
+
+move multiple (see restrictions, and watch bit order!)
+	movm.wl		&I,A	# store
+	movm.wl		A,&I	# load
+
+signed multiply
+	muls.w	A,%DR
+
+unsigned multiply
+	mulu.w	A,%DR
+
+negate bcd
+	nbcd.b		A
+
+negate
+	neg.bwl		A
+
+negate with extend
+	negx.bwl	A
+
+no operation
+	nop
+
+not (one's complement)
+	not.bwl		A
+
+or
+	or.bwl		&I,A
+	or.bwl		A,%DR
+	or.bwl		%DR,A
+
+push effective address (not subsumed in mov)
+	pea.L		A
+
+reset
+	reset
+
+rotate left
+	rol.bwl		see asl
+
+rotate right
+	ror.bwl		see asl
+
+rotate left with extend
+	roxl.bwl	see asl
+
+rotate right with extend
+	roxr.bwl	see asl
+
+return from exception
+	rte
+
+return and restore codes
+	rtr
+
+return from subroutine
+	rts
+
+subtract bcd
+	sbcd.b	%DR,%DR
+	sbcd.b	-(%AR),-(%AR)
+
+set according to condition
+	st.b		A
+	shi.b		A
+	scc.b		A
+	shs.b		A
+	sne.b		A
+	svc.b		A
+	spl.b		A
+	sge.b		A
+	sgt.b		A
+	sf.b		A
+	sls.b		A
+	scs.b		A
+	slo.b		A
+	seq.b		A
+	svs.b		A
+	smi.b		A
+	slt.b		A
+	sle.b		A
+
+stop
+	stop		&I
+
+subtract
+	sub.bwl	&I,A
+	sub.bwl	%DR,A
+	sub.bwl	A,%DR
+
+subtract with extend
+	subx.bwl	%DR,A
+	subx.bwl	-(%AR),-(%AR)
+
+swap halves
+	swap.w		%AR
+
+test and set
+	tas.b		A
+
+trap
+	trap	&I
+
+trap on overflow
+	trapv
+
+test (might optimize cmp with this)
+	tst.bwl	A
+
+unlink
+	unlk	%AR

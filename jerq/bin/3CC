@@ -1,0 +1,165 @@
+PATH=/usr/jerq/bin:/bin:/usr/bin
+E=0
+I="/usr/jerq/include"
+ISUF=".i"
+oldC=${oldC-3cc}
+G=0
+P=''
+OC=
+OO=a.out
+MUX='-DMUX -DMUXTERM'
+for A do
+	case $A in
+	+V)	I="/usr/jerq/include"
+		O="$O $A"
+		;;
+	+*)	O="$O $A"
+		;;
+	-E)	PON=1
+		;;
+	-F)	FON=1
+		;;
+	-Fc)	FON=1
+		O="$O +L"
+		;;
+	-C)	Y="$Y $A"
+		O="$O +C"
+		;;
+	-I*)	Y="$Y $A"
+		;;
+	-D*)	Y="$Y $A"
+		;;
+	-U*)	Y="$Y $A"
+		;;
+	-I*)	Y="$Y $A"
+		;;
+	-m)	MUX=''
+		;;
+	-p)	P='-p'
+		;;
+	-c)	CF=1
+		;;
+	-o)	OX=1
+		X="$X $A"
+		;;
+	-.c)	echo "bad suffix option: -.c"
+		;;
+	-.*)	SUF=`expr "$A" : '-\(.*\)'`
+		;;
+	*.c)	if	test -f $A
+		then
+			B=`basename $A .c`
+			if	test $PON
+			then
+				if test $SUF
+				then
+					echo "cpp $MUX $O < $A > $B$SUF:"
+					/lib/cpp -I$I $Y < $A >$B$SUF
+					E=$?
+				else
+					/lib/cpp $MUX -I$I $Y < $A
+					E=$?
+					case $E in
+					0)	;;
+					*)	break
+						;;
+					esac
+				fi
+			elif	test $FON
+			then
+				if test $SUF
+				then
+					echo "cfront $O < $A > $B$SUF:"
+					/lib/cpp $MUX -I$I $Y < $A | cfront +f$A $O > $B$SUF
+					E=$?
+				else	
+					/lib/cpp $MUX -I$I $Y < $A | cfront +f$A $O
+					E=$?
+					case $E in
+					0)	;;
+					*)	break
+						;;
+					esac
+				fi
+			else
+				echo "CC $O $A:"
+				/lib/cpp $MUX -C -I$I $Y < $A | cfront +f$A $O > $B$ISUF
+				E=$?
+				R=1
+				C="$C $B$ISUF"
+				case $E in
+				0)	X="$X $B$ISUF"
+					G=1
+					;;
+				1)	echo "1 error"
+					;;
+				*)	echo "$E errors"
+					;;
+				esac
+			fi
+		else
+			echo "$A not found"
+		fi
+		;;
+	*)	X="$X $A"
+		if test $OX
+		then
+			OO=$A
+			OX=""
+		else
+			G=1
+		fi
+		;;
+	esac
+done
+
+case $G in
+0)	;;
+*)							# generate code
+	if test $CF					# -c: skip link edit
+	then
+		echo "$oldC $P -c $X -lC" 1>&2
+		$oldC $P -c $X -lC
+		EE=$?
+	else
+		echo "$oldC $P $X -lC" 1>&2
+		$oldC $P -c $X >__err			# compile, no load
+		EE=$?
+		case $EE in
+		0)	#echo "ld $Z -lC -lc"
+			$oldC $P $X -lC > __err		# load
+			EE=$?
+			if test -s __err
+			then
+				cat __err
+			else				# find ctors/dtors
+				3nm $OO | munch $P >__ctdt.c
+				case $? in
+				1)	echo "compiling constructors code"
+					$oldC -c __ctdt.c >/dev/null
+					$oldC $P $X __ctdt.o -lC	# re-load
+					rm __ctdt.o
+					EE=$?
+					;;
+				esac
+				rm __ctdt.c
+			fi
+			;;
+		*)	#echo "ld2 $X -lC -lc"
+			$oldC $P $X -lC			# load
+			EE=$?
+		esac
+		rm __err
+	fi
+esac
+
+if	test $R
+then
+	rm $C
+fi
+
+case $E in
+0)	exit $EE
+	;;
+*)	exit $E
+esac

@@ -1,0 +1,29 @@
+There are three kinds of stab entries:
+
+	stabs	"symbol",code,c_type,expression
+
+Defines a symbol.  Code is an absolute expression
+known to sdb that tells what kind.
+c_type is the type in the what I hope is pcc's usual encoding.
+The last expression is the `value' of the symbol.
+It will be absolute for automatics and register and relocatable for statics
+and defined externs.
+Currently it must be defined in the current assembly,
+not external-undefined or common (only),
+but I think this can be changed if need be.
+
+	stabn	code,c_type,expression
+
+Same as
+
+	stabs	"", ...
+
+(There are entries which need no name)
+
+	stabd	code,line#
+
+Used for line-number, block markers, and the like.
+It is the same as
+
+	stabn	"",code,line,L%x
+L%x:

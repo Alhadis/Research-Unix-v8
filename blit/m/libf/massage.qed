@@ -1,0 +1,16 @@
+bar
+g;.;s/\{addmag\}/addmag%%/g
+g;.;s/\{submag\}/submag%%/g
+g;.;s/\{fladd\}/fladd%%/g
+g;.;s/\{flcmp\}/flcmp%%/g
+g;.;s/\{fldiv\}/fldiv%%/g
+g;.;s/\{flmul\}/flmul%%/g
+g;.;s/\{flneg\}/flneg%%/g
+g;.;s/\{flsub\}/flsub%%/g
+g;.;s/\{ftol\}/ftol%%/g
+g;.;s/\{itof\}/itof%%/g
+g;.;s/\{ltof\}/ltof%%/g
+g;.;s/\{ultof\}/ultof%%/g
+g;.;s/%%%%/%%/g
+w
+q

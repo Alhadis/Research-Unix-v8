@@ -1,0 +1,5 @@
+C	Assign this color to the object you select next.
+C	There is no visible effect on the DMD5620, unless you
+C	have set the markers. Then the color name appears next
+C	to the object. The assignment of color becomes meaningful
+C	when you display a PED file on a color device.

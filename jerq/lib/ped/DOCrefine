@@ -1,0 +1,15 @@
+GEN	Assorted commands for changing the form of objects.
+GEN	They are supposed to be used less frequently than those
+GEN	in the `reshape' menu.
+GEN	After you make a menu selection, you must point to an
+GEN	object for the selection to take effect.
+psize	Set point size for text. After you select a (text) object,
+psize	then you will be asked to type a number.
+psize	Not only the selected text will be displayed with
+psize	that point size, but also this point size will be
+psize	for all labels typed from now on.
+fix	The next time you point to an object that is drawn with
+fix	double or heavy lines, or with an interpolating spline
+fix	that display will become effective not only under the
+fix	`view host' mode, but also under the `local' mode. However
+fix	the original object description will be lost.

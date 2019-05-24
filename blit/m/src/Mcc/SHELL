@@ -1,0 +1,67 @@
+T=/tmp/$$ PATH=/bin:/usr/bin:/usr/m/bin L=/usr/m/lib O= OTWO= S=c N=yes OPT= ret=0 sdb=
+LC="$L/crt0.o" LIBS=" -b 4096 $L/libc.a" NAS=mas LD=mld CCOMP=$L/ccom
+ECHO=echo
+trap "rm -f $T.*; exit 1" 1 2 3 15
+trap 'rm -f $T.*; exit $ret' 0
+for A
+do	case $A in
+	*.c)	B=`basename $A .c`
+		$ECHO "$B.c"
+		case $S in
+		-S)	if /lib/cpp -Dmc68000 -Updp11 -I/usr/m/include $O $A $T.i &&
+			   $CCOMP $sdb <$T.i $OTWO >$B.s; then
+				: OK
+			else
+				ret=$?
+			fi ;;
+		*)	if /lib/cpp -Dmc68000 -Updp11 -I/usr/m/include $O $A $T.i &&
+			   $CCOMP $sdb <$T.i $OTWO >$T.s &&
+			    $NAS $T.s -o $B.o; then
+				ll="$ll $B.o"
+			else
+				N=no ret=$?
+			fi
+		esac ;;
+
+	-S)	N=no S=-S OTWO=-l ;;
+
+	-X)	CCOMP=/usr/scj/mcc/comp ;;
+
+	-M)	N=no S=-M ;;
+
+	-O)	OPT=yes ;;
+
+	-[IDU]*)	O="$O $A" ;;
+
+	-c)	N=no ;;
+
+	-)	ECHO=: ;;
+
+	*.s)	B=`basename $A .s`
+		case $S in
+
+		*)	if echo "$B.s:" &&
+			   $NAS $A -o $B.o; then
+				ll="$ll $B.o"
+			else
+				N=no ret=$?
+			fi
+		esac ;;
+
+	-g)	sdb=-g  ;;
+
+	-alone)
+		LC=$L/locore.o  LIBS="/usr/m/lib/io.o /usr/m/lib/fakeio.o $LIBS" ;;
+
+	*)	ll="$ll $A"
+	esac
+done
+case $N in
+	no)	: ;;
+	*)	case $OPT in
+		yes)	$LD -O $LC $ll $LIBS ;;
+
+		*)	$LD $LC $ll $LIBS
+		esac
+		ret=$?
+esac

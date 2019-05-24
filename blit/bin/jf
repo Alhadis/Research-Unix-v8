@@ -1,0 +1,2 @@
+#!/bin/sh
+jx /usr/blit/mbin/jf.m $*

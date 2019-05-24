@@ -1,0 +1,119 @@
+#	global data
+display
+defont
+topbits
+botbits
+#	allocation
+alloc
+allocinit
+balloc
+bfree
+free
+freeall
+gcalloc
+gcfree
+gcfreeall
+realalloc
+realballoc
+realgcalloc
+#	lines
+jmoveto
+jlineto
+jmove
+jline
+jsegment
+segment
+Jsetline
+Jclipline
+PtCurrent
+#	bitmap graphics
+addr
+bitblt
+texture
+point
+jtexture
+rectf
+jrectf
+screenswap
+menuhit
+#	arithmetic
+add
+sub
+inset
+mul
+div
+rsubp
+raddp
+eqpt
+eqrect
+rectclip
+rectXrect
+ptinrect
+#	layers
+lblt
+lrectf
+newlayer
+#lbitblt
+lsegment
+ltexture
+layerop
+dellayer
+upfront
+lpoint
+Lbox
+Lgrey
+lfront
+lback
+#	strings and fonts
+# string
+jstring
+strwidth
+jstrwidth
+#	I/O devices
+#		keyboard
+kbdchar
+kbdinit
+auto2
+#		acia (host rs232)
+aciainit
+rcvchar
+sendchar
+aciatrint
+sendbreak
+trenable
+trdisable
+#		mouse
+#cursinhibit
+#cursallow
+#cursinit
+#auto1
+#nap
+#cursswitch
+#		buttons
+binit
+auto4
+#		queues
+qinit
+qputc
+qgetc
+qclear
+own
+wait
+#		data
+cursor
+mouse
+curtabp
+usercurtab
+interrupt
+cursbm
+cbufs
+queues
+#	CRC calculation
+crc
+crc16t_32
+#	help for joff tracebacks
+Lblt
+Lrectf
+Lsegment
+Ltexture
+Rlayerop

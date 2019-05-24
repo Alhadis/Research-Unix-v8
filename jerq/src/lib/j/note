@@ -1,0 +1,2 @@
+source clipping for bitblt is subtle. you have to move the destination point!!
+sorry about the flap. The accompanying bitblt should be used INSTEAD of the other we sent.

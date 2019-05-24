@@ -1,0 +1,66 @@
+.TH BLITBLT 9 "(Blit)"
+.SH NAME
+blitblt \- produce hard copy of Blit screen image
+.SH SYNOPSIS
+.B blitblt
+.SH DESCRIPTION
+.I Blitblt
+is a program that copies part or all of a Blit screen into a file
+or down a pipe to a printer daemon.  The data are compressed (typically by
+a factor of 3 to 5) as they leave the
+Blit to save transmission time and file space.
+The program is menu driven off button 3 as follows:
+.TP 8m
+.B choose layer
+A bull's eye cursor appears.
+Clicking button 3 with the cursor inside a layer (cf.
+.I joff\c
+(9)) selects it for subsequent manipulations.
+.TP
+.B flip stipple
+The stipple pattern is inverted in the previously selected layer or rectangle.
+.TP
+.B reverse video
+The video is inverted in the selected layer or rectangle.
+.TP
+.B run/halt
+The
+terminal
+process in the selected layer is continued or halted.
+This menu entry changes with the layer's status.
+.TP
+.B sweep rectangle
+A rectangle cursor appears.  The rectangle swept out on button 3
+becomes the selected area for subsequent manipulations.
+.TP
+.B whole screen
+The entire Blit screen, including border areas, but excluding the
+.I blitblt
+layer itself, is selected.
+.TP
+.B write file
+The portion of the screen previously selected and prepared is written
+into a file.  The filename is typed in answer to a prompt appearing
+at the bottom of the
+.I blitblt
+layer.  Hitting return selects the (default) name in parenthesis.
+.TP
+.B pipe to bcan
+The selected portion of the screen is sent to the laser printer.
+.TP
+.B exit
+Must be confirmed by clicking button 3 in response to the skull cursor.
+.SH FILES
+/usr/jerq/mbin/bbterm.m \- terminal program
+.br
+/usr/bin/[4]bcan \- print command
+.SH BUGS
+Moving layers (e.g., clocks) result in broken images.  Use the
+.B halt
+function.
+.PP
+If a
+.B pipe
+request fails, the
+.I blitblt
+layer generally becomes unusable.

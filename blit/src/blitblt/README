@@ -1,0 +1,24 @@
+Canon printers live on panther and ikeya. To minimize Datakit traffic,
+files are sent over the network in compressed form, where they are
+(regrettably) expanded and handed over to the printer daemon.
+
+To use, run blitblt in a window to produce a compressed raster file
+(default file name is BLITBLT). Then type "bcan filename" to get the
+output. If the filename is BLITBLT, "bcan" by itself is sufficient.
+
+Files for blitblt:
+
+Binaries:
+
+blitblt		lives in /usr/blit/bin, host program.
+
+bbterm.m	lives in /usr/blit/mbin, blit side; 68ld'd by blitblt.
+
+bcan.out	lives in panther!/usr/bin, and ikeya!/usr/bin, does format
+		conversion and runs ipr to print the result.
+
+
+Shell scripts:
+
+bcan		lives in /usr/bin, runs bcan.out on panther.
+4bcan		linked to bcan, runs bcan.out on ikeya.

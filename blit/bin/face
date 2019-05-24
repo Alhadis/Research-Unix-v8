@@ -1,0 +1,7 @@
+if
+	test $# = 0
+then
+	echo "usage: $0 facelist"
+else
+	jx /usr/blit/mbin/face48.m $*
+fi

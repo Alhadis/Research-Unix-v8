@@ -1,0 +1,1286 @@
+.fp 1 PA
+.fp 2 PI
+.fp 3 PB
+.TL
+The Blit Programmer's Manual (TTY Edition)
+.AB
+The Blit is a bitmap terminal with a Motorola 68000 microprocessor,
+256K bytes of memory, an 800\(mu1024-bit display and a graphics mouse.
+It is fully programmable, and because the hardware provides no
+graphics support other than the dual-ported display memory,
+graphics operations must be done in software.
+This document describes the environment available to the Blit programmer,
+and includes a description of the graphics and process control capabilities
+of the Blit software.
+.AE
+.AU
+Rob Pike
+.SH
+Overview
+.PP
+The Blit is a bitmap display terminal with an MC68000 microprocessor.
+The computer has 256K bytes of random access memory, of which 100K
+bytes map directly to the 800\(mu1024-bit display.
+The computer also has 24K bytes of read-only memory, used
+to store the bootstrap loader, a simple terminal program, and much of
+the graphics library.
+Access to the machine is through a standard RS-232 serial port.
+Attached to the Blit are a keyboard and
+a mouse.
+.PP
+There are two compatible programming environments available.
+One is a stand-alone system, in which the program is the only
+one running in the terminal.
+The other is a small time-shared environment, in which several
+programs, multiplexed in time and screen-space, coexist.
+A compile-time flag indicates which environment the program will use.
+This document explains the environments and how to use the Blit.
+.SH
+Compiling
+.PP
+The C compiler (\f2mcc\fP), loader (\f2mld\fP) and assembler (\f2mas\fP)
+are in the directory /usr/jerq/bin.
+MC68000 C has 16-bit shorts and
+ints and 32-bit longs and addresses.
+The difference in size between an
+.Po int
+and an address implies that null pointers
+.I must
+explicitly be cast to pointers:
+.Po "foo((char *)0)"
+passes to
+.Po foo
+a 32-bit zero but
+.Po foo(0)
+passes a 16-bit zero.
+Also, pointer subtraction yields a long result, not an int.
+The 68000 is a Big-Endian:
+the address of a word is the address of its high byte, and the
+address of a longword is the address of its high word (the opposite
+of the VAX, for example).
+This is largely irrelevant except when dealing with the display at a low level.
+To compile a standard C program, say
+.DS
+mcc [\-j] source.c
+.DE
+The default behavior of
+.I mcc
+is to compile programs to run under the multiplexed world
+of
+\f2mpx\f1(1) .
+The flag
+.B \-j
+instead invokes the stand-alone world.
+.SH
+Running a program
+.PP
+The Blit has two ROM-resident programs: a boot loader
+and a simple terminal program.
+The terminal program is invoked whenever the Blit is powered on,
+or when the boot button (on the back of the keyboard enclosure) is depressed.
+When the terminal program receives a control-P character, octal 020, from
+Unix, it invokes the boot loader.
+The boot loader clears the screen, except for a small horizontal
+glitch in the upper left corner, and waits for the Unix machine
+to send a packetized representation of the program to run.
+The program is copied into Blit RAM, starting in low memory.
+The boot loader sets the display to point to low memory, so the
+incoming program can be viewed on the display during the boot process.
+To restart the Blit after some disaster, push the boot button.
+This will restart the terminal program and may hang up the connection to Unix,
+depending on the hardware switch settings
+\(em see your Blit Owner's Manual for more details.
+.PP
+The Unix program \f268ld\f1 talks to the Blit to download a
+Blit program, such as the terminal half of
+.I mpx.
+The Unix program \f2jx\f1
+downloads programs to run in an environment which
+includes a Standard I/O interpreter
+(obtained by #include <blitio.h>).
+See the manual
+\f2jx\f1(1) for more information.
+If the program does not use Standard I/O,
+or some other protocol is desired,
+the program should be loaded directly with
+.I 68ld,
+not
+.I jx.
+.PP
+The
+.I mpx
+world is an asynchronous, time-shared ``layer'' environment in which
+several programs may be sharing the processor and graphics screen.
+\f268ld\f1 (and hence \f2jx\f1) can download layer processes into \f2mpx\f1.
+See \f2mpx\f1(1) for information on running \f2mpx\f1; the rest of
+this manual assumes some understanding of its workings.
+When a layer is created, a terminal process
+runs in the layer, copying Unix characters to the screen and
+sending keyboard characters back to the standard input of
+the Unix process
+(typically the Shell or a text editor).
+If a Unix process (usually \f268ld\f1) sends the
+.I ioctl
+.Po JBOOT ,
+the boot loader is invoked for that layer, and a program compiled
+for the
+.I mpx
+environment
+may be loaded and run in the layer.
+If that process calls
+.Po exit() ,
+or if the
+.I ioctl
+.Po JTERM
+is sent,
+the layer will automatically restart the terminal program.
+.SH
+Data Types
+.PP
+The graphics functions use
+a number of data types, defined in
+.Po /usr/include/blit.h .
+This section explains their definitions and interpretation.
+.PP
+A
+.Po Word
+is a short (16-bit) integer: type
+.Po int .
+It is the quantum of memory used by the graphics software.
+.PP
+A
+.Po Point
+is two integers, specifying a point on the screen or in a bitmap:
+.DS
+.ft CW
+typedef struct{
+	short x;
+	short y;
+}Point;
+.ft
+.DE
+The coordinate system is oriented with
+.Po x
+positive to the right, ranging from
+.Po 0
+to
+.Po XMAX-1
+across the screen,
+and
+.Po y
+positive down, ranging from
+.Po 0
+to
+.Po YMAX-1
+from top to bottom.
+(The \-1's will be explained later).
+.PP
+A
+.Po Rectangle
+is specified by two Points:
+.DS
+.ft CW
+typedef struct{
+	Point origin;	/* Upper left */
+	Point corner;	/* Lower right */
+}Rectangle;
+.ft
+.DE
+.Po origin
+is the location of the upper left corner (minimum x and y) of the
+.Po Rectangle ,
+and
+.Po corner
+is the lower right (maximum x and y).
+By convention, the right (maximum x) and bottom (maximum y) edges
+are excluded from the rectangle, so abutting rectangles
+have no points in common.
+This is why there are \-1's in the ranges of x and y across the screen:
+the
+.Po Rectangle
+describing the screen is
+.Po {0,\ 0,\ XMAX,\ YMAX} .
+.PP
+A
+.Po Bitmap
+is a storage area for a rectangular image,
+defined by the enclosing rectangle, and the storage itself:
+.DS
+.ft CW
+typedef struct{
+	Word	*base;			/* pointer to start of data */
+	unsigned width;		/* width in Words of total data area */
+	Rectangle rect;		/* rectangle in data area, screen coords */
+}Bitmap;
+.ft
+.DE
+Bitmap storage is arranged just like an array, with x varying fastest.
+.Po base
+points to the word of storage containing the upper left corner of
+the
+.Po Bitmap .
+The following words contain the rest of the uppermost scan line of the
+image.
+The last word of one scan line is followed immediately in memory by the
+first word of the next scan line.
+.Po width
+is the number of
+.Po Word s
+of storage consumed by a scan line.
+.Po rect
+defines both the image's shape and coordinate system:
+it is the coordinate system inside the
+.Po Bitmap ,
+so
+.Po rect.origin
+is the coordinates of the upper left point in the bitmap image,
+and is not necessarily
+.Po "(0, 0)" .
+Graphics operations performed on a
+.Po Bitmap
+are clipped to
+.Po rect .
+.Po rect
+is often,
+although not necessarily,
+also the screen coordinates of the rectangle saved in the
+.Po Bitmap .
+The screen itself is described by a global
+.Po Bitmap
+called
+.Po display.
+.PP
+A
+.Po Texture
+is a 16\(mu16 rectangle of
+bits which defines a dot pattern.
+A
+.Po Texture
+is declared something like this:
+.DS
+.ft CW
+Texture grey={
+	0xAAAA, 0x5555, 0xAAAA, 0x5555,
+	0xAAAA, 0x5555, 0xAAAA, 0x5555,
+	0xAAAA, 0x5555, 0xAAAA, 0x5555,
+	0xAAAA, 0x5555, 0xAAAA, 0x5555,
+};
+.ft
+.DE
+The
+.Po Texture
+looks much like a 16\(mu16
+bitmap :
+the first Word is the first horizontal scan of the texture,
+the second is the next, and so on.
+The routines which use
+.Po Texture s
+fix the patterns to the absolute
+screen coordinates, so that, for example, if two overlapping screen
+rectangles are textured with the same
+.Po Texture ,
+ the dots
+in each rectangle will mesh properly to form a constant pattern.
+.PP
+Most graphics routines take a
+.Po Code
+argument to specify the logical function to use for drawing.
+The values and meanings of a
+.Po Code
+are:
+.DS
+.ft CW
+F_STORE		target =  source
+F_OR			target |= source
+F_XOR			target ^= source
+F_CLR			target &= ~source
+.ft
+.DE
+In other words, if a
+.Po Rectangle
+is copied to another place with
+.Po Code
+.Po F_OR ,
+the result will be the bitwise
+OR of the source
+.Po Rectangle
+and the contents of the target area.
+For line-drawing, points, etc.,
+.Po F_STORE
+should be avoided;
+.Po F_OR
+is the equivalent.
+.Po F_STORE
+is only meaningful for
+copying
+.Po Rectangle s
+and drawing textures.
+.SH
+Graphics
+.PP
+A Blit program must begin
+.DS
+.ft CW
+#include <blit.h>
+.ft
+.DE
+to define the data types discussed above,
+some manifest constants such as
+.Po XMAX
+and
+.Po YMAX ,
+and other useful oddments.
+Programs to be run by
+.I jx
+should also include
+.Po <blitio.h> ,
+after
+.Po <blit.h>
+\(em see \f2jx\f1(1).
+.PP
+Because a program may be running stand-alone, and thereby using the whole
+screen, or running under
+.I mpx ,
+confined to a rectangular portion of the screen,
+there are two coordinate systems: screen and layer coordinates.
+Screen coordinates refer to the actual pixels of the screen:
+.Po (0,\ 0)
+is the upper left corner, and
+.Po (XMAX-1,\ YMAX-1)
+is the lower right corner of the screen.
+Layer coordinates refer to the rectangular portion of the screen
+actually used by the program,
+and are scaled so that
+.Po (0,\ 0)
+is the upper left corner, and
+.Po (XMAX-1,\ YMAX-1)
+is the lower right corner
+.I "only of the screen area available to the program.
+(This portion of the screen is called the program's layer.)
+Layer coordinates are therefore scaled, and
+adjacent locations in layer coordinates do not necessarily refer
+to separate screen pixels.
+.PP
+Several global structures describe the screen portion available to the program.
+.Po display
+is a
+.Po Bitmap
+that defines the layer.
+As in all
+.Po Bitmap s,
+the coordinate system of
+.Po display.rect
+is screen coordinates.
+Unfortunately, for technical reasons,
+the rectangle defined by
+.Po display.rect
+includes the border surrounding the layer in
+.I mpx ,
+so the global
+.Po Rectangle
+.Po Drect
+is available:
+it defines the screen area
+.I inside
+the border, again in screen coordinates.
+The
+.Po Rectangle
+.Po Jrect
+is always defined to be
+.Po {0,\ 0,\ XMAX,\ YMAX} ,
+even under \f2mpx\f1,
+and therefore describes the screen area in layer coordinates.
+.PP
+Most of the graphics routines take their arguments in screen coordinates,
+and require a target
+.Po Bitmap
+to be explicitly passed (by reference, never by value),
+but those routines whose names begin with a
+.Po `j' \u\(dg\d
+.FS
+\u\(dg\dThe origin of this character is lost to history.
+.FE
+take layer coordinates, and operate on the
+.Po display
+.Po Bitmap .
+Many programs
+\(em ``asteroids'' is the canonical example \(em
+always want to have graphical operations scaled to fit the layer,
+so that the layer appears to the program just like a full screen.
+Such programs need therefore only use the
+.Po `j'
+routines.
+These routines also have the convenience that they remember a current point
+\(em much like dot in
+.I ed
+\(em and so make it simple to draw a curve, for example,
+by a set of line segments.
+The appendix describes how these routines interact with the current point.
+Programs dealing largely with text or off-screen bitmaps must be
+more careful with how objects appear in the layer,
+and must work at least sometimes in screen coordinates,
+avoiding the
+.Po `j'
+routines.
+In general, both layer and screen coordinates will be used,
+which can be confusing,
+but the careful programmer will be able to write a program that can
+run unchanged either stand-alone or under
+.I mpx .
+Except for the coordinate differences and internal details of implementation,
+the stand-alone and
+.I mpx
+environments are very similar
+(the differences are described in a later section of this manual),
+and all the routines in the appendix
+have the same specifications in either environment.
+.PP
+Here begins an introductory walking tour of Blit graphics.
+Every program must include
+.Po <blit.h>
+to define the basic graphics data types described above.
+.PP
+Here is a program to draw a grid with spacing defined by
+.Po XSPACING
+and
+.Po YSPACING :
+.DS
+.ft CW
+.so p1.c
+.ft 1
+.DE
+Since the program uses
+.Po jsegment
+to draw the lines,
+the total number of lines will be the same regardless of the layer's shape.
+The macro
+.Po Pt(x,\ y)
+passes the
+.Po Point
+.Po (x,\ y)
+to
+.Po jsegment ,
+in lieu of structure-valued constants in C.
+.Po Pt
+and its relatives
+.Po Rect
+(\c
+.Po Rectangle
+from four coordinates) and
+.Po Rpt
+(\c
+.Po Rectangle
+from two
+.Po Points )
+only work in parameter lists.
+.PP
+The grid program draws the lines in
+.Po F_OR
+mode, which simply turns on all the bits in the line.
+The grid may be erased again by executing the same code in
+.Po F_CLR
+mode, which turns all the bits off.
+It may also be erased by simply clearing the screen, either
+.DS
+.ft CW
+jrectf(Jrect, F_CLR);
+.ft 1
+.DE
+or
+.DS
+.ft CW
+rectf(&display, Drect, F_CLR);
+.ft 1
+.DE
+For most graphical operations,
+.Po F_OR
+and
+.Po F_CLR
+are inverses, since one is the opposite of the other.
+It is
+.I not
+true, however, that following a
+.Po F_OR
+operation with a
+.Po F_CLR
+operation will undo the first,
+since the
+.Po F_CLR
+will clear all bits, even those that were set before the
+.Po F_OR .
+This brings us to the marvelously versatile
+.Po F_XOR
+mode.
+.PP
+.Po F_XOR
+.I inverts
+each target bit, turning ones to zeros and zeros to ones
+(all the modes have slightly different meanings in
+.Po bitblt
+and
+.Po texture ;
+we shall return to these later).
+.Po F_XOR
+has several useful properties:
+.in +3
+.br
+\(bu
+.Po F_XOR
+is its own true inverse:
+two adjacent identical
+.Po F_XOR
+operations cancel exactly, restoring the screen to its previous form.
+.br
+\(bu
+.Po F_XOR
+is commutative:
+.Po F_XOR
+operations may be executed in any order to produce the same final result.
+Combined with its inverse property,
+this means that a
+.Po F_XOR
+operation may be cancelled at any later time by another
+.Po F_XOR
+operation.
+.br
+\(bu
+Because
+.Po F_XOR
+is its own inverse, the same code can be used to draw or undraw
+a picture.
+This is a common action:
+the mouse cursor, for example, is updated by calling the same routine,
+using
+.Po F_XOR
+mode internally, to undraw the old position and draw the new one
+(the order is irrelevant!).
+.br
+\(bu
+Because the mouse cursor is tracked in
+.Po F_XOR
+mode,
+any operations done in
+.Po F_XOR
+mode will never interfere with the cursor,
+but the graphics routines must interlock with the cursor
+to avoid leaving ``mouse tracks'' when drawing with other function codes.
+.in
+.br
+Of course, these properties break down if
+.Po F_XOR
+operations are mixed with other modes.
+However,
+it is not only possible,
+but common and even natural,
+to do
+.I all
+graphics in
+.Po F_XOR
+mode.
+Again, ``asteroids'' is the canonical example.
+.Po F_XOR
+can also be used to simulate the video bit:
+inverting the screen or some portion of it with a call such as
+.DS
+.ft CW
+jrectf(Jrect, F_XOR);
+.ft 1
+.DE
+changes the sense of all subsequent
+and
+.I previous
+.Po F_XOR
+operations.
+.PP
+The
+.Po point ,
+.Po segment ,
+and
+.Po rectf
+routines define a set of points upon which to peform some action
+defined by the
+.Po Code
+argument, such as
+.Po F_XOR .
+There is another, more fundamental, way to define these routines
+which both explains the names of the
+.Po Code s
+and introduces
+.I the
+bitmap operator,
+.Po bitblt.
+The graphical operators may be defined as constructing an
+imaginary off-screen
+bitmap, commensurate with the screen,
+set to zeros everywhere except the points corresponding to
+the points on the screen where the operation is to be performed:
+the points of the approximating line of
+.Po segment ,
+the single point of
+.Po point ,
+or the points in the rectangle of
+.Po rectf .
+The routines then simply, bit for bit,
+perform a logical function from the imaginary bitmap into the screen
+(or whatever target bitmap has been specified):
+.DS
+.ft CW
+F_OR:		screen location |= imaginary location
+F_CLR:		screen location &= ~imaginary location
+F_XOR:		screen location ^= imaginary location
+.ft 1
+.DE
+There is an obvious fourth code to add (and several less obvious ones):
+.DS
+.ft CW
+F_STORE:	screen location = imaginary location
+.ft 1
+.DE
+The operator to perform this function is
+.Po bitblt ,
+although (for efficiency rather than practicality)
+some of the basic graphics functions
+(such as the line- and point-drawing routines)
+are written without it.
+.Po bitblt
+is actually more general, doing the bit for bit function from
+an arbitrary
+.Po Rectangle
+in an arbitrary
+.Po Bitmap
+to an arbitrary
+.Po Rectangle/Bitmap
+destination.
+It is declared like this:
+.DS
+.ft CW
+bitblt(sourcemap, sourcerect, destmap, destpt, code)
+	Bitmap *sourcemap, *destmap;
+	Rectangle sourcerect;
+	Point destpt;
+	Code code;
+.ft 1
+.DE
+.Po sourcerect
+and
+.Po destpt
+are in the coordinate systems of their particular
+.Po Bitmap s.
+.Po destpt
+specifies the
+.Po Point
+corresponding to the
+.Po origin
+of
+.Po sourcerect
+in the destination
+.Po Bitmap ;
+the
+.Po corner
+is derived from the destination
+.Po Rectangle
+being congruent to the source.
+The source and destination
+.Po Bitmap s
+may be the same,
+and the source and destination
+.Po Rectangle s
+may even overlap;
+.Po bitblt
+always does the assignments in the correct order.
+Here, for example, is how to scroll the screen up 16 pixels:
+.DS
+.ft CW
+bitblt(&display, Rect(0, 16, XMAX, YMAX),
+	&display, Pt(0, 0), F_STORE);
+/* now clear the bottom line */
+rectf(&display, Rect(0, YMAX-16, XMAX, YMAX), F_CLR);
+.ft 1
+.DE
+For simplicity, this code assumes it is running stand-alone,
+and can scribble freely on the screen.
+.PP
+Note that there is no
+.Po jbitblt
+\(em
+.Po bitblt
+operates directly on
+.Po Bitmap s,
+which are specified in screen coordinates.
+.PP
+A common use of
+.Po bitblt
+is to copy a prepared picture
+\(em such as a character \(em
+from off-screen onto the display.
+The following complete program simulates a bouncing ball
+by building an off-screen bitmap and
+using
+.Po bitblt
+to make it bounce:
+.DS
+.ft CW
+.so p2.c
+.ft 1
+.DE
+.Po disc ,
+.Po balloc ,
+.Po sleep
+and
+the arithmetic routines are explained in the appendix.
+Note also the use of
+.Po F_XOR
+in
+.Po drawball .
+.PP
+Although a bitmap may only have pixel values zero and one,
+and is therefore incapable of grey-scale or color drawings
+(except for green),
+by turning on pixels in a regular pattern the programmer may
+draw textures, which may be used for many of the same
+functions, graphical and mnemonic, as colors on color displays.
+Textures are specified, as described above, by a 16\(mu16
+array of bits.
+The simplest way to visualize how textures are implemented is to
+recall the imaginary off-screen bitmap described earlier,
+and imagine the array replicated to cover the entire area of the bitmap.
+Then, rectangles may be textured by
+copying the corresponding bits,
+again according to a
+.Po Code
+argument,
+from the imaginary bitmap to the target bitmap or screen.
+By this definition,
+images may be textured identically by dividing them up into
+any set of rectangles:
+because the texture is bound to the coordinates of the imaginary bitmap,
+the texture will be replicated smoothly across the image.
+For example, the display area may be textured by:
+.DS
+.ft CW
+texture(&display, Drect, grey, F_STORE);
+.ft 1
+.DE
+but the following, much slower, code will produce the
+.I same
+result:
+.DS
+.ft CW
+register i, j;
+for(i=Drect.origin.x; i<Drect.corner.x; i++)
+	for(j=Drect.origin.y; j<Drect.corner.y; j++)
+		texture(&display, Rect(i, j, i+1, j+1),
+			grey, F_STORE);
+.ft 1
+.DE
+.PP
+.SH
+Resources and I/O
+.PP
+I/O from a Blit program is totally different from I/O in a Unix program.
+The differences are inherent, essential and invaluable, and all stem
+from the Blit being a
+.I terminal
+rather than a CPU running a Unix process.
+.PP
+A program running in a Blit does
+.I not
+possess a standard input or standard output,
+.I jx
+notwithstanding.
+Put yourself in a Blit's shoes:
+connected to a host Unix machine by a single RS-232 connection,
+your only link to the outside world is a bidirectional, low-speed link.
+As a terminal, your usual job is twofold:
+first, send characters typed on the keyboard down the line to
+the standard input of a Unix process, and second,
+receive characters sent from the standard output of a Unix process
+and draw them on the screen.
+The ideas of standard input and output are meaningless in your
+isolated world.
+Moreover, the methods of Unix I/O are of no help.
+Characters requiring your attention may appear at any time from either
+the host or the keyboard, so you must be prepared to deal with two
+I/O devices at any time.  A Unix read is useless for this, because
+there is no way to read from two file descriptors at once, and if you
+read from, say, the keyboard, you may miss characters sent from the host.
+Instead of the Unix model, Blit I/O requests never block
+(wait for a resource to become available).
+Instead, they return an error status if the request cannot be serviced.
+A Blit program may, however, explicitly ask to wait for a resource
+to become available.
+.PP
+A Blit program has access to four I/O resources:
+.DS
+.ta \w'RCVRCVRCV\ \ 'u
+\f(CWRCV\f1	characters received from Unix
+\f(CWSEND\f1	characters sent to Unix
+\f(CWKBD\f1	characters typed on the keyboard
+\f(CWMOUSE\f1	the graphics input device
+.ta 0.5i +0.5i +0.5i +0.5i +0.5i +0.5i
+.DE
+A program wishing to use one or more of these devices indicates
+its intention by a
+.Po request()
+call.  Multiple resources may be allocated by OR'ing the resource
+names together; for example
+.DS
+.ft CW
+request(KBD|MOUSE);
+.ft P
+.DE
+allocates the keyboard and mouse to the program.
+A
+.Po request()
+call overrides all previous calls \(em
+all desired resources must be
+.Po request ed
+in one call.
+The semantics of this allocation are described below.
+.PP
+Characters sent to and from Unix are kept in two queues, the
+.Po RCV
+queue for characters coming from Unix to the program, and the
+.Po SEND
+queue for characters going to Unix.
+Characters read from the
+.Po RCV
+queue were typically written on the standard output
+or standard error of the
+.I Unix
+process associated with the layer (imagine that the stand-alone world
+is one full-screen layer).
+Characters put on the
+.Po SEND
+queue are sent to Unix and may be read on the standard input of
+the associated Unix process.
+Note that the terms ``standard input,'' ``standard output,'' and
+``standard error'' apply to the
+.I Unix
+process, not the process running in the Blit.
+The
+.Po RCV
+and
+.Po SEND
+queues in the Blit are similar to standard input and output, but
+.Po RCV
+characters come from Unix standard
+.I output ,
+and
+.Po SEND
+characters go to Unix standard
+.I input .
+In other words, the Blit and Unix processes have I/O cross-coupled,
+much like two Unix processes connected by a pair of pipes.
+.PP
+The routine
+.Po rcvchar()
+reads the next character from the process's
+.Po RCV
+queue, or
+.Po -1
+if the queue is empty.
+.Po sendchar(c)
+similarly puts the character
+.Po c
+on the
+.Po SEND
+queue, and thereby transmits it to Unix.
+.Po sendnchars(n,\ p)
+similarly transmits the
+.Po n
+characters pointed to by
+.Po p .
+.PP
+If the keyboard has been
+.Po request ed,
+.Po kbdchar()
+will return the next character typed to the process on the keyboard,
+or
+.Po -1
+if no characters are outstanding.
+If the keyboard has not been
+.Po request ed,
+typed characters are sent automatically, through
+the teletype input routine, to the standard input
+of the Unix process.
+In other words, if the keyboard is not
+.Po request ed,
+it is coupled automatically to the standard input of the Unix process.
+(In the stand-alone world, the characters are thrown away if the keyboard
+is not
+.Po request ed.)
+The standard
+.I mpx
+terminal program,
+for example,
+does not request the keyboard \(em
+typed characters are simply sent to the Unix process.
+But many programs \(em
+for example
+.I jim,
+the Blit text editor \(em
+wish control over the keyboard.
+As a trivial example, the ball program shown earlier can be made to
+exit when a character is typed by adding
+.DS
+.ft CW
+	request(KBD);
+.ft 1
+.DE
+as the first statement in
+.Po main() ,
+and replacing the
+.Po for(;;)
+by
+.DS
+.ft CW
+	while(kbdchar() == -1)
+.ft 1
+.DE
+.PP
+The semantics of mouse allocation are a little more complicated,
+and relate to the user interface of
+.I mpx.
+.I mpx
+has a current layer \(em
+at most one layer which currently owns the keyboard and mouse.
+Clicking button 1 in a layer, or using the ``Current'' menu button,
+hands both the keyboard and mouse to the process in the indicated layer.
+Pressing a mouse button in the current layer passes the button hit
+to the layer if it has
+.Po request ed
+the mouse; otherwise, it is interpreted by the system.
+For example,
+.Po button2()
+is true only when the process is in the
+current layer
+.I and
+the mouse cursor points to a visible portion of the layer
+.I and
+the process has
+.Po request ed
+the mouse
+.I and
+button 2 is depressed.
+The next section explains the interface to the mouse in more detail.
+.PP
+Two primitives,
+.Po own()
+and
+.Po wait() ,
+inform a process about its resources.
+.Po own()
+returns a bit vector of the requested resource status:
+.DS
+.ft CW
+	own()&RCV		\f1the \f(CWRCV\f1 queue has a character\f(CW
+	own()&SEND		\f1always true\f(CW
+	own()&KBD		\f1the \f(CWKBD\f1 queue has a character\f(CW
+	own()&MOUSE		mouse \f1structure is up to date\f(CW
+.ft 1
+.DE
+Note that ownership of the mouse is independent of the status of the buttons;
+basically it implies that the system will pass to the current process
+mouse coordinates and button status as they change.
+(See the next section for more information about the
+.Po mouse
+structure.)\ 
+A process never owns a resource it has not
+.Po request ed.
+(\f(CWSEND\f1 is always implicitly
+.Po request ed.)\ 
+A typical use of
+.Po own()
+is to see which of several I/O devices need service, like this:
+.DS
+.ft CW
+main(){
+	int got;
+	request(KBD|RCV);
+	for(;;){
+		got=own();
+		if(got&KBD)
+			kbdservice();
+		if(got&RCV)
+			rcvservice();
+		...
+	}
+}
+.ft 1
+.DE
+The Blit operating system does not do pre-emptive scheduling,
+so processes must explicitly give up the CPU to enable other processes to run.
+Therefore, the above program could lock out all other processes running.
+.Po wait()
+resolves this difficulty by suspending a process until a resource becomes
+available.
+.Po wait()
+takes an argument resource bit-vector and waits until at least one
+of the resources becomes available,
+and returns which of the requested resources is available.
+Thus, the above example should probably be written:
+.DS
+.ft CW
+main(){
+	int got;
+	request(KBD|RCV);
+	for(;;){
+		got=wait(KBD|RCV);
+		if(got&KBD)
+			kbdservice();
+		if(got&RCV)
+			rcvservice();
+		...
+	}
+}
+.ft 1
+.DE
+Some programs, such as game programs, wish to run continuously.
+To enable other processes to run, a fake resource,
+.Po CPU ,
+which is always implicitly
+.Po request ed,
+may be waited for.
+.Po wait(CPU)
+enables all other processes which are ready to run, and returns
+immediately after they have had a chance to run,
+regardless of the state of other resources.
+The inner loop of a game program might therefore look like:
+.DS
+.ft CW
+for(;;){
+	wait(CPU);
+	updatedisplay();
+}
+.ft 1
+.DE
+.PP
+.SH
+The Mouse
+.PP
+The software does automatic cursor tracking and
+keeps relevant variables about the mouse in a global structure
+called
+.Po mouse .
+For example, the following is a complete C program to draw
+a curve sketched by the mouse whenever
+button 1 is depressed:
+.DS
+.ft CW
+.so p3.c
+.ft 1
+.DE
+.Po mouse.xy
+is the mouse position in screen coordinates,
+.Po mouse.jxy
+is in layer coordinates.
+The macros \f(CWbutton1()\f1 and its obvious analogues
+are true when the corresponding buttons are depressed.
+The macro \f(CWbutton12()\f1 is true when either of button one or two
+are depressed, and similarly for \f(CWbutton23()\f1 and \f(CWbutton123()\f1.
+\f(CWsleep()\f1 suspends the
+process for some number (the argument) of `ticks' of the video refresh.
+A tick is approximately 1/60 sec.
+The display is interlaced, so sleeping for two ticks guarantees that
+the line is on the screen before proceeding.
+.SH
+Characters and Fonts
+.PP
+The Blit has access to multiple character sets or
+.I fonts.
+A font is internally a single
+.Po Bitmap ,
+with some associated information.
+The
+.Po Bitmap
+contains the bit pattern for each character,
+arrayed adjacently into a long horizontal stripe,
+as on the wall in first grade, like this:
+.DS
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+.DE
+(It is not necessary that the characters appear in ASCII order.)\ 
+The characters in the
+.Po Bitmap
+are all aligned on the same baseline.
+The
+.Po Font
+structure is defined in
+.Po <font.h> :
+.DS
+.ft CW
+typedef struct{
+	short n;		/* ascii value of last char in font */
+	char height;		/* height of bitmap */
+	char ascent;		/* top of bitmap to baseline */
+	long unused;		/* for a rainy day */
+	Bitmap *bits;		/* where characters are stored */
+	Fontchar info[0..n+1];	/* n+2 character descriptors */
+}Font;
+.ft 1
+.DE
+The extra
+.Po Fontchar
+is present to indicate the right edge of the
+\f(CWn\f1'th character.
+A single
+.Po Fontchar
+structure describes each character:
+.DS
+.ft CW
+typedef struct{
+	short x;		/* left edge of bits in bitmap */
+	char top;		/* y of first non-zero scan-line */
+	char bottom;		/* y of last non-zero scan-line */
+	char left;		/* x offset of baseline (for kerning) */
+	char width;		/* width of baseline */
+}Fontchar;
+.ft 1
+.DE
+To draw a character on the screen requires copying the appropriate
+rectangle from the font bitmap to the screen, at the correct location.
+For
+.Po F_OR ,
+.Po F_XOR
+and
+.Po F_CLR
+modes, the minimum enclosing rectangle of the character is all that need
+be copied.
+For
+.Po F_STORE
+mode, the entire target rectangle,
+the size of a complete character,
+must be copied from the
+.Po Font
+.Po Bitmap
+to the destination
+.Po Bitmap .
+The routine to draw a character
+.Po c
+from
+.Po Font
+.Po fp
+in a
+.Po Bitmap
+.Po db
+at
+.Po p
+with code
+.Po f
+looks like this:
+.DS
+.ft CW
+#include <font.h>
+drawchar(c, fp, db, p, f)
+	char c;
+	Font *fp;
+	Bitmap *db;
+	Point p;
+	Code f;
+{
+	Rectangle r;
+	Fontchar *i=fp->info+c;
+
+	if(f == F_STORE){
+		r.origin.y = 0;
+		r.corner.y = fp->height;
+	}else{
+		r.origin.y = i->top;
+		r.corner.y = i->bottom;
+	}
+	r.origin.x = i->x;
+	r.corner.x = (i+1)->x;
+	bitblt(fp->bits, r, db, Pt(p.x+i->left, p.y+r.origin.y), f);
+}  	
+.ft 1
+.DE
+Note that the coordinate system places the
+origin of the tallest character at the specified point,
+not at the baseline.  This behavior is consistent with
+the coordinate system of
+.Po Rectangle s,
+but requires some programming if characters from several fonts are to be placed
+on the same baseline.
+.Po <font.h>
+must be included in any program that uses the
+.Po Font
+or
+.Po Fontchar
+structures.
+.PP
+Several service routines provide simple access to fonts stored on the
+host file system.
+These routines \(em
+.Po infont ,
+.Po outfont ,
+and
+.Po getfont \(em
+are described in the appendix.
+.SH
+The Stand-alone World
+.PP
+Although the stand-alone and multiplexed environments are very similar,
+there are a few differences, and more will develop in time.
+This is because the multiplexed environment is more comfortable to work in,
+and few programs are written any more for the bare machine.
+.PP
+The most important differences between the environments are:
+.sp
+.in +5
+\(bu The stand-alone world has no trap catching or recovery.
+Under \f2mpx\f1, errant processes are safely shut down
+and their errors reported to the user.  Also, the debugger
+.I joff
+only runs under \f2mpx\f1.
+.sp
+\(bu The multiplexed environment provides parallel, transparent, error-corrected
+connections between the host and terminal processes.
+The stand-alone environment has no inherent protocol, and programs must,
+through necessity, provide one.
+.sp
+\(bu Only the multiplexed environment interlocks the cursor and display operations.
+Graphics operations in the stand-alone
+world must inhibit the cursor to avoid interfering with the mouse.
+.in
+.SH
+Caveat Blittor
+.PP
+The Blit is a terminal, not a personal computer.
+A significant program to use the terminal must have some support from
+the host Unix machine, most likely to provide access to system
+resources such as files.
+In general,
+a Blit program requires two separate programs to run, and a
+protocol for their communication.
+This division has advantages:
+it allows a clean division of work between two processors,
+which can lead to a clean, simple design;
+and it results in a smaller program running in the terminal,
+which down-loads faster and consumes less precious memory.
+But the division must be made, and it can be very difficult
+to choose a good place to divide.
+The low bandwidth connection imposes the further constraint
+that communications across the division should be tightly encoded.
+The
+.I jx
+system provides an easy solution, by
+.I simulating
+standard I/O functions in the terminal program.
+But that is not always a sensible approach.
+A text editor, for example, is untenable under
+.I jx ,
+because a context search requires looking at the entire file,
+which must therefore be read by the program
+down the low-speed RS-232 line.
+A Unix program can do file I/O much quicker,
+so a better approach for an editor is to write a Unix
+program to do file I/O and associated functions,
+and let the Blit program manage the display and user interactions.
+.PP
+Don't be lulled by the simplicity of using
+.I jx .
+Designing a two-process protocol is a fair fraction of the work
+required to write a Blit program, but the effort is repaid
+by a smaller, more efficient system.
+.bp

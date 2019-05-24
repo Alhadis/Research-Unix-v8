@@ -1,0 +1,66 @@
+/*	MC68000 	*/
+
+# define ARGINIT 64
+# define AUTOINIT 0
+# define SZCHAR 8
+# define SZINT 16
+# define SZLONG 32
+# define SZDOUBLE 32
+# define SZPOINT 32
+# define ALCHAR 8
+# define ALINT 16
+# define ALLONG 16
+# define ALDOUBLE 16
+# define ALPOINT 16
+# define ALSTRUCT 16
+# define ALSTACK 16
+# define ALINIT 16
+
+	/* short => int */
+# define NOSHORT
+	/* structures returned in static areas */
+# define STATSRET
+	/* the name of the (shared) return area */
+# define RNODNAME "__StRet"
+	/* define the shared structure return area */
+# define SRETNAME(sz) printf( "\tcomm\t%s,%d\n", RNODNAME, sz/SZCHAR );
+	/* only one floating point type */
+# define ONEFLOAT
+	/* in some ways, pointers are like longs */
+# define PTRTYPE LONG
+	/* don't fool around with registers; there are different kinds */
+# define MEMONLY
+	/* with PTR+INT, put the PTR on the right */
+# define PTRRIGHT
+	/* except that, with PTR+CONST, leave the PTR on the left */
+# define CONSRIGHT
+	/* charged cost for load, store */
+# define CLOAD(x) 4
+# define CSTORE(x) 4
+
+	/* use common declarations for all unitialized declarations */
+# define ALLCOMM
+
+	/* format for compiler-generated labels */
+# define LABFMT "L%%%d"
+	/* automatics run backward (downwards) on the stack */
+# define BACKAUTO
+	/* so do temps */
+# define BACKTEMP
+	/* characters are signed */
+# define CHSIGN
+	/* sdb is enabled */
+# define SDB
+	/* fields can be long */
+# define LONGFIELDS
+
+	/* my own initialization routine, for speed */
+# define MYINIT(a,b) myinit(a,b)
+
+	/* number of scratch registers */
+# define NRGS 2
+
+# define SETREGS(x) { extern int rsmask; rsmask |= x; }
+
+	/* SDB output register number */
+# define OUTREGNO(p) (ISPTR(p->stype)?p->offset+8:p->offset)

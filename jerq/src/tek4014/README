@@ -1,0 +1,48 @@
+To get a 4014 emulator going, Say "make", and "make install".  
+
+jek.c is the main file.
+
+tiny.c, bigapl.c, and tinyapl.c contain the fonts as C declarations, and can
+be used by an program which is willing to say "extern Font xxxx", where xxxx
+is one of tinyfont, bigaplfont, and tinyaplfont.
+
+All the remaining files (the ones with 'd' somewhere in the title) are versions
+of the line drawing code for executing lines with texturing.  Only dsegment is
+included, and the arguments are just like segment, with an extra Word argument
+at the end.  This all works under layers/mpx.
+
+
+Caveats:
+	You must be running the December '82 (or later) release of mpx, since
+tek uses the alarm() mechanism, and assumes that the cursor dissappears during
+F_CLR mode operations.
+	Intensity settings don't dim the points, but, instead, roll a 1d100 and
+plot the point if the die rolls a number less than the intensity.  This is
+probably undesirable in most cases, but comes as close as I can figure out to
+mimicing a 4014.
+	Yes, the little characters sure are tiny.  
+	Write-through mode lines are done in XOR mode, and thus may not be
+perfect.  The cross-hairs are done this way, too.
+	Oh, yes: the no scroll key is used as an alternate method of paging
+the screen.  I.e., an alternate to the button 2 menu item.  
+	The timing on the XMIT light sometimes will cause the rightmost LED
+to glow.  Stupid keyboard design and overutilization of the clock are at fault.
+	Our 4014's have the straps set the way the program works.  If you really
+want to implement page full conditions, or CR implies LF, or GIN mode sends
+EOT, or whatever, go for it!  
+
+
+NOTES ON THE SECOND RELEASE:
+
+Point plot mode now uses a simple dithering algorithm which produces very good
+results on the limited set of examples I have available to me.  If you prefer
+the old style, that is still available; at 100% intensity, both methods coincide
+if you set focused mode.
+
+In jek.c, there is a line of code which has been commented out which may make
+tek4014 work under pure 4.1bsd -- if you get prompt symbols wandering diagonally
+down the page, you may want to try this.  Search for "/* THIS MAY BE OF USE".
+
+The other changes are mostly just reorganizing, and minor bug fixes.  I expect
+this release to be the final one prior to the next DMD tape.
+

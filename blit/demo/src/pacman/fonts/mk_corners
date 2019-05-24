@@ -1,0 +1,6 @@
+:
+# Make the corner font pieces - master is font24_d
+#
+awk '{printf("%-24s\n",$0)}' font24_d | rev > font24_c
+awk '{printf("%-24s\n",$0)}' font24_d | rl  > font24_e
+awk '{printf("%-24s\n",$0)}' font24_d | rl | rev > font24_f

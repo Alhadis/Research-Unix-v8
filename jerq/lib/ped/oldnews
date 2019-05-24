@@ -1,0 +1,10 @@
+December 20
+Bug fixing. Also circles are converted into splines
+before being filled. Such "circles" can be dashed, or
+filled correctly with any texture
+December 16
+shaded objects can have  a border now. All you need to click
+button1 twice when you select the color.
+December 8
+ped displays in F_STORE mode when you do "view host"
+(so you see what tped prints)

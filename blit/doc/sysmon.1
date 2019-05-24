@@ -1,0 +1,50 @@
+.TH SYSMON 1 12/16/83
+.SH NAME
+sysmon \- display system statistics on a Blit
+.SH SYNOPSIS
+.B sysmon
+[
+.BR \- n
+]
+.br
+.SH DESCRIPTION
+.I Sysmon
+monitors the use of a UNIX system.
+It displays in a Blit window 4 items: the time of day, the length of the run
+queue, CPU use statistics, and mail announcements.
+.PP
+.I "Time of day"
+is displayed in 24 hour mode.  It is updated once a minute.
+.PP
+.I "Run queue length"
+is displayed as the average length of the run queue and as the change in
+length since the last display.  It is updated once a minute.
+.PP
+.I "CPU statistics"
+are represented as a multi-shaded bar.
+The size of each shaded segment indicates a percentage of the CPU.
+The segments (from left to right in the bar) represent:
+.TP 12n
+.B black
+user time
+.TP 12n
+.B "lightest gray"
+user time for niced programs
+.TP 12n
+.B "dark grey"
+system time
+.TP 12n
+.B "light grey"
+queuing (I/O) time
+.TP 12n
+.B white
+idle time
+.PP
+The bar graph is updated every 
+.I n
+(default 5) seconds.
+.PP
+.I "Mail arrival"
+is announced by displaying the name of the sender in the window and
+by beeping.
+The user's mail file is scanned once every 15 seconds.

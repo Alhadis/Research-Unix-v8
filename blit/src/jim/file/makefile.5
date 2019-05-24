@@ -1,0 +1,36 @@
+CC=Ncc
+CFILES=r.c pattern.c file.c string.c msgs.c index.c
+FILES=r.o pattern.o file.o string.o msgs.o index.o
+CFLAGS=
+
+xr:	$(FILES)
+	$(CC) $(CFLAGS) -o xr $(FILES)
+
+ftest:	ftest.o string.o file.o
+	$(CC) -o ftest ftest.o string.o file.o
+
+xlr:	$(FILES)
+	lcomp $(CFILES) && cp a.out xlr && rm a.out
+
+$(FILES):	file.h
+
+r.o msgs.o:	msgs.h
+
+
+archive:
+	archive -a file.h msgs.h $(CFILES)
+
+lint:
+	lint -h -u -x $(CFILES)
+
+pp:
+	@pp -t"Unix Jim" -fMM -k file.h msgs.h $(CFILES) | dcan
+
+print:
+	@pr file.h msgs.h $(CFILES)
+
+install:	xr
+	cp xr /usr/jerq/bin/jim
+
+clean:
+	rm -f xr *.o

@@ -1,0 +1,6 @@
+ps -ut`basename $@` | awk '
+BEGIN			{ MyId = "'`getuid`'"; MeMissing = 1; Otherfound = 0 }
+$1!="USER" && $1!=MyId	{ Otherfound = 0 }
+$1==MyId		{ MeMissing = 0 }
+END			{ if( !MeMissing && !OtherFound ) exit(0); exit(1) }
+'

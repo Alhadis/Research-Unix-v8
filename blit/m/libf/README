@@ -1,0 +1,13 @@
+From wild!scj Mon Dec 13 00:29 EST 1982
+I gather you have got as much mail from ark as I.  I believe that the
+situation is as follows.  Andy's library will work when compiled on
+the vax and run on the 68000.  It will probably work when compiled
+on any machine.  Programs using Andy's library will probably work
+when compiled on the vax and run on the 68000.  My compiler, as
+on your tape, will not work if run on the 68000 itself or on
+the 3B.  Also, there are a couple of relatively obscure bugs in the
+floating-point conversions.
+
+I don't see anything wrong with distributing the compiler and library
+with these caviats; let the buyer beware about anything else.
+

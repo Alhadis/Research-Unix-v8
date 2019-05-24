@@ -1,0 +1,30 @@
+:
+# makes the fonts for the board
+#
+# relies on the fact the -DV2_0 defines V2_0 to 1
+#
+egrep '#define[ 	]*FONTSIZE|#define[ 	]*BYTESIZE|#define[ 	]*BIGFONT' ../pacman.h
+echo "unsigned char chr24[][FONTSIZE*FONTSIZE/BYTESIZE] = {"
+for i in a b c d e f g h i
+do
+	echo
+	echo "/* character $i */"
+	echo "#if BLIT"
+	mkfont24 -b font24_$i
+	echo "#endif"
+done
+echo "};"
+#
+# Now, 40 bit fonts
+#
+echo
+echo "unsigned char chr40[][BIGFONT*BIGFONT/BYTESIZE] = {"
+for i in a  b c d  e f g  h i j  k l m n o p q r s t u v w x
+do
+	echo
+	echo "/* character $i */"
+	echo "#if BLIT"
+	mkfont40 -b font40_$i
+	echo "#endif"
+done
+echo "};"
