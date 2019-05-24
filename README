@@ -1,0 +1,26 @@
+The following files were found on Mountain Avenue.  I understood
+that they all came from the final Bell Labs Plan 9 file server:
+
+1e.tar.bz2:
+	First Edition Plan 9
+	bzip2 tar file
+
+2e.tar.bz2:
+	Second Edition Plan 9
+	bzip2 tar file
+
+v8.tar.bz2:
+	Eight Edition Research Unix
+	bzip2 tar file
+
+v8jerq.tar.bz2:
+	Support for the JERQ terminal under 8th Edition
+	bzip2 tar file
+
+v10src.tar.bz2:
+	Source for Tenth Edition Research Unix
+	bzip2 tar file
+
+v10blit.tar.bz2:
+	Support for the Blit terminal under 10th Edition
+	bzip2 tar file
